@@ -1,0 +1,56 @@
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using K_Shelf.Models;
+
+namespace K_Shelf.Data
+{
+    public class ApplicationDbContext : IdentityDbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Artista> Artistas { get; set; }
+        public DbSet<Album> Albuns { get; set; }
+        public DbSet<Colecao> Colecoes { get; set; }
+        public DbSet<AlbumColecao> AlbumColecoes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Configurar chave composta para tabela de junção
+            builder.Entity<AlbumColecao>()
+                .HasKey(ac => new { ac.AlbumId, ac.ColecaoId });
+
+            // Configurar relacionamentos
+            builder.Entity<AlbumColecao>()
+                .HasOne(ac => ac.Album)
+                .WithMany(a => a.AlbumColecoes)
+                .HasForeignKey(ac => ac.AlbumId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<AlbumColecao>()
+                .HasOne(ac => ac.Colecao)
+                .WithMany(c => c.AlbumColecoes)
+                .HasForeignKey(ac => ac.ColecaoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configurar relacionamento Album -> Artista
+            builder.Entity<Album>()
+                .HasOne(a => a.Artista)
+                .WithMany(art => art.Albuns)
+                .HasForeignKey(a => a.ArtistaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Índices para melhor performance
+            builder.Entity<Artista>()
+                .HasIndex(a => a.Nome)
+                .IsUnique(false);
+
+            builder.Entity<Album>()
+                .HasIndex(a => a.Titulo);
+        }
+    }
+}
