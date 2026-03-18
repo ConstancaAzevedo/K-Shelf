@@ -20,15 +20,55 @@ namespace K_Shelf.Models
         [Display(Name = "URL da Capa")]
         public string? CapaUrl { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Selecione um artista válido")]
-        [Display(Name = "Artista")]
-        public int ArtistaId { get; set; }
+        public enum TipoAlbum
+        {
+            Studio,
+            Single,
+            EP,
+            Compilação,
+            AoVivo,
+            Remix
+        }
 
-        // Relacionamento muitos-para-um
+        [Display(Name = "Tipo de Álbum")]
+        public TipoAlbum Tipo { get; set; }
+
+        public enum EdicaoAlbum
+        {
+            Standard,
+            Limited,
+            Special,
+            Platform,
+            JewelCase,
+            Photobook
+        }
+
+        [Display(Name = "Edição")]
+        public EdicaoAlbum Edicao { get; set; }
+
+        // FK para Grupo (se for álbum de grupo)
+        public int? GrupoId { get; set; }
+
+        [ForeignKey("GrupoId")]
+        [Display(Name = "Grupo")]
+        public virtual Grupo? Grupo { get; set; }
+
+        // FK para Solista (se for álbum de solista)
+        public int? SolistaId { get; set; }
+
+        [ForeignKey("SolistaId")]
+        [Display(Name = "Solista")]
+        public virtual Solista? Solista { get; set; }
+
+        // FK para Artista (se for álbum de um artista específico - caso raro)
+        public int? ArtistaId { get; set; }
+
         [ForeignKey("ArtistaId")]
+        [Display(Name = "Artista")]
         public virtual Artista? Artista { get; set; }
 
-        // Relacionamento muitos-para-muitos com Colecao
+        // Relacionamentos
+        public virtual ICollection<Musica>? Musicas { get; set; } // ← NOVO
         public virtual ICollection<AlbumColecao>? AlbumColecoes { get; set; }
     }
 }
