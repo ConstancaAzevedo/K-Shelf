@@ -30,7 +30,7 @@ namespace K_Shelf.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ArtistaId")
+                    b.Property<int?>("ArtistaId")
                         .HasColumnType("int");
 
                     b.Property<string>("CapaUrl")
@@ -38,6 +38,18 @@ namespace K_Shelf.Data.Migrations
 
                     b.Property<DateTime>("DataLancamento")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Edicao")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GrupoId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SolistaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tipo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
@@ -48,7 +60,9 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasIndex("ArtistaId");
 
-                    b.HasIndex("Titulo");
+                    b.HasIndex("GrupoId");
+
+                    b.HasIndex("SolistaId");
 
                     b.ToTable("Albuns");
                 });
@@ -79,25 +93,51 @@ namespace K_Shelf.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataEstreia")
+                    b.Property<DateTime?>("DataEntrada")
                         .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DataSaida")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("GrupoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ImagemUrl")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAtivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nacionalidade")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Pais")
-                        .IsRequired()
+                    b.Property<string>("NomeArtistico")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Posicao")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("SolistaId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Nome");
+                    b.HasIndex("GrupoId");
+
+                    b.HasIndex("SolistaId")
+                        .IsUnique()
+                        .HasFilter("[SolistaId] IS NOT NULL");
 
                     b.ToTable("Artistas");
                 });
@@ -131,6 +171,126 @@ namespace K_Shelf.Data.Migrations
                     b.HasIndex("UtilizadorId");
 
                     b.ToTable("Colecoes");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Grupo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Companhia")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DataEstreia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Fansigno")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImagemUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAtivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Grupos");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Musica", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AlbumId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Compositores")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Duracao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSingle")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTitleTrack")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Letra")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Produtores")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SpotifyId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("TrackNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("YoutubeUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("Titulo");
+
+                    b.ToTable("Musicas");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Solista", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Companhia")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("DataEstreia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImagemUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAtivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Solistas");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -338,12 +498,22 @@ namespace K_Shelf.Data.Migrations
             modelBuilder.Entity("K_Shelf.Models.Album", b =>
                 {
                     b.HasOne("K_Shelf.Models.Artista", "Artista")
+                        .WithMany()
+                        .HasForeignKey("ArtistaId");
+
+                    b.HasOne("K_Shelf.Models.Grupo", "Grupo")
                         .WithMany("Albuns")
-                        .HasForeignKey("ArtistaId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("GrupoId");
+
+                    b.HasOne("K_Shelf.Models.Solista", "Solista")
+                        .WithMany("Albuns")
+                        .HasForeignKey("SolistaId");
 
                     b.Navigation("Artista");
+
+                    b.Navigation("Grupo");
+
+                    b.Navigation("Solista");
                 });
 
             modelBuilder.Entity("K_Shelf.Models.AlbumColecao", b =>
@@ -365,6 +535,21 @@ namespace K_Shelf.Data.Migrations
                     b.Navigation("Colecao");
                 });
 
+            modelBuilder.Entity("K_Shelf.Models.Artista", b =>
+                {
+                    b.HasOne("K_Shelf.Models.Grupo", "Grupo")
+                        .WithMany("Artistas")
+                        .HasForeignKey("GrupoId");
+
+                    b.HasOne("K_Shelf.Models.Solista", "Solista")
+                        .WithOne("Artista")
+                        .HasForeignKey("K_Shelf.Models.Artista", "SolistaId");
+
+                    b.Navigation("Grupo");
+
+                    b.Navigation("Solista");
+                });
+
             modelBuilder.Entity("K_Shelf.Models.Colecao", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Utilizador")
@@ -374,6 +559,17 @@ namespace K_Shelf.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Utilizador");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Musica", b =>
+                {
+                    b.HasOne("K_Shelf.Models.Album", "Album")
+                        .WithMany("Musicas")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Album");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -430,16 +626,27 @@ namespace K_Shelf.Data.Migrations
             modelBuilder.Entity("K_Shelf.Models.Album", b =>
                 {
                     b.Navigation("AlbumColecoes");
-                });
 
-            modelBuilder.Entity("K_Shelf.Models.Artista", b =>
-                {
-                    b.Navigation("Albuns");
+                    b.Navigation("Musicas");
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Colecao", b =>
                 {
                     b.Navigation("AlbumColecoes");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Grupo", b =>
+                {
+                    b.Navigation("Albuns");
+
+                    b.Navigation("Artistas");
+                });
+
+            modelBuilder.Entity("K_Shelf.Models.Solista", b =>
+                {
+                    b.Navigation("Albuns");
+
+                    b.Navigation("Artista");
                 });
 #pragma warning restore 612, 618
         }
