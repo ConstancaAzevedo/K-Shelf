@@ -18,6 +18,7 @@ namespace K_Shelf.Data
         public DbSet<Musica> Musicas { get; set; }
         public DbSet<Colecao> Colecoes { get; set; }
         public DbSet<AlbumColecao> AlbumColecoes { get; set; }
+        public DbSet<Utilizador> Utilizadores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
