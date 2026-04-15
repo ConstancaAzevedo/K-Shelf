@@ -4468,11 +4468,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj",
+      "projectUniqueName": "C:\\users\\const\\source\\repos\\k-shelf\\K-Shelf.csproj",
       "projectName": "K-Shelf",
-      "projectPath": "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj",
+      "projectPath": "C:\\users\\const\\source\\repos\\k-shelf\\K-Shelf.csproj",
       "packagesPath": "C:\\Users\\const\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\const\\source\\repos\\K-Shelf\\obj\\",
+      "outputPath": "C:\\users\\const\\source\\repos\\k-shelf\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

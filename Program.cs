@@ -38,4 +38,6 @@ app.UseStaticFiles();
 
 app.MapRazorPages();
 
+app.UseHttpsRedirection();
+
 app.Run();
