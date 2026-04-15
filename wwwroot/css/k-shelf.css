@@ -1,0 +1,89 @@
+﻿/* Cores principais */
+:root {
+    --kpop-pink: #ff6b9d;
+    --kpop-purple: #9b59b6;
+    --kpop-dark: #2c3e50;
+    --kpop-light: #f8f9fa;
+}
+
+/* Estilo do logo */
+.logo-kpop {
+    max-height: 60px;
+    transition: transform 0.3s ease;
+}
+
+    .logo-kpop:hover {
+        transform: scale(1.05);
+    }
+
+/* Navegação personalizada */
+.navbar-kpop {
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+    .navbar-kpop .nav-link {
+        color: white !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+        .navbar-kpop .nav-link:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+/* Banner principal */
+.hero-banner {
+    background: linear-gradient(135deg, var(--kpop-light), #e8e8e8);
+    border-radius: 20px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* Cards personalizados */
+.card-kpop {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+    .card-k-shelf:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+/* Botões personalizados */
+.btn-kpop {
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+    .btn-kpop:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(255,107,157,0.4);
+        color: white;
+    }
+
+/* Footer personalizado */
+.footer-kpop {
+    background-color: var(--kpop-dark);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+/* Títulos */
+.title-kpop {
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
