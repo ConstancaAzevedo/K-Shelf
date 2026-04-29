@@ -1,0 +1,73 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Registar";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/registo.css" />
+
+<div class="register-container">
+    <div class="header">
+        <h2>K-Shelf</h2>
+        <p>Criar nova conta</p>
+    </div>
+
+    <div class="content">
+        <div class="info-box">
+            Preencha os dados abaixo para criar a sua conta.
+        </div>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+            
+            <div class="form-group">
+                <label asp-for="Input.Email">Email</label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="nome@exemplo.com" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword">Confirmar Password</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="register-btn">Registar</button>
+
+            <div class="login-link">
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Já tem conta? Entrar</a>
+            </div>
+        </form>
+
+        @{
+            if ((Model.ExternalLogins?.Count ?? 0) > 0)
+            {
+                <div class="external-register">
+                    <h3>Ou registe-se com outro serviço</h3>
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" name="provider" value="@provider.Name" title="Registar usando a sua conta @provider.DisplayName">@provider.DisplayName</button>
+                        }
+                    </form>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="footer-register">
+        © 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

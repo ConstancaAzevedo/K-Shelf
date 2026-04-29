@@ -12,9 +12,13 @@ namespace K_Shelf.Data
         }
 
         public DbSet<Artista> Artistas { get; set; }
+        public DbSet<Grupo> Grupos { get; set; }
+        public DbSet<Solista> Solistas { get; set; }
         public DbSet<Album> Albuns { get; set; }
+        public DbSet<Musica> Musicas { get; set; }
         public DbSet<Colecao> Colecoes { get; set; }
         public DbSet<AlbumColecao> AlbumColecoes { get; set; }
+        public DbSet<Utilizador> Utilizadores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -37,20 +41,19 @@ namespace K_Shelf.Data
                 .HasForeignKey(ac => ac.ColecaoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configurar relacionamento Album -> Artista
-            builder.Entity<Album>()
-                .HasOne(a => a.Artista)
-                .WithMany(art => art.Albuns)
-                .HasForeignKey(a => a.ArtistaId)
-                .OnDelete(DeleteBehavior.Restrict);
+            // Configurar relacionamento Album -> Musica
+            builder.Entity<Musica>()
+                .HasOne(m => m.Album)
+                .WithMany(a => a.Musicas)
+                .HasForeignKey(m => m.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade); // Se apagar álbum, apaga músicas
 
             // Índices para melhor performance
-            builder.Entity<Artista>()
-                .HasIndex(a => a.Nome)
-                .IsUnique(false);
+            builder.Entity<Musica>()
+                .HasIndex(m => m.Titulo);
 
-            builder.Entity<Album>()
-                .HasIndex(a => a.Titulo);
+            builder.Entity<Musica>()
+                .HasIndex(m => m.AlbumId);
         }
     }
 }

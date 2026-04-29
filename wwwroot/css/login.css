@@ -1,0 +1,234 @@
+﻿.login-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+    margin: 40px auto;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    text-align: center;
+}
+
+    .header h2 {
+        color: white;
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .header p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+    }
+
+.content {
+    padding: 40px;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 12px;
+    margin-bottom: 25px;
+    font-size: 13px;
+    color: #666;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s;
+    outline: none;
+}
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+    .checkbox-label input {
+        width: auto;
+        margin: 0;
+    }
+
+    .checkbox-label span {
+        font-size: 14px;
+        color: #666;
+    }
+
+.forgot-link {
+    font-size: 14px;
+    color: #667eea;
+    text-decoration: none;
+}
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+    .login-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-btn:active {
+        transform: translateY(0);
+    }
+
+.links {
+    margin-top: 25px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 25px;
+}
+
+    .links a {
+        display: block;
+        color: #667eea;
+        text-decoration: none;
+        margin: 10px 0;
+        font-size: 14px;
+        transition: color 0.2s;
+    }
+
+        .links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+.footer-login {
+    background: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+    border-top: 1px solid #e0e0e0;
+}
+
+    .footer-login a {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+        .footer-login a:hover {
+            text-decoration: underline;
+        }
+
+.text-danger {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.validation-summary {
+    background: #fee;
+    color: #c33;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.external-login {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+    .external-login h3 {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .external-login button {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .external-login button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+@media (max-width: 480px) {
+    .content {
+        padding: 25px;
+    }
+
+    .header {
+        padding: 20px;
+    }
+
+        .header h2 {
+            font-size: 24px;
+        }
+}
