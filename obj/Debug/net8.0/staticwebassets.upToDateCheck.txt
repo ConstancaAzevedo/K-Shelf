@@ -1,5 +1,6 @@
 wwwroot\css\k-shelf.css
 wwwroot\css\login.css
+wwwroot\css\registo.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\imagens\logocomfundo.png
