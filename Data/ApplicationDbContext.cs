@@ -4,12 +4,14 @@ using K_Shelf.Models;
 
 namespace K_Shelf.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<Utilizador>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
+        // NÃO tem DbSet<Utilizador> - Identity já gere
 
         public DbSet<Artista> Artistas { get; set; }
         public DbSet<Grupo> Grupos { get; set; }
@@ -18,17 +20,13 @@ namespace K_Shelf.Data
         public DbSet<Musica> Musicas { get; set; }
         public DbSet<Colecao> Colecoes { get; set; }
         public DbSet<AlbumColecao> AlbumColecoes { get; set; }
-        public DbSet<Utilizador> Utilizadores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // Configurar chave composta para tabela de junção
-            builder.Entity<AlbumColecao>()
-                .HasKey(ac => new { ac.AlbumId, ac.ColecaoId });
+            builder.Entity<AlbumColecao>().HasKey(ac => new { ac.AlbumId, ac.ColecaoId });
 
-            // Configurar relacionamentos
             builder.Entity<AlbumColecao>()
                 .HasOne(ac => ac.Album)
                 .WithMany(a => a.AlbumColecoes)
@@ -41,19 +39,14 @@ namespace K_Shelf.Data
                 .HasForeignKey(ac => ac.ColecaoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configurar relacionamento Album -> Musica
             builder.Entity<Musica>()
                 .HasOne(m => m.Album)
                 .WithMany(a => a.Musicas)
                 .HasForeignKey(m => m.AlbumId)
-                .OnDelete(DeleteBehavior.Cascade); // Se apagar álbum, apaga músicas
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Índices para melhor performance
-            builder.Entity<Musica>()
-                .HasIndex(m => m.Titulo);
-
-            builder.Entity<Musica>()
-                .HasIndex(m => m.AlbumId);
+            builder.Entity<Musica>().HasIndex(m => m.Titulo);
+            builder.Entity<Musica>().HasIndex(m => m.AlbumId);
         }
     }
 }

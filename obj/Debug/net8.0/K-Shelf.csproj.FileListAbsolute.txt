@@ -250,10 +250,10 @@ C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\staticwebassets.build.json.
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\K-Shelf.csproj.Up2Date
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\K-Shelf.dll
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\refint\K-Shelf.dll
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\K-Shelf.pdb
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\K-Shelf.genruntimeconfig.cache
 C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\ref\K-Shelf.dll
-C:\Users\const\source\repos\K-Shelf\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
