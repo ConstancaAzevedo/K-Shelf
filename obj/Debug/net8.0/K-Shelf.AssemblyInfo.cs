@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("K-Shelf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b0fbe34f24fe78613fd164f081e6e762ddc8839")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+23f75da4f7b1c8939687e99cc580ae6e1366f1e7")]
 [assembly: System.Reflection.AssemblyProductAttribute("K-Shelf")]
 [assembly: System.Reflection.AssemblyTitleAttribute("K-Shelf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

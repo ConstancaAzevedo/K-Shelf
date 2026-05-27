@@ -1,4 +1,3 @@
-wwwroot\css\k-shelf.css
 wwwroot\css\login.css
 wwwroot\css\registo.css
 wwwroot\css\site.css
@@ -66,3 +65,5 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\css\k-shelf.css
+wwwroot\css\manage.css
