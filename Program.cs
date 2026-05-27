@@ -40,4 +40,21 @@ app.MapRazorPages();
 
 app.UseHttpsRedirection();
 
+// Popular a base de dados se estiver vazia
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        await DbSeeder.SeedAsync(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao popular a base de dados.");
+    }
+}
+
 app.Run();
+

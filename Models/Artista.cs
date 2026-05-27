@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace K_Shelf.Models
@@ -28,7 +28,6 @@ namespace K_Shelf.Models
         [Display(Name = "Nacionalidade")]
         public string? Nacionalidade { get; set; }
 
-        [Url]
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 

@@ -1,4 +1,4 @@
-﻿/* Cores principais */
+/* Cores principais */
 :root {
     --kpop-pink: #ff6b9d;
     --kpop-purple: #9b59b6;
@@ -87,3 +87,300 @@
     background-clip: text;
     color: transparent;
 }
+
+/* --- Extensões de Estilo Premium K-Shelf --- */
+
+/* Importar fontes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #fafafd;
+}
+
+/* Glassmorphism e Efeitos de Blur */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+}
+
+.glass-panel-dark {
+    background: rgba(44, 62, 80, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    color: white;
+}
+
+/* Animações de Entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pesquisa e Filtros Glow */
+.search-input-kpop {
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.search-input-kpop:focus {
+    border-color: var(--kpop-pink);
+    box-shadow: 0 0 12px rgba(255, 107, 157, 0.25);
+    outline: none;
+}
+
+.filter-btn-kpop {
+    border: 2px solid var(--kpop-pink);
+    color: var(--kpop-pink);
+    background: transparent;
+    border-radius: 25px;
+    padding: 6px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.filter-btn-kpop.active, .filter-btn-kpop:hover {
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+/* Neon Badges */
+.badge-neon-pink {
+    background: rgba(255, 107, 157, 0.15);
+    color: var(--kpop-pink);
+    border: 1px solid rgba(255, 107, 157, 0.3);
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+}
+
+.badge-neon-purple {
+    background: rgba(155, 89, 182, 0.15);
+    color: var(--kpop-purple);
+    border: 1px solid rgba(155, 89, 182, 0.3);
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+}
+
+.badge-neon-success {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    font-weight: 600;
+    border-radius: 20px;
+    padding: 6px 12px;
+}
+
+/* Cards de Artistas Customizados */
+.artist-card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.artist-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(255, 107, 157, 0.15);
+}
+
+.artist-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 280px;
+}
+
+.artist-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.artist-card:hover .artist-image {
+    transform: scale(1.08);
+}
+
+.artist-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 20px;
+    color: white;
+}
+
+/* Efeito Premium de Disco de Vinil para os Álbuns */
+.vinyl-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
+.vinyl-album {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    background-color: #eee;
+}
+
+.vinyl-album-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vinyl-disc {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    background: radial-gradient(circle, #333 4%, #111 5%, #111 15%, #222 25%, #111 35%, #222 45%, #111 55%, #222 65%, #050505 70%);
+    border-radius: 50%;
+    z-index: 1;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vinyl-disc::before {
+    content: '';
+    position: absolute;
+    width: 32%;
+    height: 32%;
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    border-radius: 50%;
+}
+
+.vinyl-disc::after {
+    content: '';
+    position: absolute;
+    width: 8%;
+    height: 8%;
+    background: #fafafd;
+    border-radius: 50%;
+}
+
+/* Hover Efeitos de Vinil */
+.vinyl-container-wrapper {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vinyl-container-wrapper:hover .vinyl-album {
+    transform: rotateY(-15deg) scale(0.98);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.vinyl-container-wrapper:hover .vinyl-disc {
+    left: 45%;
+    transform: rotate(180deg);
+}
+
+/* Estante Virtual de Coleções */
+.shelf-container {
+    background: linear-gradient(to bottom, #d5c3db 0%, #ebe3ed 100%);
+    border-radius: 30px;
+    padding: 40px;
+    box-shadow: inset 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.shelf-row {
+    position: relative;
+    border-bottom: 16px solid #8e7399;
+    padding-bottom: 20px;
+    margin-bottom: 50px;
+    box-shadow: 0 10px 15px -10px rgba(0,0,0,0.15);
+}
+
+.shelf-row::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* Mosaico de Álbuns em Miniatura */
+.mini-album-pile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.mini-cover {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    object-fit: cover;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+.mini-cover:nth-child(1) {
+    transform: translateX(-25px) rotate(-10deg);
+    z-index: 1;
+}
+
+.mini-cover:nth-child(2) {
+    transform: translateY(-5px) scale(1.05);
+    z-index: 3;
+}
+
+.mini-cover:nth-child(3) {
+    transform: translateX(25px) rotate(10deg);
+    z-index: 2;
+}
+
+.collection-card:hover .mini-cover:nth-child(1) {
+    transform: translateX(-40px) rotate(-20deg) scale(1.05);
+}
+
+.collection-card:hover .mini-cover:nth-child(3) {
+    transform: translateX(40px) rotate(20deg) scale(1.05);
+}
+
+.collection-card:hover .mini-cover:nth-child(2) {
+    transform: translateY(-12px) scale(1.1);
+    box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
+}
