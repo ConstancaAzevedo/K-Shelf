@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace K_Shelf.Models
 {
@@ -22,7 +22,6 @@ namespace K_Shelf.Models
         [Display(Name = "Fansigno")]
         public string? Fansigno { get; set; } // Nome do fandom (ex: ARMY, BLINK)
 
-        [Url]
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 

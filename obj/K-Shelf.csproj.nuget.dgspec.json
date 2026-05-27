@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj": {}
+    "C:\\Users\\ruimi\\OneDrive\\Documentos\\IPT\\2Ano\\2Semestre\\TrabFinalWEB\\K-Shelf\\K-Shelf.csproj": {}
   },
   "projects": {
-    "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj": {
+    "C:\\Users\\ruimi\\OneDrive\\Documentos\\IPT\\2Ano\\2Semestre\\TrabFinalWEB\\K-Shelf\\K-Shelf.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj",
+        "projectUniqueName": "C:\\Users\\ruimi\\OneDrive\\Documentos\\IPT\\2Ano\\2Semestre\\TrabFinalWEB\\K-Shelf\\K-Shelf.csproj",
         "projectName": "K-Shelf",
-        "projectPath": "C:\\Users\\const\\source\\repos\\K-Shelf\\K-Shelf.csproj",
-        "packagesPath": "C:\\Users\\const\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\const\\source\\repos\\K-Shelf\\obj\\",
+        "projectPath": "C:\\Users\\ruimi\\OneDrive\\Documentos\\IPT\\2Ano\\2Semestre\\TrabFinalWEB\\K-Shelf\\K-Shelf.csproj",
+        "packagesPath": "C:\\Users\\ruimi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ruimi\\OneDrive\\Documentos\\IPT\\2Ano\\2Semestre\\TrabFinalWEB\\K-Shelf\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\const\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ruimi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -90,6 +90,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.27, 8.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.27, 8.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.27, 8.0.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.27, 8.0.27]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
