@@ -59,6 +59,12 @@ namespace K_Shelf.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            /// <summary>
+            ///     Nome de utilizador personalizado
+            /// </summary>
+            [Display(Name = "Nome de Utilizador")]
+            public string NomeUsuario { get; set; }
         }
 
         private async Task LoadAsync(Utilizador user)
@@ -70,7 +76,8 @@ namespace K_Shelf.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                NomeUsuario = user.NomeUsuario
             };
         }
 
@@ -111,8 +118,20 @@ namespace K_Shelf.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            // Atualizar o NomeUsuario
+            if (Input.NomeUsuario != user.NomeUsuario)
+            {
+                user.NomeUsuario = Input.NomeUsuario;
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    StatusMessage = "Erro ao atualizar o nome de utilizador.";
+                    return RedirectToPage();
+                }
+            }
+
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "O seu perfil foi atualizado com sucesso!";
             return RedirectToPage();
         }
     }

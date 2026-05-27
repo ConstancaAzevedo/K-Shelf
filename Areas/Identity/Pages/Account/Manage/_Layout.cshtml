@@ -1,5 +1,8 @@
-﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+@using K_Shelf.Models
+@inject SignInManager<Utilizador> SignInManager
+@inject UserManager<Utilizador> UserManager
+@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -25,5 +28,5 @@
 </div>
 
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", required: false);
 }
