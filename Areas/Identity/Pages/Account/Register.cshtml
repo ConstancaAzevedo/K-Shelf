@@ -1,4 +1,4 @@
-ï»¿@page
+@page
 @model RegisterModel
 
 @{
@@ -30,20 +30,20 @@
 
             <div class="form-group">
                 <label asp-for="Input.Password">Password</label>
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Input.ConfirmPassword">Confirmar Password</label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
             <button id="registerSubmit" type="submit" class="register-btn">Registar</button>
 
             <div class="login-link">
-                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">JÃ¡ tem conta? Entrar</a>
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Já tem conta? Entrar</a>
             </div>
         </form>
 
@@ -51,7 +51,7 @@
             if ((Model.ExternalLogins?.Count ?? 0) > 0)
             {
                 <div class="external-register">
-                    <h3>Ou registe-se com outro serviÃ§o</h3>
+                    <h3>Ou registe-se com outro serviço</h3>
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                         @foreach (var provider in Model.ExternalLogins!)
                         {
@@ -64,7 +64,7 @@
     </div>
 
     <div class="footer-register">
-        Â© 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
+        © 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
     </div>
 </div>
 

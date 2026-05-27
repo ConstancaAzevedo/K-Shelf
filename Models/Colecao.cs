@@ -24,11 +24,10 @@ namespace K_Shelf.Models
         [Display(Name = "Data de Criação")]
         public DateTime DataCriacao { get; set; } = DateTime.Now;
 
-        // Relacionamento com IdentityUser
+        // ALTERADO: IdentityUser → Utilizador
         [ForeignKey("UtilizadorId")]
-        public virtual IdentityUser? Utilizador { get; set; }
+        public virtual Utilizador? Utilizador { get; set; }  // ← MUDAR AQUI
 
-        // Relacionamento muitos-para-muitos com Album
         public virtual ICollection<AlbumColecao>? AlbumColecoes { get; set; }
     }
 }

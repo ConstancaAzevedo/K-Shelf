@@ -1,25 +1,23 @@
-﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
-    {
-        Layout = parentLayout.ToString();
-    }
-    else
-    {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
-    }
+@using K_Shelf.Models
+@inject SignInManager<Utilizador> SignInManager
+@inject UserManager<Utilizador> UserManager
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Gerir Conta";
 }
 
-<h1>Manage your account</h1>
+<!-- CSS específico para a página Manage -->
+<link rel="stylesheet" href="~/css/manage.css" />
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+<div class="manage-page-container">
+    <div class="manage-card">
+        <div class="row">
+            <div class="col-md-3 manage-nav">
+                <partial name="_ManageNav" />
+            </div>
+            <div class="col-md-9">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

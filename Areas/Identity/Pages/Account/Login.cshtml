@@ -1,4 +1,4 @@
-ï»¿@page
+@page
 @model LoginModel
 
 @{
@@ -32,7 +32,7 @@
 
             <div class="form-group">
                 <label asp-for="Input.Password">Password</label>
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
@@ -48,7 +48,7 @@
 
             <div class="links">
                 <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login de um utilizador existente</a>
-                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar confirmaÃ§Ã£o de email</a>
+                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar confirmação de email</a>
             </div>
         </form>
 
@@ -56,7 +56,7 @@
             if ((Model.ExternalLogins?.Count ?? 0) > 0)
             {
                 <div class="external-login">
-                    <h3>Ou use outro serviÃ§o para entrar</h3>
+                    <h3>Ou use outro serviço para entrar</h3>
                     <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                         @foreach (var provider in Model.ExternalLogins!)
                         {
@@ -69,7 +69,7 @@
     </div>
 
     <div class="footer" style="margin-left: 20px; margin-bottom: 20px">
-        Â© 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
+        © 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
     </div>
 </div>
 
