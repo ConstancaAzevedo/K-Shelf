@@ -95,24 +95,11 @@
                     <div class="glass-panel p-4 h-100 d-flex flex-column justify-content-between shadow-sm hover-elevate transition-all border-0">
                         <div>
                             <!-- EFEITO PREMIUM DE VINIL -->
-                            <div class="vinyl-container-wrapper py-3 mb-4">
-                                <div class="vinyl-container">
-                                    <!-- Capa do Álbum (Sleeve) -->
-                                    <div class="vinyl-album">
-                                        @if (!string.IsNullOrEmpty(album.CapaUrl))
-                                        {
-                                            <img src="@album.CapaUrl" class="vinyl-album-cover" alt="@album.Titulo" />
-                                        }
-                                        else
-                                        {
-                                            <div class="vinyl-album-cover d-flex align-items-center justify-content-center text-white" style="background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple)); font-size: 3rem; height: 100%;">
-                                                💿
-                                            </div>
-                                        }
-                                    </div>
-                                    <!-- Disco de Vinil que Desliza -->
-                                    <div class="vinyl-disc"></div>
+                           <div class="vinyl-container-wrapper">
+                                <div class="vinyl-album">
+                                    <img src="@album.CapaUrl" class="vinyl-album-cover" alt="@album.Titulo" />
                                 </div>
+                                <div class="vinyl-disc"></div>
                             </div>
 
                             <!-- Informações do Álbum -->
