@@ -26,7 +26,7 @@ namespace K_Shelf.Data
                     DataEstreia = new DateTime(2013, 6, 13),
                     Companhia = "Big Hit Music (HYBE)",
                     Fansigno = "ARMY",
-                    ImagemUrl = "https://images.unsplash.com/photo-1613588718956-c2e80305bf61?q=80&w=600&auto=format&fit=crop",
+                    ImagemUrl = "/imagens/.jpeg",
                     IsAtivo = true
                 };
                 context.Grupos.Add(bts);
@@ -94,7 +94,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "Map of the Soul: 7",
                     DataLancamento = new DateTime(2020, 2, 21),
-                    CapaUrl = "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/mapalbum.jpeg",
                     Tipo = Album.TipoAlbum.Studio,
                     Edicao = Album.EdicaoAlbum.Standard,
                     GrupoId = bts.Id
@@ -106,7 +106,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "D-DAY",
                     DataLancamento = new DateTime(2023, 4, 21),
-                    CapaUrl = "https://images.unsplash.com/photo-1487180142328-0c4e37023af5?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/agustd.jpeg",
                     Tipo = Album.TipoAlbum.Studio,
                     Edicao = Album.EdicaoAlbum.JewelCase,
                     SolistaId = agustD.Id
@@ -174,7 +174,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "The Album",
                     DataLancamento = new DateTime(2020, 10, 2),
-                    CapaUrl = "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/thealbum.jpeg",
                     Tipo = Album.TipoAlbum.Studio,
                     Edicao = Album.EdicaoAlbum.Special,
                     GrupoId = bp.Id
@@ -225,7 +225,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "Get Up",
                     DataLancamento = new DateTime(2023, 7, 21),
-                    CapaUrl = "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/newjeans.jpeg",
                     Tipo = Album.TipoAlbum.EP,
                     Edicao = Album.EdicaoAlbum.Platform,
                     GrupoId = nj.Id
@@ -275,7 +275,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "LILAC",
                     DataLancamento = new DateTime(2021, 3, 25),
-                    CapaUrl = "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/lilac.jpg",
                     Tipo = Album.TipoAlbum.Studio,
                     Edicao = Album.EdicaoAlbum.Limited,
                     SolistaId = iuSolista.Id
@@ -340,7 +340,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "★★★★★ (5-STAR)",
                     DataLancamento = new DateTime(2023, 6, 2),
-                    CapaUrl = "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/5star.png",
                     Tipo = Album.TipoAlbum.Studio,
                     Edicao = Album.EdicaoAlbum.Standard,
                     GrupoId = skz.Id
@@ -406,7 +406,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "DARK BLOOD",
                     DataLancamento = new DateTime(2023, 5, 22),
-                    CapaUrl = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/enhypen.jpeg",
                     Tipo = Album.TipoAlbum.EP,
                     Edicao = Album.EdicaoAlbum.Limited,
                     GrupoId = enhypen.Id
@@ -459,7 +459,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "YOUTH IN THE SHADE",
                     DataLancamento = new DateTime(2023, 7, 10),
-                    CapaUrl = "https://images.unsplash.com/photo-1614680376593-902f74fa0d41?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/zb1.jpeg",
                     Tipo = Album.TipoAlbum.EP,
                     Edicao = Album.EdicaoAlbum.Standard,
                     GrupoId = zb1.Id
@@ -524,7 +524,7 @@ namespace K_Shelf.Data
                 {
                     Titulo = "Fe3O4: BREAK",
                     DataLancamento = new DateTime(2024, 1, 15),
-                    CapaUrl = "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=500&auto=format&fit=crop",
+                    CapaUrl = "/imagens/nmixx.jpeg",
                     Tipo = Album.TipoAlbum.EP,
                     Edicao = Album.EdicaoAlbum.Photobook,
                     GrupoId = nmixx.Id
