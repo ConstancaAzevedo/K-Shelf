@@ -1,0 +1,66 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@using K_Shelf.Models
+@inject UserManager<Utilizador> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@{
+    ViewData["Title"] = "Tornar-me Admin";
+}
+
+@functions {
+    public async Task<IActionResult> OnPostAsync()
+    {
+        var user = await UserManager.GetUserAsync(User);
+        if (user != null)
+        {
+            if (!await RoleManager.RoleExistsAsync("Admin"))
+            {
+                await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            if (!await UserManager.IsInRoleAsync(user, "Admin"))
+            {
+                await UserManager.AddToRoleAsync(user, "Admin");
+                TempData["Message"] = "Admin role adicionada com sucesso! Faça logout e login novamente.";
+            }
+        }
+
+        return RedirectToPage();
+    }
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">👑 Tornar-se Administrador</h3>
+                </div>
+                <div class="card-body text-center">
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Message"]</div>
+                        <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-danger">Fazer Logout</a>
+                    }
+                    else if (User.Identity?.IsAuthenticated == false)
+                    {
+                        <div class="alert alert-warning">⚠️ Precisa de estar logado.</div>
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary">Fazer Login</a>
+                    }
+                    else if (User.IsInRole("Admin"))
+                    {
+                        <div class="alert alert-success">✅ Você já é Administrador!</div>
+                        <a asp-page="/Artistas/Index" class="btn btn-primary">Ir para Artistas</a>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-warning btn-lg">👑 Tornar-me Admin</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
