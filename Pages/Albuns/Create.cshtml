@@ -1,0 +1,114 @@
+@page
+@model K_Shelf.Pages.Albuns.CreateModel
+@{
+    ViewData["Title"] = "Adicionar Álbum";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">📀</span>
+                    <div>
+                        <h2 class="fw-bold mb-0">Adicionar Álbum</h2>
+                        <p class="text-secondary mb-0">Preencha os dados do novo álbum</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <!-- Título -->
+                    <div class="mb-3">
+                        <label asp-for="Album.Titulo" class="form-label fw-bold"></label>
+                        <input asp-for="Album.Titulo" class="form-control search-input-kpop" placeholder="Ex: Map of the Soul: 7" />
+                        <span asp-validation-for="Album.Titulo" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Data de Lançamento -->
+                    <div class="mb-3">
+                        <label asp-for="Album.DataLancamento" class="form-label fw-bold"></label>
+                        <input asp-for="Album.DataLancamento" type="date" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Album.DataLancamento" class="text-danger small"></span>
+                    </div>
+
+                    <!-- URL da Capa -->
+                    <div class="mb-3">
+                        <label asp-for="Album.CapaUrl" class="form-label fw-bold"></label>
+                        <input asp-for="Album.CapaUrl" class="form-control search-input-kpop" placeholder="https://..." />
+                        <span asp-validation-for="Album.CapaUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <!-- Tipo de Álbum -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Album.Tipo" class="form-label fw-bold"></label>
+                            <select asp-for="Album.Tipo" class="form-select search-input-kpop"
+                                    asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.TipoAlbum>()">
+                            </select>
+                            <span asp-validation-for="Album.Tipo" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Edição -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Album.Edicao" class="form-label fw-bold"></label>
+                            <select asp-for="Album.Edicao" class="form-select search-input-kpop"
+                                    asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.EdicaoAlbum>()">
+                            </select>
+                            <span asp-validation-for="Album.Edicao" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Artista: Grupo ou Solista -->
+                    <div class="bg-light rounded-3 p-3 mb-4">
+                        <h6 class="fw-bold mb-3">🎤 Artista</h6>
+                        <p class="text-secondary small mb-3">Associe o álbum a um <strong>Grupo</strong> ou a um <strong>Solista</strong> (não pode ser ambos).</p>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Album.GrupoId" class="form-label fw-bold"></label>
+                                <select asp-for="Album.GrupoId" class="form-select search-input-kpop"
+                                        asp-items="Model.GruposSelectList">
+                                    <option value="">-- Nenhum Grupo --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Album.SolistaId" class="form-label fw-bold"></label>
+                                <select asp-for="Album.SolistaId" class="form-select search-input-kpop"
+                                        asp-items="Model.SolistasSelectList">
+                                    <option value="">-- Nenhum Solista --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Impede selecionar Grupo e Solista ao mesmo tempo
+        const grupoSelect = document.getElementById('Album_GrupoId');
+        const solistaSelect = document.getElementById('Album_SolistaId');
+
+        grupoSelect.addEventListener('change', function () {
+            if (this.value) solistaSelect.value = '';
+        });
+
+        solistaSelect.addEventListener('change', function () {
+            if (this.value) grupoSelect.value = '';
+        });
+    </script>
+}
