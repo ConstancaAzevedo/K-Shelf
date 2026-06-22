@@ -199,6 +199,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxidW5zXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/const/source/repos/K-Shelf/Pages/Albuns/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxidW5zXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/const/source/repos/K-Shelf/Pages/Albuns/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWxidW5zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
