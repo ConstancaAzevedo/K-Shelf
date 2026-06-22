@@ -1,0 +1,200 @@
+﻿@page
+@{
+    ViewData["Title"] = "Informações do Projeto";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Cabeçalho -->
+            <div class="glass-panel p-5 shadow-sm mb-4 text-center">
+                <h1 class="title-kpop display-4 fw-bold mb-2">K-Shelf</h1>
+                <p class="lead text-secondary">Plataforma de Gestão de Coleções de K-Pop</p>
+                <hr class="my-4" />
+                <p class="text-muted">Informações do Projeto</p>
+            </div>
+
+            <!-- Informações Acadêmicas -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h3 class="fw-bold mb-3">📚 Informações Acadêmicas</h3>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="text-secondary small mb-1"><strong>Curso:</strong></p>
+                        <p class="fw-bold">Licenciatura em Engenharia Informática</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-secondary small mb-1"><strong>Disciplina:</strong></p>
+                        <p class="fw-bold">Desenvolvimento Web</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-secondary small mb-1"><strong>Ano Letivo:</strong></p>
+                        <p class="fw-bold">2025/2026</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-secondary small mb-1"><strong>Semestre:</strong></p>
+                        <p class="fw-bold">2º Semestre</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Autores -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h3 class="fw-bold mb-3">👥 Autores do Trabalho</h3>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="text-secondary small mb-1"><strong>Autor 1:</strong></p>
+                            <p class="fw-bold mb-1">Constança Reis Ribeiro Lopes de Azevedo</p>
+                            <p class="text-muted small">Nº 25969</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="text-secondary small mb-1"><strong>Autor 2:</strong></p>
+                            <p class="fw-bold mb-1">Rui Miguel Gonçalves Dias</p>
+                            <p class="text-muted small">Nº 25957</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tecnologias Utilizadas -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h3 class="fw-bold mb-3">⚙️ Tecnologias e Frameworks Utilizados</h3>
+
+                <h6 class="fw-bold mt-3 mb-2">Backend & Framework:</h6>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="badge-neon-pink">ASP.NET Core 8.0</span>
+                    <span class="badge-neon-pink">Razor Pages</span>
+                    <span class="badge-neon-pink">MVC</span>
+                </div>
+
+                <h6 class="fw-bold mt-3 mb-2">Persistência de Dados:</h6>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="badge-neon-purple">Entity Framework Core</span>
+                    <span class="badge-neon-purple">LINQ</span>
+                    <span class="badge-neon-purple">SQL Server</span>
+                </div>
+
+                <h6 class="fw-bold mt-3 mb-2">Autenticação & Autorização:</h6>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="badge-neon-success">ASP.NET Core Identity</span>
+                    <span class="badge-neon-success">Role-Based Access Control</span>
+                </div>
+
+                <h6 class="fw-bold mt-3 mb-2">Frontend & UI:</h6>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="badge bg-info text-white">Bootstrap 5.3.0</span>
+                    <span class="badge bg-info text-white">HTML5</span>
+                    <span class="badge bg-info text-white">CSS3</span>
+                    <span class="badge bg-info text-white">JavaScript</span>
+                    <span class="badge bg-info text-white">jQuery (via Bootstrap)</span>
+                </div>
+
+                <h6 class="fw-bold mt-3 mb-2">Ferramentas de Desenvolvimento:</h6>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <span class="badge bg-secondary">Visual Studio 2022</span>
+                    <span class="badge bg-secondary">Visual Studio Code</span>
+                    <span class="badge bg-secondary">Git & GitHub</span>
+                </div>
+
+                <div class="alert alert-info rounded-3 mt-3 mb-0">
+                    <small>
+                        <strong>Origem das bibliotecas:</strong><br />
+                        • Bootstrap: <a href="https://getbootstrap.com" target="_blank" class="alert-link">https://getbootstrap.com</a> (via CDN)<br />
+                        • ASP.NET Core & Entity Framework: <a href="https://dotnet.microsoft.com" target="_blank" class="alert-link">https://dotnet.microsoft.com</a><br />
+                        • Fontes do Google: <a href="https://fonts.google.com" target="_blank" class="alert-link">https://fonts.google.com</a> (Outfit font)
+                    </small>
+                </div>
+            </div>
+
+            <!-- Credenciais de Acesso -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h3 class="fw-bold mb-3">🔐 Credenciais de Acesso</h3>
+
+                <div class="alert alert-warning rounded-3 mb-3">
+                    <strong>⚠️ Utilizador Teste (Admin):</strong>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="text-secondary small mb-1"><strong>Email:</strong></p>
+                            <p class="fw-bold font-monospace">admin@kshelf.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3">
+                            <p class="text-secondary small mb-1"><strong>Password:</strong></p>
+                            <p class="fw-bold font-monospace">Admin@123</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3 p-3 bg-light rounded-3">
+                    <p class="text-secondary small mb-1"><strong>Nível de Acesso:</strong></p>
+                    <p class="mb-0"><span class="badge-neon-pink">Admin</span> — Acesso total à gestão de Artistas, Álbuns e Coleções</p>
+                </div>
+
+                <div class="alert alert-info rounded-3 mt-3 mb-0">
+                    <small><strong>Nota:</strong> Para registar um novo utilizador comum (User), use a página de Registo. Utilizadores comuns têm acesso apenas às suas próprias coleções.</small>
+                </div>
+            </div>
+
+            <!-- Funcionalidades Implementadas -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h3 class="fw-bold mb-3">✅ Funcionalidades Implementadas</h3>
+
+                <h6 class="fw-bold mt-3 mb-2">Componente 1 - Interface Web (60%):</h6>
+                <ul class="list-unstyled mb-3">
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Artistas</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Álbuns com gestão de faixas</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Coleções com adicionar/remover álbuns</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> Autenticação e autorização com roles (Admin/User)</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> Interface responsiva em Português</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> Validação de formulários</li>
+                </ul>
+
+                <h6 class="fw-bold mt-3 mb-2">Componente 2 - API (30%):</h6>
+                <ul class="list-unstyled mb-3">
+                    <li class="mb-2"><span class="badge bg-secondary">⏳</span> Em desenvolvimento</li>
+                </ul>
+
+                <h6 class="fw-bold mt-3 mb-2">Componente 3 - Publicação (10%):</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><span class="badge bg-secondary">⏳</span> Pendente</li>
+                </ul>
+            </div>
+
+            <!-- Notas Adicionais -->
+            <div class="glass-panel p-4 shadow-sm">
+                <h3 class="fw-bold mb-3">📝 Notas Adicionais</h3>
+
+                <div class="alert alert-light rounded-3 mb-2">
+                    <p class="mb-1"><strong>Base de Dados:</strong></p>
+                    <small>SQL Server com Entity Framework Core. Tabelas: Artistas, Álbuns, Coleções, Grupos, Solistas, Músicas e relacionamentos obrigatórios (many-to-one e many-to-many).</small>
+                </div>
+
+                <div class="alert alert-light rounded-3 mb-2">
+                    <p class="mb-1"><strong>Código Limpo:</strong></p>
+                    <small>Código formatado e comentado conforme exigências. Referências a bibliotecas de terceiros incluídas nos comentários e nesta página.</small>
+                </div>
+
+                <div class="alert alert-light rounded-3">
+                    <p class="mb-1"><strong>Repositório GitHub:</strong></p>
+                    <small><a href="https://github.com/ConstancaAzevedo/K-Shelf" target="_blank" class="alert-link">https://github.com/ConstancaAzevedo/K-Shelf</a></small>
+                </div>
+            </div>
+
+            <!-- Botão Voltar -->
+            <div class="mt-4 text-center">
+                <a asp-page="/Index" class="btn btn-kpop rounded-pill px-4">← Voltar ao Início</a>
+            </div>
+        </div>
+    </div>
+</div>
