@@ -231,6 +231,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXJ0aXN0YXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/const/source/repos/K-Shelf/Pages/Colecoes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29sZWNvZXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/const/source/repos/K-Shelf/Pages/Colecoes/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29sZWNvZXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/const/source/repos/K-Shelf/Pages/Colecoes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29sZWNvZXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/const/source/repos/K-Shelf/Pages/Colecoes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29sZWNvZXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/const/source/repos/K-Shelf/Pages/Colecoes/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29sZWNvZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

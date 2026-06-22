@@ -1,0 +1,87 @@
+@page
+@model K_Shelf.Pages.Artistas.EditModel
+@{
+    ViewData["Title"] = "Editar Artista";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="Artista.Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.Nome" class="form-label"></label>
+                            <input asp-for="Artista.Nome" class="form-control" />
+                            <span asp-validation-for="Artista.Nome" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.NomeArtistico" class="form-label"></label>
+                            <input asp-for="Artista.NomeArtistico" class="form-control" />
+                            <span asp-validation-for="Artista.NomeArtistico" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.DataNascimento" class="form-label"></label>
+                            <input asp-for="Artista.DataNascimento" type="date" class="form-control" />
+                            <span asp-validation-for="Artista.DataNascimento" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.Posicao" class="form-label"></label>
+                            <input asp-for="Artista.Posicao" class="form-control" />
+                            <span asp-validation-for="Artista.Posicao" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.Nacionalidade" class="form-label"></label>
+                            <input asp-for="Artista.Nacionalidade" class="form-control" />
+                            <span asp-validation-for="Artista.Nacionalidade" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.ImagemUrl" class="form-label"></label>
+                            <input asp-for="Artista.ImagemUrl" class="form-control" placeholder="https://..." />
+                            <span asp-validation-for="Artista.ImagemUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.DataEntrada" class="form-label"></label>
+                            <input asp-for="Artista.DataEntrada" type="date" class="form-control" />
+                            <span asp-validation-for="Artista.DataEntrada" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Artista.DataSaida" class="form-label"></label>
+                            <input asp-for="Artista.DataSaida" type="date" class="form-control" />
+                            <span asp-validation-for="Artista.DataSaida" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input asp-for="Artista.IsAtivo" class="form-check-input" />
+                            <label asp-for="Artista.IsAtivo" class="form-check-label"></label>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
