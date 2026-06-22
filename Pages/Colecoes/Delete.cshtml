@@ -1,55 +1,58 @@
 @page
-@model K_Shelf.Pages.Artistas.DeleteModel
+@model K_Shelf.Pages.Colecoes.DeleteModel
 @{
-    ViewData["Title"] = "Eliminar Artista";
+    ViewData["Title"] = "Eliminar Coleção";
 }
 
-<div class="container mt-4">
+<div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-danger text-white">
-                    <h2 class="mb-0">🗑️ @ViewData["Title"]</h2>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-warning">
-                        <h4 class="mb-2">⚠️ Tem a certeza que pretende eliminar este artista?</h4>
-                        <p class="mb-0">Esta ação é irreversível!</p>
+        <div class="col-md-7">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">🗑️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Coleção</h2>
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
                     </div>
-
-                    <div class="mb-4">
-                        @if (!string.IsNullOrEmpty(Model.Artista?.ImagemUrl))
-                        {
-                            <img src="@Model.Artista.ImagemUrl" style="max-height: 150px; border-radius: 10px;" />
-                        }
-                    </div>
-
-                    <dl class="row">
-                        <dt class="col-sm-3">Nome</dt>
-                        <dd class="col-sm-9">@Model.Artista?.Nome</dd>
-
-                        <dt class="col-sm-3">Nome Artístico</dt>
-                        <dd class="col-sm-9">@(Model.Artista?.NomeArtistico ?? "N/A")</dd>
-
-                        <dt class="col-sm-3">Posição</dt>
-                        <dd class="col-sm-9">@(Model.Artista?.Posicao ?? "N/A")</dd>
-
-                        <dt class="col-sm-3">Nacionalidade</dt>
-                        <dd class="col-sm-9">@(Model.Artista?.Nacionalidade ?? "N/A")</dd>
-
-                        <dt class="col-sm-3">Data Nascimento</dt>
-                        <dd class="col-sm-9">@(Model.Artista?.DataNascimento.ToString("dd/MM/yyyy") ?? "N/A")</dd>
-
-                        <dt class="col-sm-3">Ativo</dt>
-                        <dd class="col-sm-9">@(Model.Artista?.IsAtivo == true ? "Sim" : "Não")</dd>
-                    </dl>
-
-                    <form method="post">
-                        <input type="hidden" asp-for="Artista.Id" />
-                        <button type="submit" class="btn btn-danger">🗑️ Confirmar Eliminação</button>
-                        <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
-                    </form>
                 </div>
+
+                <div class="alert alert-warning rounded-3 mb-4">
+                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar esta coleção?</h5>
+                    <p class="mb-0">Todos os álbuns serão removidos da coleção (os álbuns em si não são eliminados).</p>
+                </div>
+
+                <!-- Pré-visualização da coleção -->
+                <div class="p-3 bg-light rounded-3 mb-4">
+                    <h4 class="fw-bold mb-1">@Model.Colecao.Nome</h4>
+                    <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
+                    <small class="text-secondary">
+                        📅 Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
+                        📀 @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                    </small>
+
+                    @if (Model.Colecao.AlbumColecoes != null && Model.Colecao.AlbumColecoes.Any())
+                    {
+                        <div class="d-flex gap-2 flex-wrap mt-2">
+                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5))
+                            {
+                                <span class="badge bg-secondary">@ac.Album?.Titulo</span>
+                            }
+                            @if (Model.Colecao.AlbumColecoes.Count > 5)
+                            {
+                                <span class="badge bg-secondary">+@(Model.Colecao.AlbumColecoes.Count - 5) mais</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Colecao.Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
+                        <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
+                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
