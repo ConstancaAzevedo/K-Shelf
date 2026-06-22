@@ -1,80 +1,43 @@
 @page
-@model K_Shelf.Pages.Artistas.EditModel
+@model K_Shelf.Pages.Colecoes.EditModel
 @{
-    ViewData["Title"] = "Editar Artista";
+    ViewData["Title"] = "Editar Coleção";
 }
 
-<div class="container mt-4">
+<div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-warning">
-                    <h2>@ViewData["Title"]</h2>
+        <div class="col-md-7">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">✏️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0">Editar Coleção</h2>
+                        <p class="text-secondary mb-0">@Model.Colecao.Nome</p>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="post">
-                        <input type="hidden" asp-for="Artista.Id" />
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Artista.Nome" class="form-label"></label>
-                            <input asp-for="Artista.Nome" class="form-control" />
-                            <span asp-validation-for="Artista.Nome" class="text-danger"></span>
-                        </div>
+                <form method="post">
+                    <input type="hidden" asp-for="Colecao.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Artista.NomeArtistico" class="form-label"></label>
-                            <input asp-for="Artista.NomeArtistico" class="form-control" />
-                            <span asp-validation-for="Artista.NomeArtistico" class="text-danger"></span>
-                        </div>
+                    <div class="mb-3">
+                        <label asp-for="Colecao.Nome" class="form-label fw-bold"></label>
+                        <input asp-for="Colecao.Nome" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Colecao.Nome" class="text-danger small"></span>
+                    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Artista.DataNascimento" class="form-label"></label>
-                            <input asp-for="Artista.DataNascimento" type="date" class="form-control" />
-                            <span asp-validation-for="Artista.DataNascimento" class="text-danger"></span>
-                        </div>
+                    <div class="mb-4">
+                        <label asp-for="Colecao.Descricao" class="form-label fw-bold"></label>
+                        <textarea asp-for="Colecao.Descricao" class="form-control search-input-kpop" rows="3"></textarea>
+                        <span asp-validation-for="Colecao.Descricao" class="text-danger small"></span>
+                    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Artista.Posicao" class="form-label"></label>
-                            <input asp-for="Artista.Posicao" class="form-control" />
-                            <span asp-validation-for="Artista.Posicao" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Artista.Nacionalidade" class="form-label"></label>
-                            <input asp-for="Artista.Nacionalidade" class="form-control" />
-                            <span asp-validation-for="Artista.Nacionalidade" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Artista.ImagemUrl" class="form-label"></label>
-                            <input asp-for="Artista.ImagemUrl" class="form-control" placeholder="https://..." />
-                            <span asp-validation-for="Artista.ImagemUrl" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Artista.DataEntrada" class="form-label"></label>
-                            <input asp-for="Artista.DataEntrada" type="date" class="form-control" />
-                            <span asp-validation-for="Artista.DataEntrada" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Artista.DataSaida" class="form-label"></label>
-                            <input asp-for="Artista.DataSaida" type="date" class="form-control" />
-                            <span asp-validation-for="Artista.DataSaida" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3 form-check">
-                            <input asp-for="Artista.IsAtivo" class="form-check-input" />
-                            <label asp-for="Artista.IsAtivo" class="form-check-label"></label>
-                        </div>
-
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Guardar</button>
-                            <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
-                        </div>
-                    </form>
-                </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar Alterações</button>
+                        <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
+                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
