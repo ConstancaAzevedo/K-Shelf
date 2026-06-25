@@ -57,9 +57,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// =========================================================================
+
 // 2. CONFIGURAÇÃO DO PIPELINE DE PEDIDOS HTTP (Middlewares)
-// =========================================================================
 
 if (app.Environment.IsDevelopment())
 {
@@ -98,9 +97,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// =========================================================================
 // 3. INICIALIZAÇÃO E ALIMENTAÇÃO DA BASE DE DADOS (Seeding)
-// =========================================================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -110,6 +107,22 @@ using (var scope = app.Services.CreateScope())
         
         // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);
+
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        // Cria os roles se não existirem
+        string[] roleNames = { "Admin", "User" };
+        foreach (var roleName in roleNames)
+        {
+            var roleExist = await roleManager.RoleExistsAsync(roleName);
+            if (!roleExist)
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogInformation($"Role '{roleName}' criado com sucesso.");
+            }
+        }
+
     }
     catch (Exception ex)
     {

@@ -10,8 +10,8 @@
 
 @functions {
     /// <summary>
-    /// Manipulador de requisições POST para atribuir a role 'Admin' ao utilizador atual.
-    /// Cria a role 'Admin' se esta ainda não existir na base de dados.
+    /// Manipulador de requisições POST para atribuir a role 'Admin' ao utilizador atual
+    /// Cria a role 'Admin' se esta ainda não existir na base de dados
     /// </summary>
     public async Task<IActionResult> OnPostAsync()
     {
@@ -26,12 +26,25 @@
             // Se o utilizador ainda não tiver a role 'Admin', adiciona-a
             if (!await UserManager.IsInRoleAsync(user, "Admin"))
             {
+                // remove o role de 'User'
+                if (await UserManager.IsInRoleAsync(user, "User"))
+                {
+                    await UserManager.RemoveFromRoleAsync(user, "User");
+                }
+
+                // adiciona o role "Admin"
                 await UserManager.AddToRoleAsync(user, "Admin");
                 TempData["Message"] = "Admin role adicionada com sucesso! Faça logout e login novamente.";
+            }
+               
+            else
+            {
+                TempData["Message"] = "Já és administrador!";
             }
         }
         // Redireciona de volta para a mesma página para atualizar o estado da UI
         return RedirectToPage();
+    }
     }
 }
 
@@ -51,7 +64,7 @@
                 else if (User.Identity?.IsAuthenticated == false)
                 {
                     <div class="alert" style="background: rgba(255,193,7,0.15); border: 1px solid rgba(255,193,7,0.3); color: #d4a017; border-radius: 12px;">
-                        ⚠️ Precisa de estar logado.
+                        Precisa de ter login feito
                     </div>
                     <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-kpop mt-2">Fazer Login</a>
                 }
@@ -64,7 +77,7 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-4">Clica no botão abaixo para obteres permissões de administrador.</p>
+                    <p class="text-muted mb-4">Clica no botão abaixo para obteres permissões de administrador</p>
                     <form method="post">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-kpop btn-lg">Tornar-me Admin</button>

@@ -10,13 +10,13 @@ namespace K_Shelf.Models
     public class Utilizador : IdentityUser
     {
         /// <summary>
-        /// Nome completo ou nome de exibição do utilizador.
+        /// Nome completo ou nome de exibição do utilizador
         /// </summary>
         [Required(ErrorMessage = "O nome é obrigatório")]
         public string NomeUsuario { get; set; } = string.Empty;
 
         /// <summary>
-        /// Data e hora em que a conta do utilizador foi criada.
+        /// Data e hora em que a conta do utilizador foi criada
         /// </summary>
         public DateTime DataCadastro { get; set; } = DateTime.Now;
     }
