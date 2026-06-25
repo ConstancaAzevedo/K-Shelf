@@ -25,7 +25,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Pages\Admin\Roles\" />
-	  <Folder Include="Pages\Admin\Users\" />
 	</ItemGroup>
 
 </Project>
