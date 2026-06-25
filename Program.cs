@@ -191,6 +191,17 @@ using (var scope = app.Services.CreateScope())
                 UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jenniephoto.jpg' WHERE [Versao] = 'Pink Ice Cream Selfie';
                 UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jakephoto.jpeg' WHERE [Versao] = 'Dark Blood Orange Ver.';
             ");
+
+            // 7. Criar a coluna PreviewAudioUrl na tabela Musicas caso não exista
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF NOT EXISTS (
+                    SELECT * FROM sys.columns 
+                    WHERE object_id = OBJECT_ID(N'[Musicas]') AND name = 'PreviewAudioUrl'
+                )
+                BEGIN
+                    ALTER TABLE [Musicas] ADD [PreviewAudioUrl] nvarchar(max) NULL;
+                END");
+
         }
         catch (Exception ex)
         {
@@ -200,6 +211,9 @@ using (var scope = app.Services.CreateScope())
         
         // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);
+
+        // Pesquisa e atualiza automaticamente os links reais das músicas através da API do iTunes
+        await DbSeeder.FetchItunesPreviewsAsync(context);
 
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
