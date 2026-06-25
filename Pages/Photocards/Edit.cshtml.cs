@@ -11,22 +11,37 @@ using System.Threading.Tasks;
 
 namespace K_Shelf.Pages.Photocards
 {
+    /// <summary>
+    /// Página de administração para editar os dados de um photocard existente no catálogo.
+    /// Acesso restrito a utilizadores com o papel de Administrador.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Construtor com injeção de dependência do contexto da base de dados.
+        /// </summary>
         public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>Dados do photocard a editar, carregados da BD e vinculados ao formulário.</summary>
         [BindProperty]
         public Photocard Photocard { get; set; } = default!;
 
+        /// <summary>Lista de artistas disponíveis para o dropdown de seleção.</summary>
         public SelectList ArtistasSelectList { get; set; } = default!;
+
+        /// <summary>Lista de álbuns disponíveis para o dropdown de seleção (opcional).</summary>
         public SelectList AlbunsSelectList { get; set; } = default!;
 
+        /// <summary>
+        /// Carrega o photocard para edição e inicializa as listas de seleção.
+        /// </summary>
+        /// <param name="id">ID do photocard a editar.</param>
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -47,6 +62,9 @@ namespace K_Shelf.Pages.Photocards
             return Page();
         }
 
+        /// <summary>
+        /// Processa o envio do formulário de edição, valida e persiste as alterações na BD.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             // Validações
@@ -107,11 +125,18 @@ namespace K_Shelf.Pages.Photocards
             }
         }
 
+        /// <summary>
+        /// Verifica se um photocard com o ID especificado ainda existe na base de dados.
+        /// </summary>
+        /// <param name="id">ID do photocard a verificar.</param>
         private bool PhotocardExists(int id)
         {
             return _context.Photocards.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Método auxiliar que carrega as listas de artistas e álbuns para os dropdowns do formulário.
+        /// </summary>
         private async Task CarregarSelectLists()
         {
             var artistas = await _context.Artistas

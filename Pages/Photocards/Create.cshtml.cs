@@ -11,22 +11,36 @@ using System.Threading.Tasks;
 
 namespace K_Shelf.Pages.Photocards
 {
+    /// <summary>
+    /// Página de administração para criar e registar um novo photocard no catálogo.
+    /// Acesso restrito a utilizadores com o papel de Administrador.
+    /// </summary>
     [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Construtor com injeção de dependência do contexto da base de dados.
+        /// </summary>
         public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>Dados do photocard a criar, preenchidos a partir do formulário.</summary>
         [BindProperty]
         public Photocard Photocard { get; set; } = default!;
 
+        /// <summary>Lista de artistas disponíveis para associar ao photocard.</summary>
         public SelectList ArtistasSelectList { get; set; } = default!;
+
+        /// <summary>Lista de álbuns disponíveis para associar ao photocard (opcional).</summary>
         public SelectList AlbunsSelectList { get; set; } = default!;
 
+        /// <summary>
+        /// Inicializa o formulário de criação carregando as listas de seleção.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync()
         {
             Photocard = new Photocard();
@@ -34,6 +48,9 @@ namespace K_Shelf.Pages.Photocards
             return Page();
         }
 
+        /// <summary>
+        /// Processa o envio do formulário, valida os dados e regista o novo photocard.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             // Validações adicionais
@@ -82,6 +99,9 @@ namespace K_Shelf.Pages.Photocards
             }
         }
 
+        /// <summary>
+        /// Método auxiliar que carrega as listas de artistas e álbuns para os dropdowns do formulário.
+        /// </summary>
         private async Task CarregarSelectLists()
         {
             var artistas = await _context.Artistas

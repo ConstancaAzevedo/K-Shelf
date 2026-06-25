@@ -12,39 +12,57 @@ using System.Threading.Tasks;
 
 namespace K_Shelf.Pages.Binder
 {
+    /// <summary>
+    /// Página pública do Catálogo de Photocards. Permite pesquisar e filtrar photocards
+    /// por grupo ou texto livre, e adicioná-los ao Binder pessoal (utilizadores autenticados).
+    /// </summary>
     public class CatalogoModel : PageModel
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Utilizador> _userManager;
 
+        /// <summary>
+        /// Construtor com injeção de dependência do contexto da BD e do gestor de utilizadores.
+        /// </summary>
         public CatalogoModel(ApplicationDbContext context, UserManager<Utilizador> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        /// <summary>Lista de photocards filtrada para exibição no catálogo.</summary>
         public IList<Photocard> Photocards { get; set; } = default!;
+
+        /// <summary>Lista de grupos para o filtro dropdown do catálogo.</summary>
         public SelectList GruposSelectList { get; set; } = default!;
 
+        /// <summary>Texto de pesquisa introduzido pelo utilizador (versão, artista, grupo ou álbum).</summary>
         [BindProperty(SupportsGet = true)]
         public string? SearchQuery { get; set; }
 
+        /// <summary>ID do grupo selecionado no filtro dropdown; null se nenhum filtro ativo.</summary>
         [BindProperty(SupportsGet = true)]
         public int? GrupoFilter { get; set; }
 
-        // Propriedades para adicionar ao Binder
+        /// <summary>ID do photocard que o utilizador pretende adicionar ao seu Binder.</summary>
         [BindProperty]
         public int AddPhotocardId { get; set; }
 
+        /// <summary>Estado de posse escolhido pelo utilizador (Possui/Deseja/ParaTroca).</summary>
         [BindProperty]
         public EstadoPhotocard AddEstado { get; set; }
 
+        /// <summary>Quantidade de cópias a adicionar ao Binder (mínimo 1).</summary>
         [BindProperty]
         public int AddQuantidade { get; set; } = 1;
 
+        /// <summary>Notas pessoais opcionais do utilizador para o photocard.</summary>
         [BindProperty]
         public string? AddNotas { get; set; }
 
+        /// <summary>
+        /// Carrega e filtra os photocards do catálogo conforme a pesquisa e o grupo selecionado.
+        /// </summary>
         public async Task OnGetAsync()
         {
             await CarregarGruposSelectList();
@@ -73,6 +91,10 @@ namespace K_Shelf.Pages.Binder
             Photocards = await query.ToListAsync();
         }
 
+        /// <summary>
+        /// Processa o pedido de adição de um photocard ao Binder pessoal do utilizador autenticado.
+        /// Se já existir com o mesmo estado, incrementa a quantidade; caso contrário, cria nova entrada.
+        /// </summary>
         public async Task<IActionResult> OnPostAdicionarAsync()
         {
             if (!User.Identity?.IsAuthenticated == true)
@@ -128,6 +150,9 @@ namespace K_Shelf.Pages.Binder
 
 
 
+        /// <summary>
+        /// Método auxiliar que carrega todos os grupos para o dropdown de filtro do catálogo.
+        /// </summary>
         private async Task CarregarGruposSelectList()
         {
             var grupos = await _context.Grupos
