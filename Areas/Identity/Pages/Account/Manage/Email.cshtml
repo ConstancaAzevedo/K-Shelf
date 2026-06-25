@@ -1,43 +1,93 @@
 @page
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = "Gestionar Email";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="email-form" method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
-            @if (Model.IsEmailConfirmed)
-            {
-                <div class="form-floating mb-3 input-group">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                        <div class="input-group-append">
-                            <span class="h-100 input-group-text text-success font-weight-bold">?</span>
-                        </div>
-                    <label asp-for="Email" class="form-label"></label>
-                </div>
-            }
-            else
-            {
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label asp-for="Email" class="form-label"></label>
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-                </div>
-            }
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                <label asp-for="Input.NewEmail" class="form-label"></label>
-                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
-            </div>
-            <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
-        </form>
-    </div>
+<div class="profile-header mb-4">
+    <h2 class="title-kpop fw-bold mb-2">Gerir Email</h2>
+    <p class="text-secondary">Atualize o seu endereço de email</p>
 </div>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+@if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+{
+    <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+        <strong>Atenção!</strong> Verifique os campos abaixo.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form id="email-form" method="post" class="profile-form">
+    <div asp-validation-summary="None" class="text-danger"></div>
+
+    <!-- Email Atual -->
+    @if (Model.IsEmailConfirmed)
+    {
+        <div class="form-floating mb-3">
+            <input asp-for="Email" class="form-control bg-light" placeholder="Email" disabled />
+            <label asp-for="Email" class="form-label">Email Atual</label>
+            <small class="text-success fw-bold mt-2 d-block">Confirmado</small>
+        </div>
+    }
+    else
+    {
+        <div class="form-floating mb-3">
+            <input asp-for="Email" class="form-control bg-light" placeholder="Email" disabled />
+            <label asp-for="Email" class="form-label">Email Atual</label>
+            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-sm btn-link mt-2">
+                Enviar email de verificação
+            </button>
+        </div>
+    }
+
+    <!-- Novo Email -->
+    <div class="form-floating mb-4">
+        <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Digite o seu novo email" />
+        <label asp-for="Input.NewEmail" class="form-label">Novo Email</label>
+        <span asp-validation-for="Input.NewEmail" class="text-danger small d-block mt-1"></span>
+    </div>
+
+    <!-- Botões -->
+    <div class="d-flex gap-2">
+        <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn-kpop btn-lg rounded-pill px-4 shadow-sm">
+            Alterar Email
+        </button>
+        <a href="@Url.Page("/Index")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+            Cancelar
+        </a>
+    </div>
+</form>
+
+<style>
+    .profile-form {
+        max-width: 500px;
+    }
+
+    .profile-form .form-floating label {
+        color: var(--kpop-dark);
+        font-weight: 500;
+    }
+
+    .profile-form .form-control {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 1rem 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .profile-form .form-control:focus {
+        border-color: var(--kpop-purple);
+        box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.25);
+    }
+
+    .profile-form .form-control.bg-light {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

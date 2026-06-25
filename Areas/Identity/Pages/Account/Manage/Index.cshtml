@@ -5,34 +5,83 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Escolha o seu nome de utilizador." disabled />
-                <label asp-for="Username" class="form-label">Email</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.NomeUsuario" class="form-control" placeholder="Digite o seu nome" />
-                <label asp-for="Input.NomeUsuario" class="form-label">Nome de Utilizador</label>
-                <span asp-validation-for="Input.NomeUsuario" class="text-danger"></span>
-            </div>
-
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Digite o seu telefone" />
-                <label asp-for="Input.PhoneNumber" class="form-label">Telefone</label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Guardar</button>
-        </form>
-    </div>
+<div class="profile-header mb-4">
+    <h2 class="title-kpop fw-bold mb-2">Perfil</h2>
+    <p class="text-secondary">Edite as suas informações pessoais</p>
 </div>
+
+<partial name="_StatusMessage" for="StatusMessage" />
+
+@if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+{
+    <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+        <strong>Atenção!</strong> Verifique os campos abaixo.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<form id="profile-form" method="post" class="profile-form">
+    <div asp-validation-summary="None" class="text-danger"></div>
+
+    <!-- Email (desativado) -->
+    <div class="form-floating mb-3">
+        <input asp-for="Username" class="form-control bg-light" placeholder="Email" disabled />
+        <label asp-for="Username" class="form-label">Email</label>
+        <small class="text-muted d-block mt-1">Não pode ser alterado</small>
+    </div>
+
+    <!-- Nome de Utilizador -->
+    <div class="form-floating mb-3">
+        <input asp-for="Input.NomeUsuario" class="form-control" placeholder="Digite o seu nome" />
+        <label asp-for="Input.NomeUsuario" class="form-label">Nome de Utilizador</label>
+        <span asp-validation-for="Input.NomeUsuario" class="text-danger small d-block mt-1"></span>
+    </div>
+
+    <!-- Telefone -->
+    <div class="form-floating mb-4">
+        <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Digite o seu telefone" />
+        <label asp-for="Input.PhoneNumber" class="form-label">Telefone</label>
+        <span asp-validation-for="Input.PhoneNumber" class="text-danger small d-block mt-1"></span>
+    </div>
+
+    <!-- Botão Guardar -->
+    <div class="d-flex gap-2">
+        <button id="update-profile-button" type="submit" class="btn btn-kpop btn-lg rounded-pill px-4 shadow-sm">
+            Guardar Alterações
+        </button>
+        <a href="@Url.Page("/Index")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+            Cancelar
+        </a>
+    </div>
+</form>
+
+<style>
+    .profile-form {
+        max-width: 500px;
+    }
+
+    .profile-form .form-floating label {
+        color: var(--kpop-dark);
+        font-weight: 500;
+    }
+
+    .profile-form .form-control {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 1rem 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .profile-form .form-control:focus {
+        border-color: var(--kpop-purple);
+        box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.25);
+    }
+
+    .profile-form .form-control.bg-light {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
