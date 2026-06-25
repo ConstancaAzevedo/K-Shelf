@@ -42,6 +42,34 @@ namespace K_Shelf.Pages.Colecoes
 
         public async Task<IActionResult> OnPostAsync()
         {
+
+            // validações manuais 
+
+            // Nome obrigatório
+            if (string.IsNullOrWhiteSpace(Colecao.Nome))
+            {
+                ModelState.AddModelError("Colecao.Nome", "O nome da coleção é obrigatório.");
+            }
+
+            // Nome com mínimo de 3 caracteres
+            if (!string.IsNullOrWhiteSpace(Colecao.Nome) && Colecao.Nome.Length < 3)
+            {
+                ModelState.AddModelError("Colecao.Nome", "O nome da coleção deve ter pelo menos 3 caracteres.");
+            }
+
+            // Nome com máximo de 100 caracteres
+            if (!string.IsNullOrWhiteSpace(Colecao.Nome) && Colecao.Nome.Length > 100)
+            {
+                ModelState.AddModelError("Colecao.Nome", "O nome da coleção não pode exceder 100 caracteres.");
+            }
+
+            // Descrição com máximo de 500 caracteres
+            if (!string.IsNullOrWhiteSpace(Colecao.Descricao) && Colecao.Descricao.Length > 500)
+            {
+                ModelState.AddModelError("Colecao.Descricao", "A descrição não pode exceder 500 caracteres.");
+            }
+
+
             if (!ModelState.IsValid)
                 return Page();
 
