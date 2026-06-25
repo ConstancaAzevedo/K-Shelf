@@ -24,37 +24,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Criar a bolha de mensagem HTML
         const messageDiv = document.createElement("div");
-        messageDiv.className = "chat-message-bubble mb-3 animate-fade-in";
+        messageDiv.className = "chat-message-wrapper animate-fade-in";
 
         // Determinar se a mensagem é do utilizador logado atualmente
-        // (Fazemos uma verificação simples com o nome do utilizador exibido no cabeçalho ou similar)
         const currentUserHeader = document.querySelector(".navbar-k-shelf .nav-link.text-white");
         let isMe = false;
         if (currentUserHeader) {
             const currentUsername = currentUserHeader.textContent.replace("Olá ", "").replace("!", "").trim();
-            const normalizedCurrentUser = currentUsername.contains("@") ? currentUsername.split('@')[0] : currentUsername;
+            const normalizedCurrentUser = currentUsername.includes("@") ? currentUsername.split('@')[0] : currentUsername;
             if (normalizedCurrentUser.toLowerCase() === user.toLowerCase()) {
                 isMe = true;
             }
         }
 
         if (isMe) {
-            messageDiv.classList.add("my-message", "ms-auto");
+            messageDiv.classList.add("my-message");
             messageDiv.innerHTML = `
-                <div class="message-info text-end small text-secondary mb-1">
-                    <span class="fw-bold">Eu</span> • ${timestamp}
+                <div class="message-info text-end">
+                    <span class="fw-bold">${cleanUser} (Eu)</span> • ${timestamp}
                 </div>
-                <div class="message-content text-white p-3 rounded-4 shadow-sm" style="background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple)); border-top-right-radius: 0 !important; max-width: 85%;">
+                <div class="message-content">
                     ${cleanMessage}
                 </div>
             `;
         } else {
-            messageDiv.classList.add("other-message", "me-auto");
+            messageDiv.classList.add("other-message");
             messageDiv.innerHTML = `
-                <div class="message-info text-start small text-secondary mb-1">
-                    <span class="fw-bold text-dark">${cleanUser}</span> • ${timestamp}
+                <div class="message-info text-start">
+                    <span class="fw-bold">${cleanUser}</span> • ${timestamp}
                 </div>
-                <div class="message-content bg-white p-3 rounded-4 shadow-sm text-dark border" style="border-top-left-radius: 0 !important; max-width: 85%;">
+                <div class="message-content">
                     ${cleanMessage}
                 </div>
             `;
