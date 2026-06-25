@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
 
@@ -53,9 +54,10 @@ namespace K_Shelf.Hubs
         /// os utilizadores ativos no chat, juntamente com o nome do remetente e data.
         /// </summary>
         /// <param name="message">Conteúdo textual da mensagem.</param>
+        [Authorize]
         public async Task SendMessage(string message)
         {
-            // Obtém o nome ou email do utilizador autenticado
+            // Obtém o nome ou email do utilizador autenticado (já garantido pelo [Authorize])
             var username = Context.User?.Identity?.Name ?? "Anónimo";
 
             // Se for um email, podemos tentar retirar a parte antes do @ para ficar mais curto e simpático
