@@ -109,6 +109,94 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
+
+        // --- AUTOCREATE PHOTOCARD TABLES ---
+        try
+        {
+            // 1. Criar a tabela de histórico de migrações se não existir
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+                BEGIN
+                    CREATE TABLE [__EFMigrationsHistory] (
+                        [MigrationId] nvarchar(150) NOT NULL CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY,
+                        [ProductVersion] nvarchar(32) NOT NULL
+                    );
+                END");
+
+            // 2. Registar todas as migrações padrão e a nova de photocards como 'aplicadas'
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '00000000000000_CreateIdentitySchema')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('00000000000000_CreateIdentitySchema', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260318112154_InitialCreate')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260318112154_InitialCreate', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260527093034_InitialIdentity')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260527093034_InitialIdentity', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260527105228_Artistas')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260527105228_Artistas', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260603095412_CriarTabelasNovas')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260603095412_CriarTabelasNovas', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260625181812_AddAlbunsToArtista')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260625181812_AddAlbunsToArtista', '8.0.0');
+                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260625215000_AddPhotocardModels')
+                    INSERT INTO [__EFMigrationsHistory] VALUES ('20260625215000_AddPhotocardModels', '8.0.0');
+            ");
+
+            // 3. Criar a tabela Photocards caso não exista
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF OBJECT_ID(N'[Photocards]') IS NULL
+                BEGIN
+                    CREATE TABLE [Photocards] (
+                        [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_Photocards] PRIMARY KEY,
+                        [Versao] nvarchar(100) NOT NULL,
+                        [ImagemUrl] nvarchar(max) NOT NULL,
+                        [ArtistaId] int NOT NULL CONSTRAINT [FK_Photocards_Artistas_ArtistaId] REFERENCES [Artistas]([Id]) ON DELETE CASCADE,
+                        [AlbumId] int NULL CONSTRAINT [FK_Photocards_Albuns_AlbumId] REFERENCES [Albuns]([Id]) ON DELETE NO ACTION
+                    );
+                END");
+
+            // 4. Criar a tabela UtilizadorPhotocards caso não exista
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF OBJECT_ID(N'[UtilizadorPhotocards]') IS NULL
+                BEGIN
+                    CREATE TABLE [UtilizadorPhotocards] (
+                        [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_UtilizadorPhotocards] PRIMARY KEY,
+                        [UtilizadorId] nvarchar(450) NOT NULL CONSTRAINT [FK_UtilizadorPhotocards_AspNetUsers_UtilizadorId] REFERENCES [AspNetUsers]([Id]) ON DELETE CASCADE,
+                        [PhotocardId] int NOT NULL CONSTRAINT [FK_UtilizadorPhotocards_Photocards_PhotocardId] REFERENCES [Photocards]([Id]) ON DELETE CASCADE,
+                        [Estado] int NOT NULL,
+                        [Quantidade] int NOT NULL,
+                        [Notas] nvarchar(200) NULL
+                    );
+                END");
+
+            // 5. Criar índices caso não existam
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Photocards_ArtistaId' AND object_id = OBJECT_ID('[Photocards]'))
+                    CREATE INDEX [IX_Photocards_ArtistaId] ON [Photocards] ([ArtistaId]);
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Photocards_AlbumId' AND object_id = OBJECT_ID('[Photocards]'))
+                    CREATE INDEX [IX_Photocards_AlbumId] ON [Photocards] ([AlbumId]);
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_UtilizadorPhotocards_UtilizadorId' AND object_id = OBJECT_ID('[UtilizadorPhotocards]'))
+                    CREATE INDEX [IX_UtilizadorPhotocards_UtilizadorId] ON [UtilizadorPhotocards] ([UtilizadorId]);
+                IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_UtilizadorPhotocards_PhotocardId' AND object_id = OBJECT_ID('[UtilizadorPhotocards]'))
+                    CREATE INDEX [IX_UtilizadorPhotocards_PhotocardId] ON [UtilizadorPhotocards] ([PhotocardId]);
+            ");
+
+            // 6. Atualizar as URLs dos photocards de sementeira com as novas imagens locais da pasta
+            await context.Database.ExecuteSqlRawAsync(@"
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jkphoto.png' WHERE [Versao] = 'Selfie Ver. 1';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jkphoto1.jpg' WHERE [Versao] = 'Concept Photo Black Swan';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/hanniphoto.png' WHERE [Versao] = 'Bunnies Beach Bag Ver. Hanni';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/hanniphoto1.jpg' WHERE [Versao] = 'ETA Concept Card';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/felixphoto.png' WHERE [Versao] = 'Limited Edition S-Class Selfie';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/felixphoto22.jpg' WHERE [Versao] = 'Soundwave POB (Pre-Order)';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jenniephoto.jpg' WHERE [Versao] = 'Pink Ice Cream Selfie';
+                UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jakephoto.jpeg' WHERE [Versao] = 'Dark Blood Orange Ver.';
+            ");
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogWarning(ex, "Aviso ao criar tabelas de photocards.");
+        }
         
         // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);

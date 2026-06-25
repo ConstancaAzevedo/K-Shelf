@@ -368,9 +368,10 @@ namespace K_Shelf.Data
             // ==========================================
             // 6. ENHYPEN -- NOVO!
             // ==========================================
-            if (!await context.Grupos.AnyAsync(g => g.Nome == "ENHYPEN"))
+            var enhypen = await context.Grupos.FirstOrDefaultAsync(g => g.Nome == "ENHYPEN");
+            if (enhypen == null)
             {
-                var enhypen = new Grupo
+                enhypen = new Grupo
                 {
                     Nome = "ENHYPEN",
                     DataEstreia = new DateTime(2020, 11, 30),
@@ -381,8 +382,12 @@ namespace K_Shelf.Data
                 };
                 context.Grupos.Add(enhypen);
                 await context.SaveChangesAsync();
+            }
 
-                var jungwon = new Artista
+            var jungwon = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Jungwon" && a.GrupoId == enhypen.Id);
+            if (jungwon == null)
+            {
+                jungwon = new Artista
                 {
                     Nome = "Yang Jung-won",
                     NomeArtistico = "Jungwon",
@@ -394,8 +399,13 @@ namespace K_Shelf.Data
                     IsAtivo = true,
                     GrupoId = enhypen.Id
                 };
+                context.Artistas.Add(jungwon);
+            }
 
-                var niki = new Artista
+            var niki = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Ni-ki" && a.GrupoId == enhypen.Id);
+            if (niki == null)
+            {
+                niki = new Artista
                 {
                     Nome = "Nishimura Riki",
                     NomeArtistico = "Ni-ki",
@@ -407,11 +417,32 @@ namespace K_Shelf.Data
                     IsAtivo = true,
                     GrupoId = enhypen.Id
                 };
+                context.Artistas.Add(niki);
+            }
 
-                context.Artistas.AddRange(jungwon, niki);
-                await context.SaveChangesAsync();
+            var jake = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Jake" && a.GrupoId == enhypen.Id);
+            if (jake == null)
+            {
+                jake = new Artista
+                {
+                    Nome = "Sim Jae-yun",
+                    NomeArtistico = "Jake",
+                    DataNascimento = new DateTime(2002, 11, 15),
+                    Posicao = "Vocalista, Rapper, Dançarino",
+                    Nacionalidade = "Australiana",
+                    ImagemUrl = "/imagens/jakephoto.jpeg",
+                    DataEntrada = new DateTime(2020, 11, 30),
+                    IsAtivo = true,
+                    GrupoId = enhypen.Id
+                };
+                context.Artistas.Add(jake);
+            }
+            await context.SaveChangesAsync();
 
-                var darkBlood = new Album
+            var darkBlood = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "DARK BLOOD" && a.GrupoId == enhypen.Id);
+            if (darkBlood == null)
+            {
+                darkBlood = new Album
                 {
                     Titulo = "DARK BLOOD",
                     DataLancamento = new DateTime(2023, 5, 22),
@@ -422,7 +453,10 @@ namespace K_Shelf.Data
                 };
                 context.Albuns.Add(darkBlood);
                 await context.SaveChangesAsync();
+            }
 
+            if (!await context.Musicas.AnyAsync(m => m.AlbumId == darkBlood.Id))
+            {
                 context.Musicas.AddRange(
                     new Musica { Titulo = "Bite Me", Duracao = "2:37", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = darkBlood.Id },
                     new Musica { Titulo = "Sacrifice (Eat Me Up)", Duracao = "3:22", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = darkBlood.Id },
@@ -545,6 +579,66 @@ namespace K_Shelf.Data
                 );
                 await context.SaveChangesAsync();
             }
+
+            // ==========================================
+            // Seeding Photocards
+            // ==========================================
+            var photoJungkook = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Jungkook");
+            var photoHanni = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Hanni");
+            var photoFelix = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Felix");
+            var photoJennie = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Jennie");
+            var photoJake = await context.Artistas.FirstOrDefaultAsync(a => a.NomeArtistico == "Jake");
+
+            var albumMapOfTheSoul = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "Map of the Soul: 7");
+            var albumGetUp = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "Get Up");
+            var albumFiveStar = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "★★★★★ (5-STAR)" || a.Titulo == "????? (5-STAR)");
+            var albumTheAlbum = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "The Album");
+            var albumDarkBlood = await context.Albuns.FirstOrDefaultAsync(a => a.Titulo == "DARK BLOOD");
+
+            // Método local auxiliar para assegurar a criação do photocard de forma idempotente
+            async Task EnsurePhotocardAsync(string versao, string imagemUrl, int artistaId, int? albumId)
+            {
+                if (!await context.Photocards.AnyAsync(p => p.Versao == versao && p.ArtistaId == artistaId))
+                {
+                    context.Photocards.Add(new Photocard
+                    {
+                        Versao = versao,
+                        ImagemUrl = imagemUrl,
+                        ArtistaId = artistaId,
+                        AlbumId = albumId
+                    });
+                }
+            }
+
+            if (photoJungkook != null)
+            {
+                await EnsurePhotocardAsync("Selfie Ver. 1", "/imagens/jkphoto.png", photoJungkook.Id, albumMapOfTheSoul?.Id);
+                await EnsurePhotocardAsync("Concept Photo Black Swan", "/imagens/jkphoto1.jpg", photoJungkook.Id, albumMapOfTheSoul?.Id);
+            }
+
+            if (photoHanni != null)
+            {
+                await EnsurePhotocardAsync("Bunnies Beach Bag Ver. Hanni", "/imagens/hanniphoto.png", photoHanni.Id, albumGetUp?.Id);
+                await EnsurePhotocardAsync("ETA Concept Card", "/imagens/hanniphoto1.jpg", photoHanni.Id, albumGetUp?.Id);
+            }
+
+            if (photoFelix != null)
+            {
+                await EnsurePhotocardAsync("Limited Edition S-Class Selfie", "/imagens/felixphoto.png", photoFelix.Id, albumFiveStar?.Id);
+                await EnsurePhotocardAsync("Soundwave POB (Pre-Order)", "/imagens/felixphoto22.jpg", photoFelix.Id, albumFiveStar?.Id);
+            }
+
+            if (photoJennie != null)
+            {
+                await EnsurePhotocardAsync("Pink Ice Cream Selfie", "/imagens/jenniephoto.jpg", photoJennie.Id, albumTheAlbum?.Id);
+            }
+
+            if (photoJake != null)
+            {
+                await EnsurePhotocardAsync("Dark Blood Orange Ver.", "/imagens/jakephoto.jpeg", photoJake.Id, albumDarkBlood?.Id);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }

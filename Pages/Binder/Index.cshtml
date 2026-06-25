@@ -1,0 +1,314 @@
+@page
+@model K_Shelf.Pages.Binder.IndexModel
+@{
+    ViewData["Title"] = "O Meu Binder de Photocards";
+}
+
+<style>
+    /* Estilos Premium para o Efeito de Rotação 3D do Binder */
+    .photocard-perspective {
+        perspective: 1000px;
+        aspect-ratio: 2.55 / 3.55;
+        border-radius: 1.25rem;
+    }
+
+    .photocard-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-style: preserve-3d;
+        border-radius: 1.25rem;
+    }
+
+    /* Rotação no Hover */
+    .photocard-perspective:hover .photocard-card-inner {
+        transform: rotateY(180deg);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .photocard-front, .photocard-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border-radius: 1.25rem;
+        overflow: hidden;
+    }
+
+    .photocard-front {
+        background-color: #eee;
+    }
+
+    .photocard-back {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem;
+        border: 1px solid rgba(255,255,255,0.4);
+    }
+</style>
+
+<!-- Mensagens de Feedback -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <!-- Cabeçalho -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-7">
+            <h1 class="title-kpop display-4 fw-bold">O Meu Binder</h1>
+            <p class="text-secondary lead">Gerencie os seus photocards pessoais, a sua wishlist e os cards duplicados disponíveis para trocas.</p>
+        </div>
+        <div class="col-lg-5 text-lg-end">
+            <a asp-page="./Catalogo" class="btn btn-outline-secondary rounded-pill px-4 py-2">🔍 Ver Catálogo Geral</a>
+        </div>
+    </div>
+
+    <!-- Abas de Filtros por Estado -->
+    <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+        <a asp-page="./Index" class="btn rounded-pill px-4 py-2 @(Model.FilterEstado == null ? "btn-kpop" : "btn-outline-secondary")">
+            📂 Todos (@(Model.TotalPossuiCount + Model.TotalDesejaCount + Model.TotalParaTrocaCount))
+        </a>
+        <a asp-page="./Index" asp-route-FilterEstado="Possui" class="btn rounded-pill px-4 py-2 @(Model.FilterEstado == K_Shelf.Models.EstadoPhotocard.Possui ? "btn-kpop" : "btn-outline-secondary")">
+            💖 Coleção (@Model.TotalPossuiCount)
+        </a>
+        <a asp-page="./Index" asp-route-FilterEstado="Deseja" class="btn rounded-pill px-4 py-2 @(Model.FilterEstado == K_Shelf.Models.EstadoPhotocard.Deseja ? "btn-kpop" : "btn-outline-secondary")">
+            ⭐ Wishlist (@Model.TotalDesejaCount)
+        </a>
+        <a asp-page="./Index" asp-route-FilterEstado="ParaTroca" class="btn rounded-pill px-4 py-2 @(Model.FilterEstado == K_Shelf.Models.EstadoPhotocard.ParaTroca ? "btn-kpop" : "btn-outline-secondary")">
+            🔄 Para Troca (@Model.TotalParaTrocaCount)
+        </a>
+    </div>
+
+    <!-- Barra de Pesquisa Rápida -->
+    <div class="glass-panel p-3 mb-5 shadow-sm">
+        <form method="get" class="row g-2 justify-content-center align-items-center">
+            <div class="col-md-5">
+                <input type="text" asp-for="SearchQuery" class="form-control rounded-pill search-input-kpop" placeholder="Pesquisar por versão ou artista..." />
+                @if (Model.FilterEstado.HasValue)
+                {
+                    <input type="hidden" name="FilterEstado" value="@Model.FilterEstado.Value" />
+                }
+            </div>
+            <div class="col-md-3">
+                <select asp-for="GrupoFilter" class="form-select rounded-pill search-input-kpop" asp-items="Model.GruposSelectList">
+                    <option value="">Todos os Grupos</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-kpop w-100 rounded-pill py-2">Pesquisar</button>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.SearchQuery) || Model.GrupoFilter.HasValue)
+            {
+                <div class="col-md-2 text-center">
+                    <a asp-page="./Index" asp-route-FilterEstado="@Model.FilterEstado" class="btn btn-outline-secondary rounded-pill w-100 py-1.5" style="font-size: 0.85rem;">Limpar</a>
+                </div>
+            }
+        </form>
+    </div>
+
+    <!-- Grelha de Cartões Flip 3D (Simulação de Dossier) -->
+    @if (Model.BinderCards != null && Model.BinderCards.Any())
+    {
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
+            @foreach (var item in Model.BinderCards)
+            {
+                @if (item.Photocard != null)
+                {
+                    <div class="col">
+                        <div class="photocard-perspective shadow-sm position-relative">
+                            <div class="photocard-card-inner">
+                                <!-- Frente do Photocard (Imagem) -->
+                                <div class="photocard-front">
+                                    <img src="@item.Photocard.ImagemUrl" alt="Frente do Card" style="width:100%; height:100%; object-fit:cover;" />
+                                    <!-- Selo rápido do Estado -->
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        @if (item.Estado == K_Shelf.Models.EstadoPhotocard.Possui)
+                                        {
+                                            <span class="badge bg-success rounded-pill px-2.5">💖 Coleção</span>
+                                        }
+                                        else if (item.Estado == K_Shelf.Models.EstadoPhotocard.Deseja)
+                                        {
+                                            <span class="badge bg-warning text-dark rounded-pill px-2.5">⭐ Wishlist</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-info text-dark rounded-pill px-2.5">🔄 Troca</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Verso do Photocard (Dados + Botões) -->
+                                <div class="photocard-back">
+                                    <div class="w-100 text-center">
+                                        <span class="badge bg-light border text-dark rounded-pill px-2.5 py-1 mb-1" style="font-size: 0.75rem;">
+                                            🎤 @(item.Photocard.Artista?.NomeArtistico ?? "Artista")
+                                        </span>
+                                        <h6 class="fw-bold mb-0 text-truncate text-dark" title="@(item.Photocard.Artista?.Grupo?.Nome ?? item.Photocard.Artista?.Solista?.Nome ?? "Solista")">
+                                            @(item.Photocard.Artista?.Grupo?.Nome ?? item.Photocard.Artista?.Solista?.Nome ?? "Solista")
+                                        </h6>
+                                        <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Versao">🎴 @item.Photocard.Versao</small>
+                                        
+                                        @if (item.Photocard.Album != null)
+                                        {
+                                            <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Album.Titulo">💿 @item.Photocard.Album.Titulo</small>
+                                        }
+                                    </div>
+
+                                    <!-- Detalhes do Registo -->
+                                    <div class="w-100 my-2 text-start px-1" style="font-size: 0.85rem;">
+                                        <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+                                            <span class="text-secondary">Quantidade:</span>
+                                            <span class="fw-bold text-dark">@item.Quantidade</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-secondary d-block">Notas:</span>
+                                            <span class="text-dark d-block text-truncate-2" style="max-height: 40px; overflow: hidden; line-height: 1.2; font-style: italic;" title="@item.Notas">
+                                                @(string.IsNullOrWhiteSpace(item.Notas) ? "Sem notas adicionais." : item.Notas)
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ações do Utilizador -->
+                                    <div class="w-100 mt-2">
+                                        <div class="d-flex gap-1.5 w-100">
+                                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#editCardModal"
+                                                    data-id="@item.Id"
+                                                    data-title="@item.Photocard.Versao"
+                                                    data-qty="@item.Quantidade"
+                                                    data-notes="@item.Notas">
+                                                ✏️ Editar
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill flex-grow-1"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#removeCardModal"
+                                                    data-id="@item.Id"
+                                                    data-title="@item.Photocard.Versao">
+                                                🗑️ Sair
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    }
+    else
+    {
+        <div class="glass-panel p-5 text-center text-secondary">
+            <p style="font-size: 3rem;">📖</p>
+            <h4 class="fw-bold text-dark">Dossiê Vazio</h4>
+            <p class="mb-0">Ainda não tens photocards neste estado no teu Binder. Vai ao catálogo para adicionares os teus primeiros cards!</p>
+            <a asp-page="./Catalogo" class="btn btn-kpop rounded-pill px-4 mt-3">Ir para o Catálogo</a>
+        </div>
+    }
+</div>
+
+<!-- Modal para Editar Photocard no Binder -->
+<div class="modal fade" id="editCardModal" tabindex="-1" aria-labelledby="editCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-panel text-dark" style="border: 1px solid rgba(255,255,255,0.4); background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="editCardModalLabel">✏️ Editar Registo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-page-handler="Editar">
+                <div class="modal-body">
+                    <input type="hidden" id="editEntryId" name="Id" />
+                    
+                    <div class="text-center mb-3">
+                        <h6 id="editPhotocardTitle" class="fw-bold mb-0 text-dark"></h6>
+                    </div>
+
+                    <!-- Quantidade -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark">Quantidade</label>
+                        <input type="number" id="editQuantidade" name="editQuantidade" min="1" max="100" class="form-control search-input-kpop rounded-pill" required />
+                    </div>
+
+                    <!-- Notas -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-dark">Notas Pessoais</label>
+                        <input type="text" id="editNotas" name="editNotas" class="form-control search-input-kpop rounded-pill" placeholder="Notas sobre o estado do cartão ou trocas" />
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-kpop rounded-pill px-4">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação para Remover Photocard -->
+<div class="modal fade" id="removeCardModal" tabindex="-1" aria-labelledby="removeCardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-panel text-dark" style="border: 1px solid rgba(255,255,255,0.4); background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="removeCardModalLabel">🗑️ Remover do Binder</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-page-handler="Remover">
+                <div class="modal-body">
+                    <input type="hidden" id="removeEntryId" name="Id" />
+                    <p class="text-secondary mb-0">Tens a certeza que queres remover o photocard <strong id="removePhotocardTitle" class="text-dark"></strong> do teu Binder?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Remover</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Configurar dados dinâmicos nos Modais
+        const editCardModal = document.getElementById('editCardModal');
+        if (editCardModal) {
+            editCardModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const title = button.getAttribute('data-title');
+                const qty = button.getAttribute('data-qty');
+                const notes = button.getAttribute('data-notes');
+
+                document.getElementById('editEntryId').value = id;
+                document.getElementById('editPhotocardTitle').textContent = title;
+                document.getElementById('editQuantidade').value = qty;
+                document.getElementById('editNotas').value = notes || '';
+            });
+        }
+
+        const removeCardModal = document.getElementById('removeCardModal');
+        if (removeCardModal) {
+            removeCardModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const id = button.getAttribute('data-id');
+                const title = button.getAttribute('data-title');
+
+                document.getElementById('removeEntryId').value = id;
+                document.getElementById('removePhotocardTitle').textContent = title;
+            });
+        }
+    </script>
+}

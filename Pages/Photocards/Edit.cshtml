@@ -1,0 +1,72 @@
+@page
+@model K_Shelf.Pages.Photocards.EditModel
+@{
+    ViewData["Title"] = "Editar Photocard - Admin";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-panel p-4 shadow-sm">
+                <!-- Cabeçalho -->
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">✏️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0">Editar Photocard</h2>
+                        <p class="text-secondary mb-0">Modifique os dados do photocard no catálogo.</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+                    <input type="hidden" asp-for="Photocard.Id" />
+
+                    <!-- Versão/Legenda -->
+                    <div class="mb-3">
+                        <label asp-for="Photocard.Versao" class="form-label fw-bold">Versão / Legenda</label>
+                        <input asp-for="Photocard.Versao" class="form-control search-input-kpop" placeholder="Ex: Selfie Ver. A, Concept Photo" />
+                        <span asp-validation-for="Photocard.Versao" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Imagem URL -->
+                    <div class="mb-3">
+                        <label asp-for="Photocard.ImagemUrl" class="form-label fw-bold">URL da Imagem</label>
+                        <input asp-for="Photocard.ImagemUrl" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Photocard.ImagemUrl" class="text-danger small"></span>
+                        <div class="form-text text-secondary">Insira um link direto para a imagem do photocard ou deixe em branco para usar a imagem padrão.</div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Artista -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Photocard.ArtistaId" class="form-label fw-bold">Artista Retratado</label>
+                            <select asp-for="Photocard.ArtistaId" class="form-select search-input-kpop" asp-items="Model.ArtistasSelectList">
+                                <option value="">-- Selecione o Artista --</option>
+                            </select>
+                            <span asp-validation-for="Photocard.ArtistaId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Álbum Associado (Opcional) -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Photocard.AlbumId" class="form-label fw-bold">Álbum Associado (Opcional)</label>
+                            <select asp-for="Photocard.AlbumId" class="form-select search-input-kpop" asp-items="Model.AlbunsSelectList">
+                                <option value="">-- Sem Álbum Associado --</option>
+                            </select>
+                            <span asp-validation-for="Photocard.AlbumId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="d-flex gap-2 justify-content-end mt-4">
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-kpop rounded-pill px-4">Guardar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,38 @@
+@page
+@model K_Shelf.Pages.Photocards.DeleteModel
+@{
+    ViewData["Title"] = "Eliminar Photocard - Admin";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm text-center">
+                <span class="fs-1 text-danger">⚠️</span>
+                <h3 class="fw-bold mt-2">Eliminar Photocard?</h3>
+                <p class="text-secondary">Esta ação é permanente e irá remover o photocard de todos os binders dos colecionadores.</p>
+
+                <!-- Detalhes do Cartão a Eliminar -->
+                <div class="my-4 d-flex flex-column align-items-center">
+                    <div class="rounded-4 overflow-hidden shadow-md mb-3" style="width: 140px; height: 200px;">
+                        <img src="@Model.Photocard.ImagemUrl" alt="Photocard" style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Photocard.Versao</h5>
+                    <p class="text-secondary mb-0">🎤 Artista: @(Model.Photocard.Artista?.NomeArtistico ?? "Sem Artista")</p>
+                    @if (Model.Photocard.Album != null)
+                    {
+                        <small class="text-muted">💿 Álbum: @Model.Photocard.Album.Titulo</small>
+                    }
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Photocard.Id" />
+                    <div class="d-flex gap-2 justify-content-center mt-4">
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Eliminar Definitivamente</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
