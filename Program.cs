@@ -6,9 +6,7 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =========================================================================
 // 1. CONFIGURAÇÃO DE SERVIÇOS (Dependency Injection)
-// =========================================================================
 
 // Configuração do contexto de Base de Dados (ApplicationDbContext) a usar SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
