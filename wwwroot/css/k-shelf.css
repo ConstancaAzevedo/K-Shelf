@@ -330,3 +330,97 @@ body {
 footer.footer-k-shelf {
     margin-top: auto;
 }
+
+/* =========================================================================
+   ESTILOS PARA O CHAT GLOBAL (SIGNALR)
+   ========================================================================= */
+.chat-messages-panel {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    padding: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    scrollbar-width: thin;
+    scrollbar-color: var(--kpop-pink) transparent;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages-panel::-webkit-scrollbar-thumb {
+    background-color: var(--kpop-pink);
+    border-radius: 6px;
+}
+
+.chat-message-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+    max-width: 75%;
+    clear: both;
+}
+
+.chat-message-wrapper.my-message {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.chat-message-wrapper.other-message {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.chat-message-wrapper .message-info {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-bottom: 0.2rem;
+}
+
+.chat-message-wrapper .message-content {
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-break: break-word;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.chat-message-wrapper.my-message .message-content {
+    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+    color: white;
+    border-top-right-radius: 4px;
+}
+
+.chat-message-wrapper.other-message .message-content {
+    background-color: white;
+    color: var(--kpop-dark);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-top-left-radius: 4px;
+}
+
+/* Animações de entrada para mensagens novas */
+@keyframes fadeInUpChat {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUpChat 0.3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.system-message {
+    align-self: center;
+}
+
+.system-message span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}

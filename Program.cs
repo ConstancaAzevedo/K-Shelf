@@ -32,6 +32,9 @@ builder.Services.AddDefaultIdentity<Utilizador>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Ativar suporte para comunicação em tempo real com SignalR
+builder.Services.AddSignalR();
+
 // Configuração do Swagger para documentação automática da API REST
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -97,6 +100,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
+
+// Mapear o endpoint do Hub do SignalR para o Chat e Contador de utilizadores
+app.MapHub<K_Shelf.Hubs.KpopChatHub>("/kpopChatHub");
 
 // =========================================================================
 // 3. INICIALIZAÇÃO E ALIMENTAÇÃO DA BASE DE DADOS (Seeding)
