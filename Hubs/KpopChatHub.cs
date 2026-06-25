@@ -54,7 +54,7 @@ namespace K_Shelf.Hubs
         /// os utilizadores ativos no chat, juntamente com o nome do remetente e data.
         /// </summary>
         /// <param name="message">Conteúdo textual da mensagem.</param>
-        [Authorize]
+        [Authorize(Roles = "User,Admin")]
         public async Task SendMessage(string message)
         {
             // Obtém o nome ou email do utilizador autenticado (já garantido pelo [Authorize])
