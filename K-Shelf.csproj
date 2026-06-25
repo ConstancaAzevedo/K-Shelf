@@ -23,4 +23,9 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Pages\Admin\Roles\" />
+	  <Folder Include="Pages\Admin\Users\" />
+	</ItemGroup>
+
 </Project>

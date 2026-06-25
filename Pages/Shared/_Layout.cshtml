@@ -51,15 +51,10 @@
                         <!-- Menu Admin Extra -->
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/Dashboard">
                                     Administração
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="adminMenu">
-                                    <li><a class="dropdown-item" asp-page="/Colecoes/Index">Todas as Coleções</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-page="/MakeMeAdmin">Gestão de Utilizadores</a></li>
-                                </ul>
                             </li>
                         }
 
