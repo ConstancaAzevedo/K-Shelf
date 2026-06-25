@@ -16,23 +16,38 @@
                     </div>
                 </div>
 
+                <!-- Mensagens de Erro/Sucesso -->
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
                     <!-- Nome -->
                     <div class="mb-3">
-                        <label asp-for="Colecao.Nome" class="form-label fw-bold"></label>
+                        <label asp-for="Colecao.Nome" class="form-label fw-bold">
+                            Nome da Coleção <span class="text-danger">*</span>
+                        </label>
                         <input asp-for="Colecao.Nome" class="form-control search-input-kpop"
-                               placeholder="Ex: Favoritos de Todos os Tempos" />
+                               placeholder="Ex: Favoritos de Todos os Tempos"
+                               maxlength="100" />
                         <span asp-validation-for="Colecao.Nome" class="text-danger small"></span>
+                        <small class="text-muted d-block">Mínimo 3 caracteres, máximo 100.</small>
                     </div>
 
                     <!-- Descrição -->
                     <div class="mb-4">
-                        <label asp-for="Colecao.Descricao" class="form-label fw-bold"></label>
+                        <label asp-for="Colecao.Descricao" class="form-label fw-bold">Descrição</label>
                         <textarea asp-for="Colecao.Descricao" class="form-control search-input-kpop"
-                                  rows="3" placeholder="Descreva a sua coleção..."></textarea>
+                                  rows="3" placeholder="Descreva a sua coleção..."
+                                  maxlength="500"></textarea>
                         <span asp-validation-for="Colecao.Descricao" class="text-danger small"></span>
+                        <small class="text-muted d-block">Máximo 500 caracteres.</small>
                     </div>
 
                     <div class="d-flex gap-2">
