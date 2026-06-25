@@ -1,0 +1,90 @@
+@page
+@model K_Shelf.Pages.Photocards.IndexModel
+@{
+    ViewData["Title"] = "Gestão de Photocards - Admin";
+}
+
+<!-- Mensagens de Feedback -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <!-- Cabeçalho -->
+    <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+        <div>
+            <h1 class="title-kpop display-5 fw-bold">Gestão de Photocards</h1>
+            <p class="text-secondary lead mb-0">Adicione e controle as versões de photocards disponíveis no catálogo.</p>
+        </div>
+        <div>
+            <a asp-page="./Create" class="btn btn-kpop rounded-pill px-4">Adicionar Photocard</a>
+        </div>
+    </div>
+
+    <!-- Tabela Geral -->
+    <div class="glass-panel p-4 shadow-sm overflow-hidden">
+        @if (Model.Photocards != null && Model.Photocards.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle text-dark mb-0">
+                    <thead class="text-secondary">
+                        <tr>
+                            <th scope="col" style="width: 80px;">Imagem</th>
+                            <th scope="col">Versão/Legenda</th>
+                            <th scope="col">Artista</th>
+                            <th scope="col">Álbum Associado</th>
+                            <th scope="col" class="text-end" style="width: 180px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Photocards)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="rounded-3 overflow-hidden shadow-sm" style="width: 50px; height: 70px;">
+                                        <img src="@item.ImagemUrl" alt="@item.Versao" style="width: 100%; height: 100%; object-fit: cover;" />
+                                    </div>
+                                </td>
+                                <td class="fw-bold">@item.Versao</td>
+                                <td>
+                                    <span class="badge bg-light text-dark rounded-pill border py-1.5 px-3">
+                                        🎤 @(item.Artista?.NomeArtistico ?? "Desconhecido")
+                                    </span>
+                                </td>
+                                <td class="text-secondary">
+                                    @(item.Album?.Titulo ?? "Sem Álbum Associado")
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill px-3">✏️ Editar</a>
+                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-secondary">
+                <p style="font-size: 3rem;">🎴</p>
+                <h5 class="fw-bold">Nenhum photocard registado</h5>
+                <p>Crie o primeiro photocard utilizando o botão acima.</p>
+            </div>
+        }
+    </div>
+</div>
