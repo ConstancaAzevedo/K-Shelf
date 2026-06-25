@@ -7,21 +7,52 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index">Perfil do @User.Identity?.Name!</a>
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                <img src="~/imagens/user.png" class="icon-white-img" alt="User" style="width: 18px; height: 18px; object-fit: contain; margin-right: 6px;" />
+                Perfil do @User.Identity?.Name
+            </a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-white border-0 py-2" style="text-decoration: none; background: transparent;">Logout</button>
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" onsubmit="return confirmarLogout()">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-link btn btn-link text-white d-flex align-items-center gap-1"
+                        style="border: none; background: none; cursor: pointer; padding: 0.5rem 1rem;">
+                    <img src="~/imagens/logout.png" class="icon-white-img" alt="Logout" style="width: 18px; height: 18px; object-fit: contain;" />
+                    Logout
+                </button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Registo</a>
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">
+                <img src="~/imagens/registar.png" class="icon-white-img" alt="Registar" style="width: 18px; height: 18px; object-fit: contain; margin-right: 4px;" />
+                Registar
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">
+                <img src="~/imagens/login.png" class="icon-white-img" alt="Login" style="width: 18px; height: 18px; object-fit: contain; margin-right: 4px;" />
+                Login
+            </a>
         </li>
     }
 </ul>
+
+<script>
+    function confirmarLogout() {
+        return confirm('Tem a certeza que pretende terminar a sessão?');
+    }
+</script>
+
+<style>
+    /* Inverter cores para ficar branco (se a imagem for preta) */
+    .icon-white-img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: invert(1) brightness(100);
+    flex-shrink: 0;
+    }
+</style>
