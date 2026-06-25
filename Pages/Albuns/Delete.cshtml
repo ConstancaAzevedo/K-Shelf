@@ -5,11 +5,28 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
+
+    <!-- Mensagens de Feedback -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show rounded-3" role="alert">
+            @TempData["WarningMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div class="glass-panel p-4 shadow-sm">
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🗑️</span>
                     <div>
                         <h2 class="fw-bold mb-0 text-danger">Eliminar Álbum</h2>
                         <p class="text-secondary mb-0">Esta ação é irreversível</p>
@@ -17,7 +34,7 @@
                 </div>
 
                 <div class="alert alert-warning rounded-3 mb-4">
-                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar este álbum?</h5>
+                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar este álbum?</h5>
                     @if (Model.ColecoesCont > 0)
                     {
                         <p class="mb-0">Este álbum está presente em <strong>@Model.ColecoesCont coleção(ões)</strong> e será removido de todas elas.</p>
@@ -47,11 +64,11 @@
                         <p class="text-secondary mb-1">
                             @if (Model.Album.Grupo != null)
                             {
-                                <span>👥 @Model.Album.Grupo.Nome</span>
+                                <span>@Model.Album.Grupo.Nome</span>
                             }
                             else if (Model.Album.Solista != null)
                             {
-                                <span>🎤 @Model.Album.Solista.Nome</span>
+                                <span>@Model.Album.Solista.Nome</span>
                             }
                         </p>
                         <div class="d-flex gap-2">
@@ -59,8 +76,8 @@
                             <span class="badge-neon-purple">@Model.Album.Edicao</span>
                         </div>
                         <small class="text-secondary mt-1 d-block">
-                            📅 @Model.Album.DataLancamento.ToString("dd/MM/yyyy") •
-                            🎵 @(Model.Album.Musicas?.Count ?? 0) músicas
+                            @Model.Album.DataLancamento.ToString("dd/MM/yyyy") •
+                            @(Model.Album.Musicas?.Count ?? 0) músicas
                         </small>
                     </div>
                 </div>
@@ -68,7 +85,7 @@
                 <form method="post">
                     <input type="hidden" asp-for="Album.Id" />
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button>
                         <a asp-page="./Details" asp-route-id="@Model.Album.Id" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
                     </div>
                 </form>
