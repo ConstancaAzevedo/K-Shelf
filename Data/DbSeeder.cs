@@ -474,9 +474,7 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
             }
 
-            // ==========================================
-            // 8. NMIXX -- NOVO!
-            // ==========================================
+            // 8. NMIXX ==========================================
             if (!await context.Grupos.AnyAsync(g => g.Nome == "NMIXX"))
             {
                 var nmixx = new Grupo
