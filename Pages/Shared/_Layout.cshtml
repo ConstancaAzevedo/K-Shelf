@@ -43,10 +43,9 @@
 
                         
                         <!-- Menu User Extra -->
-                        @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                        @if (User.IsInRole("User"))
                         {
                             <li class="nav-item"><a class="nav-link" asp-page="/Colecoes/Index">Minhas Coleções</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-page="/Chat">Chat K-Pop</a></li>
                         }
 
                         <!-- Menu Admin Extra -->
@@ -64,6 +63,7 @@
                             </li>
                         }
 
+                        <li class="nav-item"><a class="nav-link" asp-page="/Chat">Chat K-Pop</a></li>
                         
                     }
                 </ul>
