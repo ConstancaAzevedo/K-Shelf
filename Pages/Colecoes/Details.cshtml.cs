@@ -9,30 +9,48 @@ using System.Security.Claims;
 
 namespace K_Shelf.Pages.Colecoes
 {
+    /// <summary>
+    /// Modelo de Página para os detalhes de uma Coleção específica.
+    /// Exige autenticação de utilizador. Permite ver álbuns inseridos, adicionar novos ou removê-los.
+    /// </summary>
     [Authorize]
     public class DetailsModel : PageModel
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Construtor do DetailsModel.
+        /// </summary>
+        /// <param name="context">Contexto da base de dados injetado.</param>
         public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>A coleção cujos detalhes estão a ser consultados.</summary>
         public Colecao Colecao { get; set; } = default!;
+
+        /// <summary>Indica se o utilizador autenticado é o dono desta coleção.</summary>
         public bool IsOwner { get; set; }
 
-        // Para adicionar álbuns à coleção
+        /// <summary>Lista de seleção (dropdown) com álbuns do sistema disponíveis para adicionar.</summary>
         public SelectList AlbunsDisponiveis { get; set; } = default!;
 
+        /// <summary>Propriedade ligada ao formulário para armazenar o ID do álbum selecionado para adicionar.</summary>
         [BindProperty]
         public int AlbumIdParaAdicionar { get; set; }
 
+        /// <summary>
+        /// Carrega os dados da coleção, valida se o utilizador tem permissões de acesso,
+        /// e carrega a lista de álbuns elegíveis para adição.
+        /// </summary>
+        /// <param name="id">ID da coleção.</param>
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
                 return NotFound();
 
+            // Carrega a coleção incluindo as relações muitos-para-muitos com Álbuns e respetivos criadores (Grupos/Solistas)
             var colecao = await _context.Colecoes
                 .Include(c => c.AlbumColecoes!)
                     .ThenInclude(ac => ac.Album)
@@ -46,7 +64,7 @@ namespace K_Shelf.Pages.Colecoes
             if (colecao == null)
                 return NotFound();
 
-            // Só o dono ou Admin pode ver detalhes
+            // Regra de Controlo de Acesso: Apenas o dono ou um Administrador pode ver os detalhes da coleção
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
                 return Forbid();
@@ -54,7 +72,7 @@ namespace K_Shelf.Pages.Colecoes
             Colecao = colecao;
             IsOwner = colecao.UtilizadorId == userId;
 
-            // Carregar álbuns que ainda não estão na coleção
+            // Carrega apenas os álbuns que ainda NÃO pertencem a esta coleção
             var albumIdsNaColecao = colecao.AlbumColecoes?.Select(ac => ac.AlbumId).ToList() ?? new List<int>();
             var albunsPossiveis = await _context.Albuns
                 .Include(a => a.Grupo)
@@ -63,6 +81,7 @@ namespace K_Shelf.Pages.Colecoes
                 .OrderBy(a => a.Titulo)
                 .ToListAsync();
 
+            // Monta a lista do dropdown com "Título do Álbum — Nome do Artista/Grupo"
             AlbunsDisponiveis = new SelectList(
                 albunsPossiveis.Select(a => new {
                     a.Id,
@@ -74,18 +93,22 @@ namespace K_Shelf.Pages.Colecoes
             return Page();
         }
 
-        // Adicionar álbum à coleção
+        /// <summary>
+        /// Endpoint POST para associar um novo álbum à coleção do utilizador.
+        /// </summary>
+        /// <param name="id">ID da coleção.</param>
         public async Task<IActionResult> OnPostAdicionarAlbumAsync(int id)
         {
             var colecao = await _context.Colecoes.FindAsync(id);
             if (colecao == null)
                 return NotFound();
 
+            // Garante que só o proprietário ou Admin podem adicionar álbuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
                 return Forbid();
 
-            // Verificar se o álbum já está na coleção
+            // Evita duplicações de registo na tabela Muitos-para-Muitos
             var jaExiste = await _context.AlbumColecoes
                 .AnyAsync(ac => ac.AlbumId == AlbumIdParaAdicionar && ac.ColecaoId == id);
 
@@ -104,13 +127,18 @@ namespace K_Shelf.Pages.Colecoes
             return RedirectToPage("./Details", new { id });
         }
 
-        // Remover álbum da coleção
+        /// <summary>
+        /// Endpoint POST para remover a associação de um álbum da coleção.
+        /// </summary>
+        /// <param name="id">ID da coleção.</param>
+        /// <param name="albumId">ID do álbum a remover.</param>
         public async Task<IActionResult> OnPostRemoverAlbumAsync(int id, int albumId)
         {
             var colecao = await _context.Colecoes.FindAsync(id);
             if (colecao == null)
                 return NotFound();
 
+            // Garante que só o proprietário ou Admin podem remover álbuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
                 return Forbid();

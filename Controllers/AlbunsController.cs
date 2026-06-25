@@ -1,6 +1,7 @@
 ﻿using K_Shelf.Data;
 using K_Shelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace K_Shelf.Controllers
@@ -23,6 +24,7 @@ namespace K_Shelf.Controllers
         /// Obtém todos os álbuns
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<object>>> GetAlbuns()
         {
             var albuns = await _context.Albuns
@@ -50,6 +52,7 @@ namespace K_Shelf.Controllers
         /// Obtém um álbum por ID, incluindo as músicas
         /// </summary>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<object>> GetAlbum(int id)
         {
             var album = await _context.Albuns
@@ -86,9 +89,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Cria um novo álbum
+        /// Cria um novo álbum (apenas Admin)
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Album>> PostAlbum(Album album)
         {
             if (!ModelState.IsValid)
@@ -101,9 +105,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Atualiza um álbum existente
+        /// Atualiza um álbum existente (apenas Admin)
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutAlbum(int id, Album album)
         {
             if (id != album.Id)
@@ -129,9 +134,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Elimina um álbum
+        /// Elimina um álbum (apenas Admin)
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteAlbum(int id)
         {
             var album = await _context.Albuns

@@ -1,6 +1,7 @@
 ﻿using K_Shelf.Data;
 using K_Shelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace K_Shelf.Controllers
@@ -23,6 +24,7 @@ namespace K_Shelf.Controllers
         /// Obtém todos os artistas
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<object>>> GetArtistas()
         {
             var artistas = await _context.Artistas
@@ -50,6 +52,7 @@ namespace K_Shelf.Controllers
         /// Obtém um artista por ID
         /// </summary>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<object>> GetArtista(int id)
         {
             var artista = await _context.Artistas
@@ -80,9 +83,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Cria um novo artista
+        /// Cria um novo artista (apenas Admin)
         /// </summary>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Artista>> PostArtista(Artista artista)
         {
             if (!ModelState.IsValid)
@@ -95,9 +99,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Atualiza um artista existente
+        /// Atualiza um artista existente (apenas Admin)
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> PutArtista(int id, Artista artista)
         {
             if (id != artista.Id)
@@ -123,9 +128,10 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Elimina um artista
+        /// Elimina um artista (apenas Admin)
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteArtista(int id)
         {
             var artista = await _context.Artistas.FindAsync(id);

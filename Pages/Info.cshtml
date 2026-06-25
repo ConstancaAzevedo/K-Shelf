@@ -1,4 +1,4 @@
-﻿@page
+@page
 @{
     ViewData["Title"] = "Informações do Projeto";
 }
@@ -69,47 +69,90 @@
 
                 <h6 class="fw-bold mt-3 mb-2">Backend & Framework:</h6>
                 <div class="d-flex gap-2 flex-wrap mb-3">
-                    <span class="badge-neon-pink">ASP.NET Core 8.0</span>
+                    <span class="badge-neon-pink">.NET 10.0</span>
+                    <span class="badge-neon-pink">ASP.NET Core 10.0</span>
                     <span class="badge-neon-pink">Razor Pages</span>
-                    <span class="badge-neon-pink">MVC</span>
+                    <span class="badge-neon-pink">MVC (API Controllers)</span>
                 </div>
 
                 <h6 class="fw-bold mt-3 mb-2">Persistência de Dados:</h6>
                 <div class="d-flex gap-2 flex-wrap mb-3">
-                    <span class="badge-neon-purple">Entity Framework Core</span>
+                    <span class="badge-neon-purple">Entity Framework Core 10.0</span>
                     <span class="badge-neon-purple">LINQ</span>
-                    <span class="badge-neon-purple">SQL Server</span>
+                    <span class="badge-neon-purple">SQL Server (LocalDB)</span>
                 </div>
 
                 <h6 class="fw-bold mt-3 mb-2">Autenticação & Autorização:</h6>
                 <div class="d-flex gap-2 flex-wrap mb-3">
                     <span class="badge-neon-success">ASP.NET Core Identity</span>
-                    <span class="badge-neon-success">Role-Based Access Control</span>
+                    <span class="badge-neon-success">Role-Based Access Control (RBAC)</span>
                 </div>
 
                 <h6 class="fw-bold mt-3 mb-2">Frontend & UI:</h6>
                 <div class="d-flex gap-2 flex-wrap mb-3">
                     <span class="badge bg-info text-white">Bootstrap 5.3.0</span>
                     <span class="badge bg-info text-white">HTML5</span>
-                    <span class="badge bg-info text-white">CSS3</span>
+                    <span class="badge bg-info text-white">CSS3 Customizado</span>
                     <span class="badge bg-info text-white">JavaScript</span>
-                    <span class="badge bg-info text-white">jQuery (via Bootstrap)</span>
+                    <span class="badge bg-info text-white">jQuery</span>
                 </div>
 
                 <h6 class="fw-bold mt-3 mb-2">Ferramentas de Desenvolvimento:</h6>
-                <div class="d-flex gap-2 flex-wrap mb-3">
-                    <span class="badge bg-secondary">Visual Studio 2022</span>
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    <span class="badge bg-secondary">Visual Studio 2022 / 2026</span>
                     <span class="badge bg-secondary">Visual Studio Code</span>
                     <span class="badge bg-secondary">Git & GitHub</span>
                 </div>
 
-                <div class="alert alert-info rounded-3 mt-3 mb-0">
-                    <small>
-                        <strong>Origem das bibliotecas:</strong><br />
-                        • Bootstrap: <a href="https://getbootstrap.com" target="_blank" class="alert-link">https://getbootstrap.com</a> (via CDN)<br />
-                        • ASP.NET Core & Entity Framework: <a href="https://dotnet.microsoft.com" target="_blank" class="alert-link">https://dotnet.microsoft.com</a><br />
-                        • Fontes do Google: <a href="https://fonts.google.com" target="_blank" class="alert-link">https://fonts.google.com</a> (Outfit font)
-                    </small>
+                <!-- Bibliotecas de Terceiros e Origens -->
+                <h5 class="fw-bold mt-4 mb-3">Identificação das Bibliotecas de Terceiros & Origens</h5>
+                <div class="table-responsive bg-light p-3 rounded-3 border mb-0" style="border-color: rgba(0,0,0,0.05) !important;">
+                    <table class="table table-borderless table-sm mb-0 align-middle" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr class="text-secondary border-bottom" style="border-color: rgba(0,0,0,0.05) !important;">
+                                <th class="pb-2">Biblioteca / Recurso</th>
+                                <th class="pb-2">Origem / Website</th>
+                                <th class="pb-2">Método de Obtenção</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-bold pt-2">Bootstrap (v5.3.0)</td>
+                                <td class="pt-2"><a href="https://getbootstrap.com" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">getbootstrap.com</a></td>
+                                <td class="pt-2 text-muted">Carregado via CDN (jsDelivr)</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">jQuery (v3.6.0)</td>
+                                <td><a href="https://jquery.com" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">jquery.com</a></td>
+                                <td class="text-muted">Incluído localmente (/lib/jquery)</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">jQuery Validation</td>
+                                <td><a href="https://jqueryvalidation.org" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">jqueryvalidation.org</a></td>
+                                <td class="text-muted">Carregado localmente via scripts de validação</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Entity Framework Core</td>
+                                <td><a href="https://nuget.org/packages/Microsoft.EntityFrameworkCore" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">nuget.org</a></td>
+                                <td class="text-muted">Instalado via NuGet Package Manager</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">ASP.NET Identity UI</td>
+                                <td><a href="https://nuget.org/packages/Microsoft.AspNetCore.Identity.UI" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">nuget.org</a></td>
+                                <td class="text-muted">Instalado via NuGet Package Manager</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Swashbuckle (Swagger)</td>
+                                <td><a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">github.com</a></td>
+                                <td class="text-muted">Instalado via NuGet Package Manager</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold pb-2">Google Fonts (Outfit)</td>
+                                <td class="pb-2"><a href="https://fonts.google.com" target="_blank" class="text-decoration-none" style="color: var(--kpop-pink);">fonts.google.com</a></td>
+                                <td class="pb-2 text-muted">Carregado dinamicamente via Web API do Google</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -162,7 +205,8 @@
 
                 <h6 class="fw-bold mt-3 mb-2">Componente 2 - API (30%):</h6>
                 <ul class="list-unstyled mb-3">
-                    <li class="mb-2"><span class="badge bg-secondary">⏳</span> Em desenvolvimento</li>
+                    <li class="mb-2"><span class="badge-neon-purple">✓</span> API REST com CRUD completo para Artistas, Álbuns e Coleções</li>
+                    <li class="mb-2"><span class="badge-neon-purple">✓</span> Documentação interativa Swagger/OpenAPI configurada e ativa em /swagger</li>
                 </ul>
 
                 <h6 class="fw-bold mt-3 mb-2">Componente 3 - Publicação (10%):</h6>
