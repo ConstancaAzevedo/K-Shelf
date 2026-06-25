@@ -1,7 +1,9 @@
 ﻿using K_Shelf.Data;
 using K_Shelf.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace K_Shelf.Controllers
 {
@@ -10,6 +12,7 @@ namespace K_Shelf.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ColecoesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,12 +23,16 @@ namespace K_Shelf.Controllers
         }
 
         /// <summary>
-        /// Obtém todas as coleções
+        /// Obtém todas as coleções do utilizador autenticado
         /// </summary>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetColecoes()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
             var colecoes = await _context.Colecoes
+                .Where(c => c.UtilizadorId == userId || isAdmin)
                 .Include(c => c.AlbumColecoes!)
                     .ThenInclude(ac => ac.Album)
                 .Select(c => new
@@ -48,10 +55,13 @@ namespace K_Shelf.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetColecao(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
             var colecao = await _context.Colecoes
+                .Where(c => c.Id == id && (c.UtilizadorId == userId || isAdmin))
                 .Include(c => c.AlbumColecoes!)
                     .ThenInclude(ac => ac.Album)
-                .Where(c => c.Id == id)
                 .Select(c => new
                 {
                     c.Id,
@@ -70,7 +80,7 @@ namespace K_Shelf.Controllers
                 .FirstOrDefaultAsync();
 
             if (colecao == null)
-                return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada." });
+                return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada ou sem permissão de acesso." });
 
             return Ok(colecao);
         }
@@ -84,7 +94,17 @@ namespace K_Shelf.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            colecao.UtilizadorId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             colecao.DataCriacao = DateTime.Now;
+
+            // Validar se já existe uma coleção com o mesmo nome para este utilizador
+            var colecaoDuplicada = await _context.Colecoes
+                .AnyAsync(c => c.UtilizadorId == colecao.UtilizadorId && 
+                               c.Nome.ToLower() == colecao.Nome.ToLower());
+
+            if (colecaoDuplicada)
+                return BadRequest(new { mensagem = $"Já existe uma coleção com o nome \"{colecao.Nome}\"!" });
+
             _context.Colecoes.Add(colecao);
             await _context.SaveChangesAsync();
 
@@ -103,7 +123,28 @@ namespace K_Shelf.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            _context.Entry(colecao).State = EntityState.Modified;
+            var colecaoExistente = await _context.Colecoes.FindAsync(id);
+            if (colecaoExistente == null)
+                return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada." });
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
+            // Verificar permissão
+            if (colecaoExistente.UtilizadorId != userId && !isAdmin)
+                return Forbid();
+
+            // Validar se já existe outra coleção com o mesmo nome para este utilizador
+            var colecaoDuplicada = await _context.Colecoes
+                .AnyAsync(c => c.UtilizadorId == colecaoExistente.UtilizadorId && 
+                               c.Id != id && 
+                               c.Nome.ToLower() == colecao.Nome.ToLower());
+
+            if (colecaoDuplicada)
+                return BadRequest(new { mensagem = $"Já existe uma coleção com o nome \"{colecao.Nome}\"!" });
+
+            colecaoExistente.Nome = colecao.Nome;
+            colecaoExistente.Descricao = colecao.Descricao;
 
             try
             {
@@ -132,6 +173,13 @@ namespace K_Shelf.Controllers
             if (colecao == null)
                 return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada." });
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
+            // Verificar permissão
+            if (colecao.UtilizadorId != userId && !isAdmin)
+                return Forbid();
+
             if (colecao.AlbumColecoes != null)
                 _context.AlbumColecoes.RemoveRange(colecao.AlbumColecoes);
 
@@ -150,6 +198,13 @@ namespace K_Shelf.Controllers
             var colecao = await _context.Colecoes.FindAsync(id);
             if (colecao == null)
                 return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada." });
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
+            // Verificar permissão
+            if (colecao.UtilizadorId != userId && !isAdmin)
+                return Forbid();
 
             var album = await _context.Albuns.FindAsync(albumId);
             if (album == null)
@@ -178,6 +233,17 @@ namespace K_Shelf.Controllers
         [HttpDelete("{id}/albuns/{albumId}")]
         public async Task<IActionResult> RemoveAlbumFromColecao(int id, int albumId)
         {
+            var colecao = await _context.Colecoes.FindAsync(id);
+            if (colecao == null)
+                return NotFound(new { mensagem = $"Coleção com ID {id} não encontrada." });
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isAdmin = User.IsInRole("Admin");
+
+            // Verificar permissão
+            if (colecao.UtilizadorId != userId && !isAdmin)
+                return Forbid();
+
             var albumColecao = await _context.AlbumColecoes
                 .FirstOrDefaultAsync(ac => ac.ColecaoId == id && ac.AlbumId == albumId);
 
