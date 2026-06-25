@@ -640,5 +640,59 @@ namespace K_Shelf.Data
 
             await context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// Pesquisa e atualiza os links de preview de áudio reais das músicas a partir do iTunes.
+        /// </summary>
+        public static async Task FetchItunesPreviewsAsync(ApplicationDbContext context)
+        {
+            // Buscar todas as músicas que não têm áudio ou que usam o soundhelix de teste
+            var musicas = await context.Musicas
+                .Include(m => m.Album)
+                    .ThenInclude(a => a!.Grupo)
+                .Include(m => m.Album)
+                    .ThenInclude(a => a!.Solista)
+                .Where(m => string.IsNullOrEmpty(m.PreviewAudioUrl) || m.PreviewAudioUrl.Contains("soundhelix.com"))
+                .ToListAsync();
+
+            if (!musicas.Any()) return;
+
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "K-Shelf-App");
+
+            foreach (var musica in musicas)
+            {
+                var artistaNome = musica.Album?.Grupo?.Nome ?? musica.Album?.Solista?.Nome ?? "";
+                if (string.IsNullOrEmpty(artistaNome)) continue;
+
+                try
+                {
+                    var query = Uri.EscapeDataString($"{artistaNome} {musica.Titulo}");
+                    var url = $"https://itunes.apple.com/search?term={query}&media=music&entity=song&limit=1";
+                    
+                    var response = await httpClient.GetStringAsync(url);
+                    using var doc = System.Text.Json.JsonDocument.Parse(response);
+                    var root = doc.RootElement;
+                    
+                    if (root.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
+                    {
+                        var firstResult = results[0];
+                        if (firstResult.TryGetProperty("previewUrl", out var previewUrl))
+                        {
+                            musica.PreviewAudioUrl = previewUrl.GetString();
+                        }
+                    }
+                    
+                    // Pequeno atraso para respeitar os limites de taxa da API do iTunes
+                    await Task.Delay(300);
+                }
+                catch
+                {
+                    // Falha silenciosa para não interromper a inicialização
+                }
+            }
+
+            await context.SaveChangesAsync();
+        }
     }
 }

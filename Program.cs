@@ -202,30 +202,6 @@ using (var scope = app.Services.CreateScope())
                     ALTER TABLE [Musicas] ADD [PreviewAudioUrl] nvarchar(max) NULL;
                 END");
 
-            // 8. Atualizar as faixas existentes com os URLs de preview de áudio
-            await context.Database.ExecuteSqlRawAsync(@"
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' WHERE [Titulo] = 'ON' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' WHERE [Titulo] = 'Black Swan' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' WHERE [Titulo] = 'Filter' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' WHERE [Titulo] = 'Haegeum' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' WHERE [Titulo] = 'People Pt.2 (feat. IU)' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' WHERE [Titulo] = 'Lovesick Girls' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' WHERE [Titulo] = 'How You Like That' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' WHERE [Titulo] = 'Super Shy' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3' WHERE [Titulo] = 'ETA' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3' WHERE [Titulo] = 'LILAC' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3' WHERE [Titulo] = 'Celebrity' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3' WHERE [Titulo] = 'S-Class' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3' WHERE [Titulo] = 'Super Bowl' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3' WHERE [Titulo] = 'TOPLINE (feat. Tiger JK)' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3' WHERE [Titulo] = 'Bite Me' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3' WHERE [Titulo] = 'Sacrifice (Eat Me Up)' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' WHERE [Titulo] = 'Chaconne' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' WHERE [Titulo] = 'In Bloom' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' WHERE [Titulo] = 'New Kidz on the Block' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' WHERE [Titulo] = 'DASH' AND [PreviewAudioUrl] IS NULL;
-                UPDATE [Musicas] SET [PreviewAudioUrl] = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' WHERE [Titulo] = 'Soñar (Breaker)' AND [PreviewAudioUrl] IS NULL;
-            ");
         }
         catch (Exception ex)
         {
@@ -235,6 +211,9 @@ using (var scope = app.Services.CreateScope())
         
         // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);
+
+        // Pesquisa e atualiza automaticamente os links reais das músicas através da API do iTunes
+        await DbSeeder.FetchItunesPreviewsAsync(context);
 
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
