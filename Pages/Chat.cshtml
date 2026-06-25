@@ -1,0 +1,99 @@
+@page
+@model K_Shelf.Pages.ChatModel
+@{
+    ViewData["Title"] = "Chat Global K-Pop";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <!-- Cabeçalho -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+            <h1 class="title-kpop display-4 fw-bold">Chat de Colecionadores</h1>
+            <p class="text-secondary lead">Converse em tempo real com outros colecionadores de K-Pop sobre álbuns, photocards e concertos!</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <span class="badge bg-success rounded-pill px-3 py-2 fs-6 shadow-sm">
+                🟢 <span id="chat-online-count">1</span> Colecionadores Ativos
+            </span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Coluna Principal: Área do Chat -->
+        <div class="col-lg-8">
+            <div class="glass-panel p-4 shadow-lg border-0 rounded-4 d-flex flex-column" style="height: 600px;">
+                <!-- Cabeçalho Interno do Chat -->
+                <div class="d-flex align-items-center pb-3 border-bottom mb-3">
+                    <div class="bg-gradient-kpop text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple)); font-size: 1.5rem;">
+                        💬
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Sala Geral K-Pop</h5>
+                        <small class="text-success fw-semibold">Tempo Real Ativo</small>
+                    </div>
+                </div>
+
+                <!-- Painel de Mensagens -->
+                <div id="messages-container" class="flex-grow-1 overflow-y-auto px-2 mb-3 chat-messages-panel" style="max-height: 400px; min-height: 380px;">
+                    <!-- Mensagem de boas-vindas do sistema -->
+                    <div class="text-center my-3 system-message">
+                        <span class="badge bg-light text-secondary rounded-pill px-3 py-2 border shadow-sm">
+                            📢 Bem-vindo ao chat do K-Shelf! Seja respeitador nas mensagens.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Formulário de Envio -->
+                <div class="border-top pt-3">
+                    <form id="chat-form" onsubmit="return false;">
+                        <div class="input-group">
+                            <input type="text" id="chat-message-input" class="form-control border-end-0 search-input-kpop rounded-start-pill py-3 px-4" placeholder="Escreva a sua mensagem sobre K-Pop aqui..." maxlength="300" autocomplete="off" />
+                            <button class="btn btn-kpop rounded-end-pill px-4 py-3" type="submit" id="chat-send-btn">
+                                Enviar 🚀
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna Lateral: Informações / Regras -->
+        <div class="col-lg-4">
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h5 class="fw-bold mb-3">📖 Regras da Sala</h5>
+                <ul class="list-unstyled mb-0" style="font-size: 0.9rem;">
+                    <li class="mb-3 d-flex align-items-start gap-2">
+                        <span class="text-success">✔</span>
+                        <span>Partilhe as suas estantes e opiniões sobre os seus álbuns favoritos.</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start gap-2">
+                        <span class="text-success">✔</span>
+                        <span>Respeite o gosto e fandom dos outros utilizadores.</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start gap-2">
+                        <span class="text-danger">✘</span>
+                        <span>Proibido spam, linguagem ofensiva ou publicidade não autorizada.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-panel p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">🛠️ Detalhes de Tecnologia</h5>
+                <p class="text-secondary small mb-2">Este chat foi construído utilizando as seguintes tecnologias em tempo real:</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge-neon-pink">ASP.NET Core SignalR</span>
+                    <span class="badge-neon-purple">WebSockets</span>
+                    <span class="badge bg-secondary text-white">JavaScript</span>
+                    <span class="badge bg-info text-white">Bootstrap 5.3</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Biblioteca oficial de cliente do SignalR via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@@8.0.0/dist/browser/signalr.min.js"></script>
+    <!-- Script personalizado de lógica do chat -->
+    <script src="~/js/kpop-chat.js" asp-append-version="true"></script>
+}

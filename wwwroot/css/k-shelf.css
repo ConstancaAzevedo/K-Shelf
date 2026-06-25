@@ -330,3 +330,64 @@ body {
 footer.footer-k-shelf {
     margin-top: auto;
 }
+
+/* =========================================================================
+   ESTILOS PARA O CHAT GLOBAL (SIGNALR)
+   ========================================================================= */
+.chat-messages-panel {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    padding: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    scrollbar-width: thin;
+    scrollbar-color: var(--kpop-pink) transparent;
+}
+
+.chat-messages-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages-panel::-webkit-scrollbar-thumb {
+    background-color: var(--kpop-pink);
+    border-radius: 6px;
+}
+
+.chat-message-bubble {
+    max-width: 80%;
+    clear: both;
+}
+
+.chat-message-bubble.my-message {
+    float: right;
+}
+
+.chat-message-bubble.other-message {
+    float: left;
+}
+
+.chat-message-bubble .message-content {
+    word-break: break-word;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+/* Animações de entrada para mensagens novas */
+@keyframes fadeInUpChat {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeInUpChat 0.3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+.system-message span {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
