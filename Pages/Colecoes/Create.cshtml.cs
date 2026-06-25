@@ -30,6 +30,18 @@ namespace K_Shelf.Pages.Colecoes
 
             // Associar a coleção ao utilizador autenticado
             Colecao.UtilizadorId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            // Validar se já existe uma coleção com o mesmo nome para este utilizador
+            var colecaoDuplicada = await _context.Colecoes
+                .AnyAsync(c => c.UtilizadorId == Colecao.UtilizadorId && 
+                               c.Nome.ToLower() == Colecao.Nome.ToLower());
+
+            if (colecaoDuplicada)
+            {
+                ModelState.AddModelError("Colecao.Nome", $"Já existe uma coleção com o nome \"{Colecao.Nome}\"!");
+                return Page();
+            }
+
             Colecao.DataCriacao = DateTime.Now;
 
             _context.Colecoes.Add(Colecao);

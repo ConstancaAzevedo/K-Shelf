@@ -54,6 +54,18 @@ namespace K_Shelf.Pages.Colecoes
             if (colecaoExistente.UtilizadorId != userId && !User.IsInRole("Admin"))
                 return Forbid();
 
+            // Validar se já existe outra coleção com o mesmo nome para este utilizador
+            var colecaoDuplicada = await _context.Colecoes
+                .AnyAsync(c => c.UtilizadorId == colecaoExistente.UtilizadorId && 
+                               c.Id != Colecao.Id && 
+                               c.Nome.ToLower() == Colecao.Nome.ToLower());
+
+            if (colecaoDuplicada)
+            {
+                ModelState.AddModelError("Colecao.Nome", $"Já existe uma coleção com o nome \"{Colecao.Nome}\"!");
+                return Page();
+            }
+
             // Atualizar apenas os campos editáveis
             colecaoExistente.Nome = Colecao.Nome;
             colecaoExistente.Descricao = Colecao.Descricao;
