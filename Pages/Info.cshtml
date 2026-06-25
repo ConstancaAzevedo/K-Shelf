@@ -209,6 +209,9 @@
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Artistas</li>
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Álbuns com gestão de faixas</li>
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Coleções com adicionar/remover álbuns</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> CRUD completo de Photocards (painel de administração)</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> Catálogo Geral de Photocards com pesquisa e filtro por grupo</li>
+                    <li class="mb-2"><span class="badge-neon-pink">✓</span> Dossiê Virtual de Photocards (Binder pessoal) com grelha 3×3 e efeito 3D Flip</li>
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> Autenticação e autorização com roles (Admin/User)</li>
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> Interface responsiva em Português</li>
                     <li class="mb-2"><span class="badge-neon-pink">✓</span> Validação de formulários</li>
@@ -238,7 +241,7 @@
 
                 <div class="alert alert-light rounded-3 mb-2">
                     <p class="mb-1"><strong>Base de Dados:</strong></p>
-                    <small>SQL Server com Entity Framework Core. Tabelas: Artistas, Álbuns, Coleções, Grupos, Solistas, Músicas e relacionamentos obrigatórios (many-to-one e many-to-many).</small>
+                    <small>SQL Server com Entity Framework Core. Tabelas: Artistas, Álbuns, Coleções, Grupos, Solistas, Músicas, Photocards, UtilizadorPhotocards e relacionamentos obrigatórios (many-to-one: Artista → Grupo; many-to-many: Utilizador ↔ Photocards via UtilizadorPhotocards).</small>
                 </div>
 
                 <div class="alert alert-light rounded-3 mb-2">
