@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace K_Shelf.Pages.Colecoes
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
@@ -31,14 +33,28 @@ namespace K_Shelf.Pages.Colecoes
             if (IsUserAuthenticated)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var isAdmin = User.IsInRole("Admin");
+
                 if (userId != null)
                 {
-                    Colecoes = await _context.Colecoes
-                        .Where(c => c.UtilizadorId == userId)
-                        .Include(c => c.AlbumColecoes!)
-                            .ThenInclude(ac => ac.Album)
-                        .OrderByDescending(c => c.DataCriacao)
-                        .ToListAsync();
+                    // Admin vê todas as coleções, User vê apenas as suas
+                    if (isAdmin)
+                    {
+                        Colecoes = await _context.Colecoes
+                            .Include(c => c.AlbumColecoes!)
+                                .ThenInclude(ac => ac.Album)
+                            .OrderByDescending(c => c.DataCriacao)
+                            .ToListAsync();
+                    }
+                    else
+                    {
+                        Colecoes = await _context.Colecoes
+                            .Where(c => c.UtilizadorId == userId)
+                            .Include(c => c.AlbumColecoes!)
+                                .ThenInclude(ac => ac.Album)
+                            .OrderByDescending(c => c.DataCriacao)
+                            .ToListAsync();
+                    }
                 }
             }
 
