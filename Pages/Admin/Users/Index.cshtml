@@ -1,14 +1,14 @@
 @page
 @model K_Shelf.Pages.Admin.Users.IndexModel
 @{
-    ViewData["Title"] = "Gerir Utilizadores - Admin";
+    ViewData["Title"] = "Gestão de Utilizadores - Admin";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <div class="container py-4 animate-fade-in-up">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="display-4 fw-bold">👥 Gerir Utilizadores</h1>
+            <h1 class="display-4 fw-bold">Gestão de Utilizadores</h1>
             <p class="text-secondary lead">Gerir utilizadores e permissões do sistema</p>
         </div>
         <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary rounded-pill">
@@ -41,7 +41,7 @@
                     <tr>
                         <th>Email</th>
                         <th>Nome de Utilizador</th>
-                        <th>Roles</th>
+                        <th>Cargos</th>
                         <th class="text-center">Ações</th>
                     </tr>
                 </thead>
@@ -67,12 +67,18 @@
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">Sem Role</span>
+                                    <span class="badge bg-secondary">Sem Cargo</span>
                                 }
                             </td>
                             <td>
                                 <div class="d-flex gap-1 justify-content-center">
-                                    <!-- Botão para tornar Admin -->
+                                    <!-- Ver detalhes -->
+                                    <a asp-page="./Details" asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-outline-info" title="Ver detalhes">
+                                        👤
+                                    </a>
+
+                                    <!-- Tornar Admin -->
                                     @if (!user.Roles.Contains("Admin"))
                                     {
                                         <form method="post" asp-page-handler="MakeAdmin" asp-route-id="@user.Id"
@@ -86,7 +92,7 @@
                                     else
                                     {
                                         <form method="post" asp-page-handler="RemoveAdmin" asp-route-id="@user.Id"
-                                              onsubmit="return confirm('Remover role Admin de @user.Email?')">
+                                              onsubmit="return confirm('Remover cargo Admin de @user.Email?')">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover Admin">
                                                 ⬇️
@@ -94,7 +100,7 @@
                                         </form>
                                     }
 
-                                    <!-- Botão para adicionar role User -->
+                                    <!-- Tornar User -->
                                     @if (!user.Roles.Contains("User") && !user.Roles.Contains("Admin"))
                                     {
                                         <form method="post" asp-page-handler="MakeUser" asp-route-id="@user.Id">

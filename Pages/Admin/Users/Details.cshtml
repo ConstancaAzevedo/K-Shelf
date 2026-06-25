@@ -1,0 +1,177 @@
+@page "{id}"
+@model K_Shelf.Pages.Admin.Users.DetailsModel
+@{
+    ViewData["Title"] = "Detalhes do Utilizador";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-4 fw-bold">Detalhes do Utilizador</h1>
+            <p class="text-secondary lead">Informações detalhadas do utilizador</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill">
+                ← Voltar à Lista
+            </a>
+            <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary rounded-pill">
+                ← Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Mensagens de Feedback -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- Informações do Utilizador -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Informações Pessoais</h5>
+                <dl class="row">
+                    <dt class="col-sm-4">Email</dt>
+                    <dd class="col-sm-8">
+                        <strong>@Model.User.Email</strong>
+                        @if (Model.User.EmailConfirmed)
+                        {
+                            <span class="badge bg-success ms-2">Verificado</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning ms-2">Não verificado</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Nome de Utilizador</dt>
+                    <dd class="col-sm-8">@Model.User.UserName</dd>
+
+                    <dt class="col-sm-4">ID</dt>
+                    <dd class="col-sm-8"><code>@Model.User.Id</code></dd>
+
+                    <dt class="col-sm-4">Telefone</dt>
+                    <dd class="col-sm-8">@(Model.User.PhoneNumber ?? "N/A")</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Cargos do Utilizador -->
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Cargos</h5>
+                @if (Model.UserRoles.Any())
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var role in Model.UserRoles)
+                        {
+                            <span class="badge @(role == "Admin" ? "bg-danger" : "bg-info") rounded-pill px-3 py-2 fs-6">
+                                @if (role == "Admin")
+                                {
+                                    <span>🛡️</span>
+                                }
+                                else
+                                {
+                                    <span>👤</span>
+                                }
+                                @role
+                            </span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-secondary">Este utilizador não tem cargos atribuídos.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="col-12">
+            <div class="glass-panel p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">Ações</h5>
+                <div class="d-flex flex-wrap gap-3">
+                    <!-- Tornar Admin -->
+                    @if (!Model.UserRoles.Contains("Admin"))
+                    {
+                        <form method="post" asp-page-handler="MakeAdmin" asp-route-id="@Model.User.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-warning rounded-pill px-4">
+                                Tornar Admin
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="RemoveAdmin" asp-route-id="@Model.User.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+                                ⬇Remover Admin
+                            </button>
+                        </form>
+                    }
+
+                    <!-- Tornar User -->
+                    @if (!Model.UserRoles.Contains("User") && !Model.UserRoles.Contains("Admin"))
+                    {
+                        <form method="post" asp-page-handler="MakeUser" asp-route-id="@Model.User.Id">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-outline-info rounded-pill px-4">
+                                Tornar User
+                            </button>
+                        </form>
+                    }
+
+                    <a asp-page="./Index" class="btn btn-secondary rounded-pill px-4">
+                        ← Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coleções do Utilizador -->
+        @if (Model.UserColecoes.Any())
+        {
+            <div class="col-12">
+                <div class="glass-panel p-4 shadow-sm">
+                    <h5 class="fw-bold mb-3">Coleções de @Model.User.Email</h5>
+                    <div class="row row-cols-1 row-cols-md-3 g-3">
+                        @foreach (var colecao in Model.UserColecoes)
+                        {
+                            <div class="col">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body">
+                                        <h6 class="card-title fw-bold">@colecao.Nome</h6>
+                                        <p class="card-text small text-secondary">@(colecao.Descricao ?? "Sem descrição")</p>
+                                        <small class="text-muted">
+                                            @(colecao.AlbumColecoes?.Count ?? 0) álbuns
+                                        </small>
+                                    </div>
+                                    <div class="card-footer bg-transparent">
+                                        <a asp-page="/Colecoes/Details" asp-route-id="@colecao.Id"
+                                           class="btn btn-sm btn-outline-primary rounded-pill">
+                                            Ver Coleção
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
