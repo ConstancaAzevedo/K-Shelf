@@ -8,7 +8,7 @@ namespace K_Shelf.Pages
     /// Modelo de Página de suporte para o Chat Global.
     /// Exige autenticação de utilizador ([Authorize]) para aceder à sala de conversa em tempo real.
     /// </summary>
-    [Authorize]
+    [Authorize(Roles = "User,Admin")]
     public class ChatModel : PageModel
     {
         /// <summary>
