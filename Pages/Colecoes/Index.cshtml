@@ -14,12 +14,20 @@
         <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
             @if (Model.IsUserAuthenticated)
             {
-                <a href="#" class="btn btn-kpop btn-lg shadow-sm rounded-pill px-4 py-2 hover-elevate">
+                <a asp-page="./Create" class="btn btn-kpop btn-lg shadow-sm rounded-pill px-4 py-2 hover-elevate">
                     ➕ Criar Nova Coleção
                 </a>
             }
         </div>
     </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
     <!-- BANNER DE CONVITE SE NÃO ESTIVER AUTENTICADO -->
     @if (!Model.IsUserAuthenticated)
@@ -69,7 +77,7 @@
                 <span class="display-3">📚</span>
                 <h3 class="mt-3 fw-bold">Não tem nenhuma coleção ativa</h3>
                 <p class="text-secondary">Comece por criar uma nova estante para organizar os seus álbuns!</p>
-                <a href="#" class="btn btn-kpop mt-3">Criar Primeira Coleção</a>
+                <a asp-page="./Create" class="btn btn-kpop mt-3">Criar Primeira Coleção</a>
             </div>
         }
         else
@@ -137,14 +145,19 @@
                                 </div>
 
                                 <!-- Rodapé do Cartão -->
-                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top gap-2">
                                     <span class="text-secondary small">
                                         📅 @colecao.DataCriacao.ToString("dd/MM/yyyy")
                                     </span>
-                                    <div>
-                                        <a href="#" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">
+                                    <div class="d-flex gap-1">
+                                        <a asp-page="./Details" asp-route-id="@colecao.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">
                                             🔍 Ver Estante
                                         </a>
+                                        @if (Model.IsUserAuthenticated)
+                                        {
+                                            <a asp-page="./Edit" asp-route-id="@colecao.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
+                                            <a asp-page="./Delete" asp-route-id="@colecao.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                        }
                                     </div>
                                 </div>
                             </div>

@@ -6,25 +6,27 @@ using K_Shelf.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace K_Shelf.Pages.Artistas
 {
-    public class IndexModel : PageModel
+    [Authorize]
+    public class ArtistasIndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
 
-        public IndexModel(ApplicationDbContext context)
+        public ArtistasIndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<Artista> Artistas { get; set; } = default!;
+        public IList<Artista> Artistas { get; set; } = new List<Artista>();
 
         [BindProperty(SupportsGet = true)]
         public string? SearchTerm { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public string? TypeFilter { get; set; } = "all"; // "all", "groups", "solos"
+        public string? TypeFilter { get; set; } = "all";
 
         public int TotalArtists { get; set; }
         public int TotalGroups { get; set; }
@@ -32,19 +34,16 @@ namespace K_Shelf.Pages.Artistas
 
         public async Task OnGetAsync()
         {
-            // Estatísticas
             TotalArtists = await _context.Artistas.CountAsync();
-            TotalGroups = await _context.Grupos.CountAsync();
-            TotalSolos = await _context.Solistas.CountAsync();
+            TotalGroups = 0;
+            TotalSolos = 0;
 
-            var query = _context.Artistas
-                .Include(a => a.Grupo)
-                .Include(a => a.Solista)
-                .AsQueryable();
+            // Remover os Includes que causam erro
+            var query = _context.Artistas.AsQueryable();
 
             if (!string.IsNullOrEmpty(SearchTerm))
             {
-                query = query.Where(a => a.Nome.Contains(SearchTerm) || 
+                query = query.Where(a => a.Nome.Contains(SearchTerm) ||
                                          (a.NomeArtistico != null && a.NomeArtistico.Contains(SearchTerm)) ||
                                          (a.Nacionalidade != null && a.Nacionalidade.Contains(SearchTerm)) ||
                                          (a.Posicao != null && a.Posicao.Contains(SearchTerm)));

@@ -1,0 +1,59 @@
+@page
+@model K_Shelf.Pages.Colecoes.DeleteModel
+@{
+    ViewData["Title"] = "Eliminar Coleção";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">🗑️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Coleção</h2>
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning rounded-3 mb-4">
+                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar esta coleção?</h5>
+                    <p class="mb-0">Todos os álbuns serão removidos da coleção (os álbuns em si não são eliminados).</p>
+                </div>
+
+                <!-- Pré-visualização da coleção -->
+                <div class="p-3 bg-light rounded-3 mb-4">
+                    <h4 class="fw-bold mb-1">@Model.Colecao.Nome</h4>
+                    <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
+                    <small class="text-secondary">
+                        📅 Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
+                        📀 @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                    </small>
+
+                    @if (Model.Colecao.AlbumColecoes != null && Model.Colecao.AlbumColecoes.Any())
+                    {
+                        <div class="d-flex gap-2 flex-wrap mt-2">
+                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5))
+                            {
+                                <span class="badge bg-secondary">@ac.Album?.Titulo</span>
+                            }
+                            @if (Model.Colecao.AlbumColecoes.Count > 5)
+                            {
+                                <span class="badge bg-secondary">+@(Model.Colecao.AlbumColecoes.Count - 5) mais</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Colecao.Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
+                        <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
+                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

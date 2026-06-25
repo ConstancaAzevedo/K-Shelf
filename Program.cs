@@ -2,6 +2,7 @@ using K_Shelf.Data;
 using K_Shelf.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,42 @@ builder.Services.AddDefaultIdentity<Utilizador>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Swagger para documentação da API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "K-Shelf API",
+        Version = "v1",
+        Description = "API REST para gestão de coleções de K-Pop. Permite gerir Artistas, Álbuns e Coleções.",
+        Contact = new OpenApiContact
+        {
+            Name = "Constança Azevedo & Rui Dias",
+            Email = "admin@kshelf.com"
+        }
+    });
+
+    // Incluir comentários XML na documentação
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+        c.IncludeXmlComments(xmlPath);
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+
+    // Swagger disponível apenas em desenvolvimento
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "K-Shelf API v1");
+        c.RoutePrefix = "swagger";
+    });
 }
 else
 {
@@ -47,8 +79,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
-app.UseHttpsRedirection();
 
 // Popular a base de dados se estiver vazia
 using (var scope = app.Services.CreateScope())

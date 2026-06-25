@@ -1,0 +1,126 @@
+@page "{id:int}"
+@model K_Shelf.Pages.Colecoes.DetailsModel
+@{
+    ViewData["Title"] = Model.Colecao.Nome;
+}
+
+<div class="container py-4 animate-fade-in-up">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Cabeçalho da Coleção -->
+    <div class="glass-panel p-4 shadow-sm mb-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+                <h1 class="fw-bold mb-1">📚 @Model.Colecao.Nome</h1>
+                <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
+                <small class="text-secondary">
+                    📅 Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
+                    📀 @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                </small>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                @if (Model.IsOwner || User.IsInRole("Admin"))
+                {
+                    <a asp-page="./Edit" asp-route-id="@Model.Colecao.Id"
+                       class="btn btn-warning rounded-pill px-3">✏️ Editar</a>
+                    <a asp-page="./Delete" asp-route-id="@Model.Colecao.Id"
+                       class="btn btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a>
+                }
+                <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-3">← Voltar</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Coluna Esquerda: Adicionar Álbum -->
+        <div class="col-md-4">
+            <div class="glass-panel p-4 shadow-sm">
+                <h5 class="fw-bold mb-3">➕ Adicionar Álbum</h5>
+                <form method="post" asp-page-handler="AdicionarAlbum" asp-route-id="@Model.Colecao.Id">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small">Selecione um álbum</label>
+                        <select asp-for="AlbumIdParaAdicionar" class="form-select search-input-kpop"
+                                asp-items="Model.AlbunsDisponiveis">
+                            <option value="0">-- Escolha um álbum --</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-kpop w-100 rounded-pill">Adicionar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Coluna Direita: Álbuns na Coleção -->
+        <div class="col-md-8">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">📀 Álbuns na Coleção</h5>
+                    <span class="badge bg-secondary rounded-pill">@(Model.Colecao.AlbumColecoes?.Count ?? 0)</span>
+                </div>
+
+                @if (Model.Colecao.AlbumColecoes == null || !Model.Colecao.AlbumColecoes.Any())
+                {
+                    <div class="text-center py-5">
+                        <span class="display-3">📭</span>
+                        <p class="text-secondary mt-3">Ainda não tem álbuns nesta coleção.<br />Use o painel ao lado para adicionar.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        @foreach (var ac in Model.Colecao.AlbumColecoes)
+                        {
+                            <div class="col">
+                                <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
+                                    <!-- Capa do álbum -->
+                                    @if (!string.IsNullOrEmpty(ac.Album?.CapaUrl))
+                                    {
+                                        <img src="@ac.Album.CapaUrl" alt="@ac.Album.Titulo"
+                                             style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex align-items-center justify-content-center bg-secondary text-white"
+                                             style="width: 60px; height: 60px; border-radius: 8px; font-size: 1.5rem;">
+                                            💿
+                                        </div>
+                                    }
+
+                                    <!-- Info -->
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="fw-bold mb-0 text-truncate">@ac.Album?.Titulo</p>
+                                        <small class="text-secondary">
+                                            @(ac.Album?.Grupo?.Nome ?? ac.Album?.Solista?.Nome ?? "Independente")
+                                        </small>
+                                        <br />
+                                        <small class="text-secondary">
+                                            Adicionado em @ac.DataAdicao.ToString("dd/MM/yyyy")
+                                        </small>
+                                    </div>
+
+                                    <!-- Remover -->
+                                    <form method="post"
+                                          asp-page-handler="RemoverAlbum"
+                                          asp-route-id="@Model.Colecao.Id"
+                                          asp-route-albumId="@ac.AlbumId"
+                                          onsubmit="return confirm('Remover este álbum da coleção?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"
+                                                title="Remover da coleção">
+                                            ✕
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+@page
+@model K_Shelf.Pages.Albuns.DetailsModel
+@{
+    ViewData["Title"] = Model.Album.Titulo;
+}
+
+<div class="container py-4 animate-fade-in-up">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <!-- Coluna Esquerda: Capa + Ações -->
+        <div class="col-md-4">
+            <div class="glass-panel p-3 shadow-sm text-center">
+                <!-- Efeito Vinil -->
+                <div class="vinyl-container-wrapper mx-auto mb-3" style="width: 220px; height: 220px;">
+                    <div class="vinyl-album" style="width: 220px; height: 220px;">
+                        @if (!string.IsNullOrEmpty(Model.Album.CapaUrl))
+                        {
+                            <img src="@Model.Album.CapaUrl" class="vinyl-album-cover" alt="@Model.Album.Titulo" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-secondary text-white" style="font-size: 4rem;">💿</div>
+                        }
+                    </div>
+                    <div class="vinyl-disc" style="width: 200px; height: 200px;"></div>
+                </div>
+
+                <h3 class="fw-bold mt-3">@Model.Album.Titulo</h3>
+
+                <div class="d-flex gap-2 justify-content-center mb-3 flex-wrap">
+                    <span class="badge-neon-pink">@Model.Album.Tipo</span>
+                    <span class="badge-neon-purple">@Model.Album.Edicao</span>
+                </div>
+
+                <p class="text-secondary">📅 @Model.Album.DataLancamento.ToString("dd MMMM yyyy")</p>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="d-flex flex-column gap-2 mt-3">
+                        <a asp-page="./Edit" asp-route-id="@Model.Album.Id" class="btn btn-warning rounded-pill">✏️ Editar</a>
+                        <a asp-page="./Delete" asp-route-id="@Model.Album.Id" class="btn btn-outline-danger rounded-pill">🗑️ Eliminar</a>
+                    </div>
+                }
+
+                <div class="mt-3">
+                    <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill w-100">← Voltar</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna Direita: Informações + Faixas -->
+        <div class="col-md-8">
+            <!-- Artista -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <h5 class="fw-bold mb-3">🎤 Artista</h5>
+                @if (Model.Album.Grupo != null)
+                {
+                    <div class="d-flex align-items-center gap-3">
+                        @if (!string.IsNullOrEmpty(Model.Album.Grupo.ImagemUrl))
+                        {
+                            <img src="@Model.Album.Grupo.ImagemUrl" alt="@Model.Album.Grupo.Nome"
+                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
+                        }
+                        <div>
+                            <h5 class="mb-0 fw-bold">@Model.Album.Grupo.Nome</h5>
+                            <small class="text-secondary">👥 Grupo • @Model.Album.Grupo.Artistas?.Count membros</small>
+                        </div>
+                    </div>
+                }
+                else if (Model.Album.Solista != null)
+                {
+                    <div class="d-flex align-items-center gap-3">
+                        @if (!string.IsNullOrEmpty(Model.Album.Solista.ImagemUrl))
+                        {
+                            <img src="@Model.Album.Solista.ImagemUrl" alt="@Model.Album.Solista.Nome"
+                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;" />
+                        }
+                        <div>
+                            <h5 class="mb-0 fw-bold">@Model.Album.Solista.Nome</h5>
+                            <small class="text-secondary">🎤 Solista</small>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-secondary mb-0">Artista Independente</p>
+                }
+            </div>
+
+            <!-- Lista de Faixas -->
+            <div class="glass-panel p-4 shadow-sm mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">🎵 Faixas</h5>
+                    <span class="badge bg-secondary rounded-pill">@(Model.Album.Musicas?.Count ?? 0) tracks</span>
+                </div>
+
+                @if (Model.Album.Musicas != null && Model.Album.Musicas.Any())
+                {
+                    <ul class="list-unstyled mb-0">
+                        @foreach (var musica in Model.Album.Musicas)
+                        {
+                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="text-secondary" style="min-width: 24px; font-size: 0.85rem;">@musica.TrackNumber.</span>
+                                    @if (musica.IsTitleTrack)
+                                    {
+                                        <span class="fw-bold" style="color: var(--kpop-pink);">★ @musica.Titulo</span>
+                                        <span class="badge-neon-pink" style="font-size: 0.7rem; padding: 3px 8px;">Title Track</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@musica.Titulo</span>
+                                    }
+                                    @if (musica.IsSingle)
+                                    {
+                                        <span class="badge-neon-purple" style="font-size: 0.7rem; padding: 3px 8px;">Single</span>
+                                    }
+                                </div>
+                                <small class="text-secondary">@musica.DuracaoFormatada</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-secondary text-center py-3">Nenhuma música registada neste álbum.</p>
+                }
+            </div>
+
+            <!-- Coleções onde aparece (só para utilizadores autenticados) -->
+            @if (User.Identity?.IsAuthenticated == true && Model.Album.AlbumColecoes != null && Model.Album.AlbumColecoes.Any())
+            {
+                <div class="glass-panel p-4 shadow-sm">
+                    <h5 class="fw-bold mb-3">📚 Presente nas Coleções</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var ac in Model.Album.AlbumColecoes)
+                        {
+                            if (ac.Colecao != null)
+                            {
+                                <a asp-page="/Colecoes/Details" asp-route-id="@ac.ColecaoId"
+                                   class="btn btn-outline-secondary rounded-pill btn-sm">
+                                    📁 @ac.Colecao.Nome
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
