@@ -31,6 +31,48 @@ namespace K_Shelf.Pages.Albuns
 
         public async Task<IActionResult> OnPostAsync()
         {
+
+            // Validações
+
+            // Título obrigatório
+            if (string.IsNullOrWhiteSpace(Album.Titulo))
+            {
+                ModelState.AddModelError("Album.Titulo", "O título do álbum é obrigatório.");
+            }
+
+            // Título com máximo de 200 caracteres
+            if (!string.IsNullOrWhiteSpace(Album.Titulo) && Album.Titulo.Length > 200)
+            {
+                ModelState.AddModelError("Album.Titulo", "O título não pode exceder 200 caracteres.");
+            }
+
+            // Verificar se já existe um álbum com o mesmo título
+            if (!string.IsNullOrWhiteSpace(Album.Titulo))
+            {
+                var albumExistente = await _context.Albuns
+                    .AnyAsync(a => a.Titulo.ToLower() == Album.Titulo.ToLower());
+
+                if (albumExistente)
+                {
+                    ModelState.AddModelError("Album.Titulo", $"Já existe um álbum com o título \"{Album.Titulo}\"!");
+                }
+            }
+
+            // Validação: Data de Lançamento não pode ser no futuro
+            if (Album.DataLancamento > DateTime.Now)
+            {
+                ModelState.AddModelError("Album.DataLancamento", "A data de lançamento não pode ser no futuro.");
+            }
+
+            // Validação: URL da capa (se fornecida)
+            if (!string.IsNullOrWhiteSpace(Album.CapaUrl))
+            {
+                if (!Uri.IsWellFormedUriString(Album.CapaUrl, UriKind.Absolute))
+                {
+                    ModelState.AddModelError("Album.CapaUrl", "O URL da capa não é válido.");
+                }
+            }
+
             // Validação: tem de ter pelo menos um artista associado
             if (!Album.GrupoId.HasValue && !Album.SolistaId.HasValue)
             {
@@ -49,11 +91,21 @@ namespace K_Shelf.Pages.Albuns
                 return Page();
             }
 
-            _context.Albuns.Add(Album);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Albuns.Add(Album);
+                await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = $"Álbum \"{Album.Titulo}\" criado com sucesso!";
-            return RedirectToPage("./Index");
+                TempData["SuccessMessage"] = $"Álbum \"{Album.Titulo}\" criado com sucesso!";
+                return RedirectToPage("./Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Erro ao criar álbum: {ex.Message}";
+                await CarregarSelectLists();
+                return Page();
+            }
+
         }
 
         private async Task CarregarSelectLists()
