@@ -83,6 +83,13 @@ namespace K_Shelf.Models
         public string? YoutubeUrl { get; set; }
 
         /// <summary>
+        /// URL de pré-visualização de áudio (geralmente um clip de 30 segundos).
+        /// </summary>
+        [Display(Name = "URL de Preview de Áudio")]
+        [Url(ErrorMessage = "O URL de preview de áudio deve ser um URL válido.")]
+        public string? PreviewAudioUrl { get; set; }
+
+        /// <summary>
         /// Chave estrangeira para o Álbum ao qual a música pertence.
         /// </summary>
         [Required(ErrorMessage = "O álbum é obrigatório")]
