@@ -1,27 +1,36 @@
-﻿@page
+@page
 @using Microsoft.AspNetCore.Identity
 @using K_Shelf.Models
 @inject UserManager<Utilizador> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @{
+    // Define o título da página
     ViewData["Title"] = "Tornar-me Admin";
 }
 
 @functions {
+    /// <summary>
+    /// Manipulador de requisições POST para atribuir a role 'Admin' ao utilizador atual.
+    /// Cria a role 'Admin' se esta ainda não existir na base de dados.
+    /// </summary>
     public async Task<IActionResult> OnPostAsync()
     {
+        // Obtém o utilizador autenticado atual
         var user = await UserManager.GetUserAsync(User);
         if (user != null)
         {
+            // Verifica se a role 'Admin' existe, caso contrário, cria-a
             if (!await RoleManager.RoleExistsAsync("Admin"))
                 await RoleManager.CreateAsync(new IdentityRole("Admin"));
 
+            // Se o utilizador ainda não tiver a role 'Admin', adiciona-a
             if (!await UserManager.IsInRoleAsync(user, "Admin"))
             {
                 await UserManager.AddToRoleAsync(user, "Admin");
                 TempData["Message"] = "Admin role adicionada com sucesso! Faça logout e login novamente.";
             }
         }
+        // Redireciona de volta para a mesma página para atualizar o estado da UI
         return RedirectToPage();
     }
 }
