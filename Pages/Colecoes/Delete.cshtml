@@ -9,15 +9,31 @@
         <div class="col-md-7">
             <div class="glass-panel p-4 shadow-sm">
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🗑️</span>
                     <div>
                         <h2 class="fw-bold mb-0 text-danger">Eliminar Coleção</h2>
                         <p class="text-secondary mb-0">Esta ação é irreversível</p>
                     </div>
                 </div>
 
+                <!-- Mensagens de Erro/Aviso -->
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                @if (TempData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning alert-dismissible fade show rounded-3" role="alert">
+                        @TempData["WarningMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
                 <div class="alert alert-warning rounded-3 mb-4">
-                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar esta coleção?</h5>
+                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar esta coleção?</h5>
                     <p class="mb-0">Todos os álbuns serão removidos da coleção (os álbuns em si não são eliminados).</p>
                 </div>
 
@@ -26,8 +42,8 @@
                     <h4 class="fw-bold mb-1">@Model.Colecao.Nome</h4>
                     <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
                     <small class="text-secondary">
-                        📅 Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
-                        📀 @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                        Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
+                        @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
                     </small>
 
                     @if (Model.Colecao.AlbumColecoes != null && Model.Colecao.AlbumColecoes.Any())
@@ -48,7 +64,7 @@
                 <form method="post">
                     <input type="hidden" asp-for="Colecao.Id" />
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button>
                         <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
                            class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
                     </div>
