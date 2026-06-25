@@ -38,6 +38,12 @@ namespace K_Shelf.Data
         /// <summary>Tabela de ligação Muitos-para-Muitos entre Álbuns e Coleções.</summary>
         public DbSet<AlbumColecao> AlbumColecoes { get; set; }
 
+        /// <summary>Tabela que armazena os Photocards disponíveis no catálogo.</summary>
+        public DbSet<Photocard> Photocards { get; set; }
+
+        /// <summary>Tabela que armazena os Photocards colecionados pelos utilizadores.</summary>
+        public DbSet<UtilizadorPhotocard> UtilizadorPhotocards { get; set; }
+
         /// <summary>
         /// Configuração avançada dos modelos e relacionamentos via Fluent API.
         /// </summary>
@@ -69,6 +75,27 @@ namespace K_Shelf.Data
                 .HasOne(m => m.Album)
                 .WithMany(a => a.Musicas)
                 .HasForeignKey(m => m.AlbumId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relação Photocard -> Album: Restringir eliminação em cascata para evitar ciclos de remoção
+            builder.Entity<Photocard>()
+                .HasOne(p => p.Album)
+                .WithMany()
+                .HasForeignKey(p => p.AlbumId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Relação UtilizadorPhotocard -> Utilizador: Eliminação em Cascata
+            builder.Entity<UtilizadorPhotocard>()
+                .HasOne(up => up.Utilizador)
+                .WithMany()
+                .HasForeignKey(up => up.UtilizadorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relação UtilizadorPhotocard -> Photocard: Eliminação em Cascata
+            builder.Entity<UtilizadorPhotocard>()
+                .HasOne(up => up.Photocard)
+                .WithMany(p => p.UtilizadorPhotocards)
+                .HasForeignKey(up => up.PhotocardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Criação de índices para otimizar pesquisas frequentes por título e chave estrangeira do álbum
