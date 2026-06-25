@@ -48,7 +48,10 @@ namespace K_Shelf.Pages.Colecoes
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
+            {
+                TempData["ErrorMessage"] = "ID da coleção não fornecido";
                 return NotFound();
+            }
 
             // Carrega a coleção incluindo as relações muitos-para-muitos com Álbuns e respetivos criadores (Grupos/Solistas)
             var colecao = await _context.Colecoes
@@ -62,12 +65,18 @@ namespace K_Shelf.Pages.Colecoes
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (colecao == null)
+            {
+                TempData["ErrorMessage"] = "Coleção não encontrada";
                 return NotFound();
+            }
 
             // Regra de Controlo de Acesso: Apenas o dono ou um Administrador pode ver os detalhes da coleção
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
+            {
+                TempData["ErrorMessage"] = "Não tem permissão para aceder a esta coleção";
                 return Forbid();
+            }
 
             Colecao = colecao;
             IsOwner = colecao.UtilizadorId == userId;
@@ -99,29 +108,59 @@ namespace K_Shelf.Pages.Colecoes
         /// <param name="id">ID da coleção.</param>
         public async Task<IActionResult> OnPostAdicionarAlbumAsync(int id)
         {
-            var colecao = await _context.Colecoes.FindAsync(id);
+            var colecao = await _context.Colecoes
+                .Include(c => c.AlbumColecoes)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            
             if (colecao == null)
+            {
+                TempData["ErrorMessage"] = "Coleção não encontrada";
                 return NotFound();
+            }
 
             // Garante que só o proprietário ou Admin podem adicionar álbuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
+            {
+                TempData["ErrorMessage"] = "Não tem permissão para adicionar álbuns a esta coleção";
                 return Forbid();
+            }
+
+            // Verificar se o álbum existe
+            var album = await _context.Albuns.FindAsync(AlbumIdParaAdicionar);
+            if (album == null)
+            {
+                TempData["ErrorMessage"] = "Álbum não encontrado";
+                return RedirectToPage("./Details", new { id });
+            }
 
             // Evita duplicações de registo na tabela Muitos-para-Muitos
             var jaExiste = await _context.AlbumColecoes
                 .AnyAsync(ac => ac.AlbumId == AlbumIdParaAdicionar && ac.ColecaoId == id);
 
-            if (!jaExiste && AlbumIdParaAdicionar > 0)
+            if (jaExiste)
             {
-                _context.AlbumColecoes.Add(new AlbumColecao
+                TempData["WarningMessage"] = $"O álbum \"{album.Titulo}\" já está nesta coleção!";
+                return RedirectToPage("./Details", new { id });
+            }
+
+            if (AlbumIdParaAdicionar > 0)
+            {
+                try
                 {
-                    AlbumId = AlbumIdParaAdicionar,
-                    ColecaoId = id,
-                    DataAdicao = DateTime.Now
-                });
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Álbum adicionado à coleção!";
+                    _context.AlbumColecoes.Add(new AlbumColecao
+                    {
+                        AlbumId = AlbumIdParaAdicionar,
+                        ColecaoId = id,
+                        DataAdicao = DateTime.Now
+                    });
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = $"Álbum \"{album.Titulo}\" adicionado à coleção com sucesso!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Erro ao adicionar álbum: {ex.Message}";
+                }
             }
 
             return RedirectToPage("./Details", new { id });
@@ -134,23 +173,50 @@ namespace K_Shelf.Pages.Colecoes
         /// <param name="albumId">ID do álbum a remover.</param>
         public async Task<IActionResult> OnPostRemoverAlbumAsync(int id, int albumId)
         {
-            var colecao = await _context.Colecoes.FindAsync(id);
+            var colecao = await _context.Colecoes
+                            .Include(c => c.AlbumColecoes)
+                            .FirstOrDefaultAsync(c => c.Id == id);
+            
             if (colecao == null)
+            {
+                TempData["ErrorMessage"] = "Coleção não encontrada";
                 return NotFound();
+            }
 
             // Garante que só o proprietário ou Admin podem remover álbuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
+            {
+                TempData["ErrorMessage"] = "Não tem permissão para remover álbuns desta coleção";
                 return Forbid();
+            }
+
+            var album = await _context.Albuns.FindAsync(albumId);
+            if (album == null)
+            {
+                TempData["ErrorMessage"] = "Álbum não encontrado";
+                return RedirectToPage("./Details", new { id });
+            }
 
             var albumColecao = await _context.AlbumColecoes
-                .FirstOrDefaultAsync(ac => ac.AlbumId == albumId && ac.ColecaoId == id);
+                  .FirstOrDefaultAsync(ac => ac.AlbumId == albumId && ac.ColecaoId == id);
 
             if (albumColecao != null)
             {
-                _context.AlbumColecoes.Remove(albumColecao);
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Álbum removido da coleção.";
+                try
+                {
+                    _context.AlbumColecoes.Remove(albumColecao);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = $"Álbum \"{album.Titulo}\" removido da coleção com sucesso";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Erro ao remover álbum: {ex.Message}";
+                }
+            }
+            else
+            {
+                TempData["WarningMessage"] = $"O álbum \"{album.Titulo}\" não está nesta coleção";
             }
 
             return RedirectToPage("./Details", new { id });
