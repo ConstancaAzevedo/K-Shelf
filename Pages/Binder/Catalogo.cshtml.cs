@@ -50,19 +50,19 @@ namespace K_Shelf.Pages.Binder
             await CarregarGruposSelectList();
 
             var query = _context.Photocards
-                .Include(p => p.Artista)
-                    .ThenInclude(a => a.Grupo)
-                .Include(p => p.Artista)
-                    .ThenInclude(a => a.Solista)
-                .Include(p => p.Album)
+                .Include(p => p.Artista!)
+                    .ThenInclude(a => a.Grupo!)
+                .Include(p => p.Artista!)
+                    .ThenInclude(a => a.Solista!)
+                .Include(p => p.Album!)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(SearchQuery))
             {
-                query = query.Where(p => p.Versao.Contains(SearchQuery) ||
-                                         (p.Artista != null && p.Artista.NomeArtistico.Contains(SearchQuery)) ||
-                                         (p.Artista != null && p.Artista.Grupo != null && p.Artista.Grupo.Nome.Contains(SearchQuery)) ||
-                                         (p.Album != null && p.Album.Titulo.Contains(SearchQuery)));
+                query = query.Where(p => p.Versao.Contains(SearchQuery!) ||
+                                         (p.Artista != null && p.Artista.NomeArtistico!.Contains(SearchQuery!)) ||
+                                         (p.Artista != null && p.Artista.Grupo != null && p.Artista.Grupo.Nome.Contains(SearchQuery!)) ||
+                                         (p.Album != null && p.Album.Titulo.Contains(SearchQuery!)));
             }
 
             if (GrupoFilter.HasValue)

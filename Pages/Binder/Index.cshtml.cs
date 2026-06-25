@@ -59,14 +59,14 @@ namespace K_Shelf.Pages.Binder
                 .CountAsync(up => up.UtilizadorId == user.Id && up.Estado == EstadoPhotocard.ParaTroca);
 
             var query = _context.UtilizadorPhotocards
-                .Include(up => up.Photocard)
-                .ThenInclude(p => p.Artista)
-                    .ThenInclude(a => a.Grupo)
-                .Include(up => up.Photocard)
-                .ThenInclude(p => p.Artista)
-                    .ThenInclude(a => a.Solista)
-                .Include(up => up.Photocard)
-                .ThenInclude(p => p.Album)
+                .Include(up => up.Photocard!)
+                .ThenInclude(p => p.Artista!)
+                    .ThenInclude(a => a.Grupo!)
+                .Include(up => up.Photocard!)
+                .ThenInclude(p => p.Artista!)
+                    .ThenInclude(a => a.Solista!)
+                .Include(up => up.Photocard!)
+                .ThenInclude(p => p.Album!)
                 .Where(up => up.UtilizadorId == user.Id)
                 .AsQueryable();
 
@@ -77,10 +77,10 @@ namespace K_Shelf.Pages.Binder
 
             if (!string.IsNullOrEmpty(SearchQuery))
             {
-                query = query.Where(up => (up.Photocard != null && up.Photocard.Versao.Contains(SearchQuery)) ||
-                                         (up.Photocard != null && up.Photocard.Artista != null && up.Photocard.Artista.NomeArtistico.Contains(SearchQuery)) ||
-                                         (up.Photocard != null && up.Photocard.Artista != null && up.Photocard.Artista.Grupo != null && up.Photocard.Artista.Grupo.Nome.Contains(SearchQuery)) ||
-                                         (up.Photocard != null && up.Photocard.Album != null && up.Photocard.Album.Titulo.Contains(SearchQuery)));
+                query = query.Where(up => (up.Photocard != null && up.Photocard.Versao.Contains(SearchQuery!)) ||
+                                         (up.Photocard != null && up.Photocard.Artista != null && up.Photocard.Artista.NomeArtistico!.Contains(SearchQuery!)) ||
+                                         (up.Photocard != null && up.Photocard.Artista != null && up.Photocard.Artista.Grupo != null && up.Photocard.Artista.Grupo.Nome.Contains(SearchQuery!)) ||
+                                         (up.Photocard != null && up.Photocard.Album != null && up.Photocard.Album.Titulo.Contains(SearchQuery!)));
             }
 
             if (GrupoFilter.HasValue)
