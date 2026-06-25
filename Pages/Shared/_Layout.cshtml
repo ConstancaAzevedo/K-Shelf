@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,6 +16,10 @@
                 <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" class="logo-k-shelf me-2" />
                 <span class="fw-bold fs-4">K-Shelf</span>
             </a>
+            <!-- Indicador Global de Utilizadores Online -->
+            <span class="badge rounded-pill ms-2 d-none d-sm-inline-block animate-fade-in" style="font-size: 0.75rem; background-color: rgba(46, 204, 113, 0.15) !important; border: 1px solid rgba(46, 204, 113, 0.3); color: #2ecc71; padding: 6px 12px;" title="Colecionadores online neste momento">
+                🟢 <span id="online-count-val">0</span> Online
+            </span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -35,6 +39,7 @@
                         <li class="nav-item"><a class="nav-link" asp-page="/Info">Informações</a></li>
                         <li class="nav-item"><a class="nav-link" asp-page="/Artistas/Index">Artistas</a></li>
                         <li class="nav-item"><a class="nav-link" asp-page="/Albuns/Index">Álbuns</a></li>
+
                         
                         <!-- Menu User Extra -->
                         @if (User.IsInRole("User"))
@@ -42,6 +47,11 @@
                             <li class="nav-item"><a class="nav-link" asp-page="/Colecoes/Index">Minhas Coleções</a></li>
                         }
                         
+
+                        <li class="nav-item"><a class="nav-link" asp-page="/Colecoes/Index">💼 Minhas Coleções</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-page="/Chat">Chat K-Pop 💬</a></li>
+
+
                         <!-- Menu Admin Extra -->
                         @if (User.IsInRole("Admin"))
                         {
@@ -88,6 +98,29 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Biblioteca SignalR Global e Lógica do Contador Online -->
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@@8.0.0/dist/browser/signalr.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Só inicializa a ligação global se NÃO estivermos na página de Chat 
+            // (para evitar abrir duas ligações simultâneas ao mesmo hub no mesmo ecrã)
+            if (window.location.pathname.toLowerCase().indexOf("/chat") === -1) {
+                const conn = new signalR.HubConnectionBuilder()
+                    .withUrl("/kpopChatHub")
+                    .withAutomaticReconnect()
+                    .build();
+
+                conn.on("UpdateOnlineCount", function (count) {
+                    const el = document.getElementById("online-count-val");
+                    if (el) el.textContent = count;
+                });
+
+                conn.start().catch(err => console.warn("SignalR Contador: " + err));
+            }
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
