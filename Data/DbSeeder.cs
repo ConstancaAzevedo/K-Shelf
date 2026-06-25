@@ -8,15 +8,24 @@ using System.Threading.Tasks;
 
 namespace K_Shelf.Data
 {
+    /// <summary>
+    /// Classe utilitária responsável por semear (popular) a base de dados com dados iniciais de teste.
+    /// Cria grupos, solistas, artistas, álbuns e músicas se estes ainda não existirem no sistema.
+    /// </summary>
     public static class DbSeeder
     {
+        /// <summary>
+        /// Semeia a base de dados de forma assíncrona.
+        /// Garante a criação física da base de dados e insere registos de vários artistas famosos de K-Pop.
+        /// </summary>
+        /// <param name="context">O contexto da base de dados da aplicação.</param>
         public static async Task SeedAsync(ApplicationDbContext context)
         {
-            // Certificar que a base de dados existe e está atualizada
+            // Certificar que a base de dados existe e está criada fisicamente na máquina
             await context.Database.EnsureCreatedAsync();
 
             // ==========================================
-            // 1. BTS & Agust D
+            // 1. BTS & Agust D (Membros e Álbuns Relacionados)
             // ==========================================
             if (!await context.Grupos.AnyAsync(g => g.Nome == "BTS"))
             {

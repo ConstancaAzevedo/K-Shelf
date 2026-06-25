@@ -6,26 +6,33 @@ using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// =========================================================================
+// 1. CONFIGURAÇÃO DE SERVIÇOS (Dependency Injection)
+// =========================================================================
+
+// Configuração do contexto de Base de Dados (ApplicationDbContext) a usar SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Configuração do ASP.NET Core Identity com definições personalizadas de segurança
 builder.Services.AddDefaultIdentity<Utilizador>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
-    options.User.RequireUniqueEmail = true;
-    options.Password.RequireDigit = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
+    options.SignIn.RequireConfirmedAccount = false; // Não exige confirmação de email
+    options.User.RequireUniqueEmail = true;         // Exige email único por utilizador
+    options.Password.RequireDigit = false;          // Não exige números na senha
+    options.Password.RequiredLength = 6;            // Comprimento mínimo de 6 caracteres
+    options.Password.RequireNonAlphanumeric = false;// Não exige caracteres especiais
+    options.Password.RequireUppercase = false;       // Não exige letras maiúsculas
+    options.Password.RequireLowercase = false;       // Não exige letras minúsculas
 })
-.AddRoles<IdentityRole>()
+.AddRoles<IdentityRole>() // Ativa suporte a Roles (Cargos como Admin/User)
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Ativar suporte para API Controllers (MVC) e Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Swagger para documentação da API
+// Configuração do Swagger para documentação automática da API REST
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -41,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 
-    // Incluir comentários XML na documentação
+    // Incluir ficheiro de documentação XML gerado pelo compilador no Swagger
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (File.Exists(xmlPath))
@@ -50,11 +57,16 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// =========================================================================
+// 2. CONFIGURAÇÃO DO PIPELINE DE PEDIDOS HTTP (Middlewares)
+// =========================================================================
+
 if (app.Environment.IsDevelopment())
 {
+    // Em desenvolvimento, ativa tratamento detalhado de erros e base de dados
     app.UseMigrationsEndPoint();
 
-    // Swagger disponível apenas em desenvolvimento
+    // Ativar a interface visual do Swagger no endpoint /swagger
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
@@ -64,29 +76,39 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
+    // Em produção, usa tratamento genérico de erros e HSTS para conexões seguras
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
+// Intercetar códigos de erro como 404 e 403 e reencaminhar para a nossa página de erro customizada
+app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
+
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // Suporte para servir ficheiros estáticos (HTML, CSS, Imagens, JS) em wwwroot
 app.UseRouting();
 
+// Ativar middlewares de segurança: autenticação de identidade e autorização de permissões
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Configuração das rotas padrão para os Controllers de API e Razor Pages
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-// Popular a base de dados se estiver vazia
+// =========================================================================
+// 3. INICIALIZAÇÃO E ALIMENTAÇÃO DA BASE DE DADOS (Seeding)
+// =========================================================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
+        
+        // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);
     }
     catch (Exception ex)
