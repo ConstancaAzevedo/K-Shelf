@@ -72,6 +72,9 @@ namespace K_Shelf.Models
         [Display(Name = "Solista")]
         public virtual Solista? Solista { get; set; }
 
+        /// <summary>Lista de Álbuns associados a este Artista.</summary>
+        public virtual ICollection<Album>? Albuns { get; set; } = new List<Album>();
+
         /// <summary>
         /// Propriedade Calculada (não guardada na BD) que classifica o tipo de artista.
         /// </summary>

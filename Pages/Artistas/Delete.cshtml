@@ -4,16 +4,35 @@
     ViewData["Title"] = "Eliminar Artista";
 }
 
-<div class="container mt-4">
+<div class="container mt-4 animate-fade-in-up">
+
+    <!-- mensagens de feedback -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show rounded-3" role="alert">
+            @TempData["WarningMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header bg-danger text-white">
-                    <h2 class="mb-0">🗑️ @ViewData["Title"]</h2>
+                    <h2 class="mb-0">@ViewData["Title"]</h2>
                 </div>
                 <div class="card-body">
                     <div class="alert alert-warning">
-                        <h4 class="mb-2">⚠️ Tem a certeza que pretende eliminar este artista?</h4>
+                        <h4 class="mb-2">Tem a certeza que pretende eliminar este artista?</h4>
                         <p class="mb-0">Esta ação é irreversível!</p>
                     </div>
 
@@ -46,7 +65,7 @@
 
                     <form method="post">
                         <input type="hidden" asp-for="Artista.Id" />
-                        <button type="submit" class="btn btn-danger">🗑️ Confirmar Eliminação</button>
+                        <button type="submit" class="btn btn-danger">Confirmar Eliminação</button>
                         <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
                     </form>
                 </div>
