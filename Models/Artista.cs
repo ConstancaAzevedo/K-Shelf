@@ -36,7 +36,7 @@ namespace K_Shelf.Models
         /// <summary>País de origem do Artista.</summary>
         [StringLength(50)]
         [Display(Name = "Nacionalidade")]
-        public string? Nacionalidade { get; set; }
+        public string? Pais { get; set; }
 
         /// <summary>Caminho local ou URL absoluto da foto do Artista.</summary>
         [Display(Name = "URL da Imagem")]
