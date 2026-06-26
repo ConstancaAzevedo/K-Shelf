@@ -64,6 +64,10 @@
             <h2 class="display-4 fw-bold" id="albunsCount">0+</h2>
             <p class="lead">Álbuns</p>
         </div>
+        <div class="col-md-3 text-center">
+            <h2 class="display-4 fw-bold" id="photocardsCount">0+</h2>
+            <p class="lead">Photocards</p>
+        </div>
         <div class="col-md-4 text-center">
             <h2 class="display-4 fw-bold" id="colecoesCount">0+</h2>
             <p class="lead">Coleções</p>
@@ -77,5 +81,6 @@
         document.getElementById('artistasCount').innerText = '@Model.ArtistasCount';
         document.getElementById('albunsCount').innerText = '@Model.AlbunsCount';
         document.getElementById('colecoesCount').innerText = '@Model.ColecoesCount';
+        document.getElementById('photocardsCount').innerText = '@Model.PhotocardsCount';
     </script>
 }

@@ -30,6 +30,7 @@ namespace K_Shelf.Pages.Admin
         public int TotalArtistas { get; set; }
         public int TotalAlbuns { get; set; }
         public int TotalColecoes { get; set; }
+        public int TotalPhotocards { get; set; }
 
         public List<RoleCount> UsersByRole { get; set; } = new();
         public List<ActivityItem> RecentActivities { get; set; } = new();
@@ -41,6 +42,7 @@ namespace K_Shelf.Pages.Admin
             TotalArtistas = await _context.Artistas.CountAsync();
             TotalAlbuns = await _context.Albuns.CountAsync();
             TotalColecoes = await _context.Colecoes.CountAsync();
+            TotalPhotocards = await _context.Photocards.CountAsync();
 
             // Utilizadores por Role
             var roles = await _roleManager.Roles.ToListAsync();
@@ -70,8 +72,7 @@ namespace K_Shelf.Pages.Admin
                 });
             }
 
-            // Atividades Recentes (exemplo - podes adaptar consoante o teu modelo)
-            // Isto é um exemplo, podes buscar logs ou registos de auditoria se tiveres
+            // Atividades Recentes 
             RecentActivities = new List<ActivityItem>
             {
                 new ActivityItem
@@ -88,11 +89,17 @@ namespace K_Shelf.Pages.Admin
                 },
                 new ActivityItem
                 {
+                    Icon = "🃏",
+                    Description = $"Último photocard adicionado: {await GetLatestPhotocardName()}",
+                    TimeAgo = "Recentemente"
+                },
+                new ActivityItem
+                {
                     Icon = "📚",
                     Description = $"Última coleção criada: {await GetLatestColecaoName()}",
                     TimeAgo = "Recentemente"
-                }
-            };
+                }                
+             };
         }
 
         private async Task<string> GetLatestAlbumName()
@@ -117,6 +124,14 @@ namespace K_Shelf.Pages.Admin
                 .OrderByDescending(c => c.Id)
                 .FirstOrDefaultAsync();
             return colecao?.Nome ?? "Nenhuma";
+        }
+
+        private async Task<string> GetLatestPhotocardName()
+        {
+            var photocard = await _context.Photocards
+                .OrderByDescending(p => p.Id)
+                .FirstOrDefaultAsync();
+            return photocard?.Versao ?? "Nenhum";
         }
     }
 

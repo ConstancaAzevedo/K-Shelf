@@ -19,28 +19,35 @@ namespace K_Shelf.Pages
         }
 
         /// <summary>
-        /// Total de artistas cadastrados na base de dados.
+        /// Total de artistas na base de dados
         /// </summary>
         public int ArtistasCount { get; set; }
 
         /// <summary>
-        /// Total de álbuns cadastrados na base de dados.
+        /// Total de álbuns na base de dados
         /// </summary>
         public int AlbunsCount { get; set; }
 
         /// <summary>
-        /// Total de coleções criadas pelos utilizadores.
+        /// Total de coleções criadas 
         /// </summary>
         public int ColecoesCount { get; set; }
 
         /// <summary>
-        /// Método invocado na requisição GET da página. Obtém os contadores estatísticos assincronamente.
+        /// Total de photocards na base de dados
+        /// </summary>
+        public int PhotocardsCount { get; set; }
+
+        /// <summary>
+        /// Método invocado na requisição GET da página
+        /// Obtém os contadores estatísticos assincronamente
         /// </summary>
         public async Task OnGetAsync()
         {
             ArtistasCount = await _context.Artistas.CountAsync();
             AlbunsCount = await _context.Albuns.CountAsync();
             ColecoesCount = await _context.Colecoes.CountAsync();
+            PhotocardsCount = await _context.Photocards.CountAsync();
         }
     }
 }
