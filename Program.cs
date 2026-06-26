@@ -102,6 +102,9 @@ app.MapRazorPages();
 // Mapear o endpoint do Hub do SignalR para o Chat e Contador de utilizadores
 app.MapHub<K_Shelf.Hubs.KpopChatHub>("/kpopChatHub");
 
+// Mapear o endpoint do Hub de Notificações
+app.MapHub<K_Shelf.Hubs.NotificacaoHub>("/notificacaoHub");
+
 // 3. INICIALIZAÇÃO E ALIMENTAÇÃO DA BASE DE DADOS (Seeding)
 using (var scope = app.Services.CreateScope())
 {
