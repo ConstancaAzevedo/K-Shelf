@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Artistas
 {
@@ -11,10 +13,12 @@ namespace K_Shelf.Pages.Artistas
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext;
 
-        public CreateModel(ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -105,6 +109,15 @@ namespace K_Shelf.Pages.Artistas
             {
                 _context.Artistas.Add(Artista);
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Artista",
+                    Acao = "Criado",
+                    Mensagem = $"Novo artista '{Artista.Nome}' foi adicionado!",
+                    Data = DateTime.Now
+                });
 
                 TempData["SuccessMessage"] = $"Artista \"{Artista.NomeExibicao}\" criado com sucesso!";
                 return RedirectToPage("./Index");

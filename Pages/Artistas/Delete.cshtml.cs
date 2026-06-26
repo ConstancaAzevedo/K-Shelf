@@ -1,9 +1,11 @@
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Artistas
 {
@@ -11,10 +13,14 @@ namespace K_Shelf.Pages.Artistas
     public class DeleteModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
-        public DeleteModel(ApplicationDbContext context)
+
+        public DeleteModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
+
         }
 
         [BindProperty]
@@ -79,6 +85,15 @@ namespace K_Shelf.Pages.Artistas
 
                 _context.Artistas.Remove(artista);
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Artista",
+                    Acao = "Deletado",
+                    Mensagem = $"Artista '{nome}' foi removido!",
+                    Data = DateTime.Now
+                });
 
                 TempData["SuccessMessage"] = $"Artista \"{nome}\" eliminado com sucesso! ({numAlbuns} álbum(ns) removidos)";
             }
