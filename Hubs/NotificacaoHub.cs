@@ -137,20 +137,5 @@ namespace K_Shelf.Hubs
                 Data = DateTime.Now
             });
         }
-
-        /// <summary>
-        /// Método executado quando um utilizador estabelece ligação ao Hub.
-        /// </summary>
-        public override async Task OnConnectedAsync()
-        {
-            await Clients.Caller.SendAsync("ReceberNotificacao", new
-            {
-                Tipo = "Sistema",
-                Acao = "Conectado",
-                Mensagem = "Conectado ao sistema de notificações em tempo real!",
-                Data = DateTime.Now
-            });
-            await base.OnConnectedAsync();
-        }
     }
 }
