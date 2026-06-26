@@ -27,7 +27,7 @@ namespace K_Shelf.Models
         /// </summary>
         [Display(Name = "Duração")]
         [RegularExpression(@"^([0-9]{1,2}):([0-9]{2})$", ErrorMessage = "Formato inválido. Use mm:ss (ex: 3:45)")]
-        public string? Duracao { get; set; } // Formato: "3:45"
+        public TimeSpan? Duracao { get; set; } // Formato: 00:03:45
 
         /// <summary>
         /// Posição da faixa na ordem do álbum (Track Number).
@@ -110,9 +110,9 @@ namespace K_Shelf.Models
         {
             get
             {
-                if (string.IsNullOrEmpty(Duracao))
-                     return "--:--";
-                return Duracao;
+                if (!Duracao.HasValue)
+                    return "--:--";
+                return Duracao.Value.ToString(@"mm\:ss");
             }
         }
 

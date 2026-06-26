@@ -12,6 +12,8 @@ namespace K_Shelf.Data
     /// Classe utilitária responsável por semear (popular) a base de dados com dados iniciais de teste.
     /// Cria grupos, solistas, artistas, álbuns e músicas se estes ainda não existirem no sistema.
     /// </summary>
+    /// 
+
     public static class DbSeeder
     {
         /// <summary>
@@ -19,6 +21,19 @@ namespace K_Shelf.Data
         /// Garante a criação física da base de dados e insere registos de vários artistas famosos de K-Pop.
         /// </summary>
         /// <param name="context">O contexto da base de dados da aplicação.</param>
+        /// 
+
+        // método auxiliar para converter string "mm:ss" em TimeSpan
+        private static TimeSpan? ParseDuracao(string duracao)
+        {
+            if (string.IsNullOrEmpty(duracao)) return null;
+            if (TimeSpan.TryParseExact(duracao, @"mm\:ss", System.Globalization.CultureInfo.InvariantCulture, out var result))
+                return result;
+            if (TimeSpan.TryParse(duracao, out var result2))
+                return result2;
+            return null;
+        }
+
         public static async Task SeedAsync(ApplicationDbContext context)
         {
             // Certificar que a base de dados existe e está criada fisicamente na máquina
@@ -124,11 +139,11 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "ON", Duracao = "4:06", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-                    new Musica { Titulo = "Black Swan", Duracao = "3:18", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-                    new Musica { Titulo = "Filter", Duracao = "3:00", TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-                    new Musica { Titulo = "Haegeum", Duracao = "2:48", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = dday.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-                    new Musica { Titulo = "People Pt.2 (feat. IU)", Duracao = "3:33", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = dday.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
+                    new Musica { Titulo = "ON", Duracao = ParseDuracao("4:06"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+                    new Musica { Titulo = "Black Swan", Duracao = ParseDuracao("3:18"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+                    new Musica { Titulo = "Filter", Duracao = ParseDuracao("3:00"), TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = mapOfTheSoul.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+                    new Musica { Titulo = "Haegeum", Duracao = ParseDuracao("2:48"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = dday.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+                    new Musica { Titulo = "People Pt.2 (feat. IU)", Duracao = ParseDuracao("3:33"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = dday.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -192,8 +207,8 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "Lovesick Girls", Duracao = "3:12", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = theAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
-                    new Musica { Titulo = "How You Like That", Duracao = "3:01", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = theAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
+                    new Musica { Titulo = "Lovesick Girls", Duracao = ParseDuracao("3:12"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = theAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
+                    new Musica { Titulo = "How You Like That", Duracao = ParseDuracao("3:01"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = theAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -243,8 +258,8 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "Super Shy", Duracao = "2:34", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = getUp.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
-                    new Musica { Titulo = "ETA", Duracao = "2:31", TrackNumber = 2, IsSingle = true, IsTitleTrack = true, AlbumId = getUp.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" }
+                    new Musica { Titulo = "Super Shy", Duracao = ParseDuracao("2:34"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = getUp.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+                    new Musica { Titulo = "ETA", Duracao = ParseDuracao("2:31"), TrackNumber = 2, IsSingle = true, IsTitleTrack = true, AlbumId = getUp.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -293,8 +308,8 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "LILAC", Duracao = "3:34", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = lilac.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" },
-                    new Musica { Titulo = "Celebrity", Duracao = "3:15", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = lilac.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" }
+                    new Musica { Titulo = "LILAC", Duracao = ParseDuracao("3:34"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = lilac.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" },
+                    new Musica { Titulo = "Celebrity", Duracao = ParseDuracao("3:15"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = lilac.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -358,9 +373,9 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "S-Class", Duracao = "3:16", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" },
-                    new Musica { Titulo = "Super Bowl", Duracao = "3:06", TrackNumber = 2, IsSingle = false, IsTitleTrack = false, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3" },
-                    new Musica { Titulo = "TOPLINE (feat. Tiger JK)", Duracao = "3:24", TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3" }
+                    new Musica { Titulo = "S-Class", Duracao = ParseDuracao("3:16"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" },
+                    new Musica { Titulo = "Super Bowl", Duracao = ParseDuracao("3:06"), TrackNumber = 2, IsSingle = false, IsTitleTrack = false, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3" },
+                    new Musica { Titulo = "TOPLINE (feat. Tiger JK)", Duracao = ParseDuracao("3:24"), TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = fiveStar.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -458,9 +473,9 @@ namespace K_Shelf.Data
             if (!await context.Musicas.AnyAsync(m => m.AlbumId == darkBlood.Id))
             {
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "Bite Me", Duracao = "2:37", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" },
-                    new Musica { Titulo = "Sacrifice (Eat Me Up)", Duracao = "3:22", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" },
-                    new Musica { Titulo = "Chaconne", Duracao = "2:59", TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
+                    new Musica { Titulo = "Bite Me", Duracao = ParseDuracao("2:37"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" },
+                    new Musica { Titulo = "Sacrifice (Eat Me Up)", Duracao = ParseDuracao("3:22"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" },
+                    new Musica { Titulo = "Chaconne", Duracao = ParseDuracao("2:59"), TrackNumber = 3, IsSingle = false, IsTitleTrack = false, AlbumId = darkBlood.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -511,8 +526,8 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "In Bloom", Duracao = "3:00", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = youthInShade.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-                    new Musica { Titulo = "New Kidz on the Block", Duracao = "3:02", TrackNumber = 2, IsSingle = false, IsTitleTrack = false, AlbumId = youthInShade.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+                    new Musica { Titulo = "In Bloom", Duracao = ParseDuracao("3:00"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = youthInShade.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+                    new Musica { Titulo = "New Kidz on the Block", Duracao = ParseDuracao("3:02"), TrackNumber = 2, IsSingle = false, IsTitleTrack = false, AlbumId = youthInShade.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
@@ -574,8 +589,8 @@ namespace K_Shelf.Data
                 await context.SaveChangesAsync();
 
                 context.Musicas.AddRange(
-                    new Musica { Titulo = "DASH", Duracao = "2:46", TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = breakAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-                    new Musica { Titulo = "Soñar (Breaker)", Duracao = "2:55", TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = breakAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
+                    new Musica { Titulo = "DASH", Duracao = ParseDuracao("2:46"), TrackNumber = 1, IsSingle = true, IsTitleTrack = true, AlbumId = breakAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+                    new Musica { Titulo = "Soñar (Breaker)", Duracao = ParseDuracao("2:55"), TrackNumber = 2, IsSingle = true, IsTitleTrack = false, AlbumId = breakAlbum.Id, PreviewAudioUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
                 );
                 await context.SaveChangesAsync();
             }
