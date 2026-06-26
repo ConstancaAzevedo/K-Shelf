@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
@@ -17,13 +19,15 @@ namespace K_Shelf.Pages.Photocards
     public class DeleteModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
         /// <summary>
         /// Construtor com injeção de dependência do contexto da base de dados.
         /// </summary>
-        public DeleteModel(ApplicationDbContext context)
+        public DeleteModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         /// <summary>O photocard a ser apresentado para confirmação de eliminação.</summary>
@@ -80,6 +84,16 @@ namespace K_Shelf.Pages.Photocards
                     // Remove o photocard e persiste a alteração na base de dados
                     _context.Photocards.Remove(photocard);
                     await _context.SaveChangesAsync();
+
+                    // notificação em tempo real
+                    await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                    {
+                        Tipo = "Photocard",
+                        Acao = "Deletado",
+                        Mensagem = $"Photocard '{photocard.Versao}' foi removido!",
+                        Data = DateTime.Now
+                    });
+
                     TempData["SuccessMessage"] = $"Photocard \"{photocard.Versao}\" eliminado com sucesso!";
                 }
                 catch (Exception ex)

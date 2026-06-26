@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +21,15 @@ namespace K_Shelf.Pages.Photocards
     public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
         /// <summary>
         /// Construtor com injeção de dependência do contexto da base de dados.
         /// </summary>
-        public EditModel(ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         /// <summary>Dados do photocard a editar, carregados da BD e vinculados ao formulário.</summary>
@@ -102,6 +106,16 @@ namespace K_Shelf.Pages.Photocards
             try
             {
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Photocard",
+                    Acao = "Editado",
+                    Mensagem = $"Photocard '{Photocard.Versao}' foi atualizado!",
+                    Data = DateTime.Now
+                });
+
                 TempData["SuccessMessage"] = $"Photocard \"{Photocard.Versao}\" editado com sucesso!";
                 return RedirectToPage("./Index");
             }

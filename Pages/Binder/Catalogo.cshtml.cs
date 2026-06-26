@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,14 +22,16 @@ namespace K_Shelf.Pages.Binder
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<Utilizador> _userManager;
+        private readonly IHubContext<NotificacaoHub> _hubContext; 
 
         /// <summary>
         /// Construtor com injeção de dependência do contexto da BD e do gestor de utilizadores.
         /// </summary>
-        public CatalogoModel(ApplicationDbContext context, UserManager<Utilizador> userManager)
+        public CatalogoModel(ApplicationDbContext context, UserManager<Utilizador> userManager, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         /// <summary>Lista de photocards filtrada para exibição no catálogo.</summary>
@@ -144,11 +148,19 @@ namespace K_Shelf.Pages.Binder
             }
 
             await _context.SaveChangesAsync();
+
+            // notificação em tmepo real
+            await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+            {
+                Tipo = "Binder",
+                Acao = "Adicionado",
+                Mensagem = $"Photocard '{photocard.Versao}' foi adicionado ao Binder de {user.Email}!",
+                Data = DateTime.Now
+            });
+
             TempData["SuccessMessage"] = $"Photocard adicionado ao teu Binder com sucesso!";
             return RedirectToPage();
         }
-
-
 
         /// <summary>
         /// Método auxiliar que carrega todos os grupos para o dropdown de filtro do catálogo.

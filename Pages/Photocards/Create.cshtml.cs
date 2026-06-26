@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,13 +21,15 @@ namespace K_Shelf.Pages.Photocards
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
         /// <summary>
         /// Construtor com injeção de dependência do contexto da base de dados.
         /// </summary>
-        public CreateModel(ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         /// <summary>Dados do photocard a criar, preenchidos a partir do formulário.</summary>
@@ -87,6 +91,15 @@ namespace K_Shelf.Pages.Photocards
             {
                 _context.Photocards.Add(Photocard);
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Photocard",
+                    Acao = "Criado",
+                    Mensagem = $"Novo photocard '{Photocard.Versao}' foi adicionado!",
+                    Data = DateTime.Now
+                });
 
                 TempData["SuccessMessage"] = $"Photocard \"{Photocard.Versao}\" adicionado com sucesso!";
                 return RedirectToPage("./Index");
