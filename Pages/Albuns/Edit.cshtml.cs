@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Albuns
 {
@@ -12,10 +14,12 @@ namespace K_Shelf.Pages.Albuns
     public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
-        public EditModel(ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -128,6 +132,15 @@ namespace K_Shelf.Pages.Albuns
                 albumOriginal.SolistaId = Album.SolistaId;
 
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Álbum",
+                    Acao = "Editado",
+                    Mensagem = $"✏️ Álbum '{Album.Titulo}' foi atualizado!",
+                    Data = DateTime.Now
+                });
 
                 TempData["SuccessMessage"] = $"Álbum \"{Album.Titulo}\" atualizado com sucesso!";
                 return RedirectToPage("./Index");

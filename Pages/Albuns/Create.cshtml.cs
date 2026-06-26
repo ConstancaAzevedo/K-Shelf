@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Albuns
 {
@@ -12,10 +14,14 @@ namespace K_Shelf.Pages.Albuns
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
 
-        public CreateModel(ApplicationDbContext context)
+
+        public CreateModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
+
         }
 
         [BindProperty]
@@ -95,6 +101,15 @@ namespace K_Shelf.Pages.Albuns
             {
                 _context.Albuns.Add(Album);
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Álbum",
+                    Acao = "Criado",
+                    Mensagem = $"Novo álbum '{Album.Titulo}' foi adicionado!",
+                    Data = DateTime.Now
+                });
 
                 TempData["SuccessMessage"] = $"Álbum \"{Album.Titulo}\" criado com sucesso!";
                 return RedirectToPage("./Index");
