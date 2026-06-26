@@ -64,7 +64,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasIndex("SolistaId");
 
-                    b.ToTable("Albuns");
+                    b.ToTable("Albuns", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.AlbumColecao", b =>
@@ -82,7 +82,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasIndex("ColecaoId");
 
-                    b.ToTable("AlbumColecoes");
+                    b.ToTable("AlbumColecoes", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Artista", b =>
@@ -139,7 +139,7 @@ namespace K_Shelf.Data.Migrations
                         .IsUnique()
                         .HasFilter("[SolistaId] IS NOT NULL");
 
-                    b.ToTable("Artistas");
+                    b.ToTable("Artistas", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Colecao", b =>
@@ -170,7 +170,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasIndex("UtilizadorId");
 
-                    b.ToTable("Colecoes");
+                    b.ToTable("Colecoes", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Grupo", b =>
@@ -205,7 +205,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Grupos");
+                    b.ToTable("Grupos", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Musica", b =>
@@ -259,7 +259,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasIndex("Titulo");
 
-                    b.ToTable("Musicas");
+                    b.ToTable("Musicas", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Solista", b =>
@@ -290,7 +290,7 @@ namespace K_Shelf.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Solistas");
+                    b.ToTable("Solistas", (string)null);
                 });
 
             modelBuilder.Entity("K_Shelf.Models.Utilizador", b =>
