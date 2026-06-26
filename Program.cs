@@ -139,9 +139,19 @@ using (var scope = app.Services.CreateScope())
                     INSERT INTO [__EFMigrationsHistory] VALUES ('20260603095412_CriarTabelasNovas', '8.0.0');
                 IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260625181812_AddAlbunsToArtista')
                     INSERT INTO [__EFMigrationsHistory] VALUES ('20260625181812_AddAlbunsToArtista', '8.0.0');
-                IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260625215000_AddPhotocardModels')
+                 IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '20260625215000_AddPhotocardModels')
                     INSERT INTO [__EFMigrationsHistory] VALUES ('20260625215000_AddPhotocardModels', '8.0.0');
             ");
+
+            // 2.5 Corrigir localmente a coluna Nacionalidade para Pais na tabela Artistas para compatibilidade com o Azure
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS(SELECT * FROM sys.columns 
+                          WHERE Name = N'Nacionalidade' AND Object_ID = Object_ID(N'Artistas'))
+                   AND NOT EXISTS(SELECT * FROM sys.columns 
+                                  WHERE Name = N'Pais' AND Object_ID = Object_ID(N'Artistas'))
+                BEGIN
+                    EXEC sp_rename 'Artistas.Nacionalidade', 'Pais', 'COLUMN';
+                END");
 
             // 3. Criar a tabela Photocards caso não exista
             await context.Database.ExecuteSqlRawAsync(@"
