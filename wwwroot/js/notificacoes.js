@@ -40,17 +40,32 @@ function iniciarNotificacoes() {
 function mostrarToast(notificacao) {
     const toastContainer = document.getElementById('toast-container') || criarToastContainer();
 
+    // ============================================================
+    // CORREÇÃO: Verificar se a data existe antes de formatar
+    // ============================================================
+    let dataFormatada = '';
+    if (notificacao.Data) {
+        try {
+            const data = new Date(notificacao.Data);
+            if (!isNaN(data.getTime())) {
+                dataFormatada = data.toLocaleTimeString('pt-PT');
+            }
+        } catch (e) {
+            console.warn('Erro ao formatar data:', e);
+        }
+    }
+
     const toast = document.createElement('div');
     toast.className = `toast-notification animate-slide-in`;
     toast.innerHTML = `
         <div class="toast-header">
             <span class="toast-icon">🔔</span>
-            <strong class="toast-title">${notificacao.Tipo}</strong>
-            <small class="toast-time ms-auto">${new Date(notificacao.Data).toLocaleTimeString('pt-PT')}</small>
+            <strong class="toast-title">${notificacao.Tipo || 'Notificação'}</strong>
+            <small class="toast-time ms-auto">${dataFormatada}</small>
             <button type="button" class="btn-close" onclick="this.closest('.toast-notification').remove()"></button>
         </div>
         <div class="toast-body">
-            ${notificacao.Mensagem}
+            ${notificacao.Mensagem || 'Notificação recebida'}
         </div>
     `;
 
