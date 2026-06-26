@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
-using K_Shelf.Hubs;
-using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,16 +17,13 @@ namespace K_Shelf.Pages.Photocards
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
-
 
         /// <summary>
         /// Construtor com injeção de dependência do contexto da base de dados.
         /// </summary>
-        public IndexModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
-            _hubContext = hubContext;
 
         }
 
