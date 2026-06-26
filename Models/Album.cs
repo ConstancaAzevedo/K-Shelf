@@ -36,7 +36,9 @@ namespace K_Shelf.Models
             EP,
             Compilação,
             AoVivo,
-            Remix
+            Remix,
+            MiniAlbum,
+            Album
         }
 
         /// <summary>Tipo do Álbum (ex: Studio, EP, Single).</summary>

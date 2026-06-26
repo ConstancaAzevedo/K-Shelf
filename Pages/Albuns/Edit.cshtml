@@ -61,17 +61,23 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.GrupoId" class="form-label fw-bold"></label>
-                                <select asp-for="Album.GrupoId" class="form-select search-input-kpop"
-                                        asp-items="Model.GruposSelectList">
-                                    <option value="">-- Nenhum Grupo --</option>
-                                </select>
+                                <div class="d-flex gap-2">
+                                    <select asp-for="Album.GrupoId" class="form-select search-input-kpop"
+                                            asp-items="Model.GruposSelectList">
+                                        <option value="">-- Nenhum Grupo --</option>
+                                    </select>
+                                    <a asp-page="/Grupos/Create" class="btn btn-outline-primary btn-sm" target="_blank">➕</a>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.SolistaId" class="form-label fw-bold"></label>
-                                <select asp-for="Album.SolistaId" class="form-select search-input-kpop"
-                                        asp-items="Model.SolistasSelectList">
-                                    <option value="">-- Nenhum Solista --</option>
-                                </select>
+                                <div class="d-flex gap-2">
+                                    <select asp-for="Album.SolistaId" class="form-select search-input-kpop"
+                                            asp-items="Model.SolistasSelectList">
+                                        <option value="">-- Nenhum Solista --</option>
+                                    </select>
+                                    <a asp-page="/Solistas/Create" class="btn btn-outline-primary btn-sm" target="_blank">➕</a>
+                                </div>
                             </div>
                         </div>
                     </div>
