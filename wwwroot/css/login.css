@@ -232,3 +232,35 @@
             font-size: 24px;
         }
 }
+
+/* Checkbox personalizada */
+.form-check-input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #ced4da;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .form-check-input[type="checkbox"]:checked {
+        background-color: var(--kpop-pink);
+        border-color: var(--kpop-pink);
+    }
+
+    .form-check-input[type="checkbox"]:hover {
+        border-color: var(--kpop-purple);
+    }
+
+/* Link "Esqueceu a password?" */
+.forgot-link {
+    color: var(--kpop-pink);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+    .forgot-link:hover {
+        color: var(--kpop-purple);
+        text-decoration: underline;
+    }

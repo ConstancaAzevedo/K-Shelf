@@ -2,7 +2,8 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Iniciar Sessão";
+    ViewData["Subtitle"] = "Bem-vindo de volta à K-Shelf!";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -11,8 +12,9 @@
 
 <div class="login-container">
     <div class="header">
-        <h2>K-Shelf</h2>
-        <p>Bem-vindo</p>
+        <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" style="max-height: 80px;" />
+        <h2 class="fw-bold mt-3">@ViewData["Title"]</h2>
+        <p class="text-white">@ViewData["Subtitle"]</p>
     </div>
 
     <div class="content">
@@ -22,7 +24,9 @@
 
 
         <form id="account" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert">
+                <strong>?? Erro no Login:</strong>
+            </div>
             
             <div class="form-group">
                 <label asp-for="Input.Email">Email</label>
@@ -36,12 +40,15 @@
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
-            <div class="checkbox-group">
-                <label class="checkbox-label">
-                    <input class="form-check-input" asp-for="Input.RememberMe" />
-                    <span>@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+            <div class="checkbox-group d-flex justify-content-between align-items-center mb-3">
+                <label class="checkbox-label d-flex align-items-center" style="cursor: pointer;">
+                    <input class="form-check-input" asp-for="Input.RememberMe"
+                           style="width: 20px; height: 20px; margin-right: 8px; cursor: pointer; accent-color: var(--kpop-pink);" />
+                    <span style="font-size: 0.95rem;">Lembrar-me</span>
                 </label>
-                <a id="forgot-password" asp-page="./ForgotPassword" class="forgot-link">Esqueceu a password?</a>
+                <a id="forgot-password" asp-page="./ForgotPassword" class="forgot-link" style="color: var(--kpop-pink); font-size: 0.9rem; text-decoration: none;">
+                    Esqueceu a password?
+                </a>
             </div>
 
             <button id="login-submit" type="submit" class="login-btn">Entrar</button>
@@ -68,8 +75,8 @@
         }
     </div>
 
-    <div class="footer" style="margin-left: 20px; margin-bottom: 20px">
-        © 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
+    <div class="footer-register">
+        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a>
     </div>
 </div>
 

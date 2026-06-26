@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Registar";
+    ViewData["Subtitle"] = "Crie a sua conta na K-Shelf!";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -10,8 +11,9 @@
 
 <div class="register-container">
     <div class="header">
-        <h2>K-Shelf</h2>
-        <p>Criar nova conta</p>
+        <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" style="max-height: 80px;" />
+        <h2 class="fw-bold mt-3">@ViewData["Title"]</h2>
+        <p class="text-white">@ViewData["Subtitle"]</p>
     </div>
 
     <div class="content">
@@ -63,8 +65,8 @@
         }
     </div>
 
-    <div class="footer-register">
-        © 2026 - <a href="#">K-Shelf</a> - <a href="#">Privacy</a>
+        
+        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a>
     </div>
 </div>
 
