@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using K_Shelf.Data;
 using K_Shelf.Models;
+using K_Shelf.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace K_Shelf.Pages.Colecoes
@@ -12,10 +14,12 @@ namespace K_Shelf.Pages.Colecoes
     public class EditModel : PageModel
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<NotificacaoHub> _hubContext; 
 
-        public EditModel(ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -101,6 +105,18 @@ namespace K_Shelf.Pages.Colecoes
             try
             {
                 await _context.SaveChangesAsync();
+
+                // notificação em tempo real
+                await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
+                {
+                    Tipo = "Coleção",
+                    Acao = "Editada",
+                    Mensagem = $"Coleção '{Colecao.Nome}' foi atualizada!",
+                    Data = DateTime.Now
+                });
+
+                TempData["SuccessMessage"] = $"Coleção \"{Colecao.Nome}\" atualizada com sucesso!";
+                return RedirectToPage("./Details", new { id = Colecao.Id });
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -108,9 +124,6 @@ namespace K_Shelf.Pages.Colecoes
                     return NotFound();
                 throw;
             }
-
-            TempData["SuccessMessage"] = $"Coleção \"{Colecao.Nome}\" atualizada com sucesso!";
-            return RedirectToPage("./Details", new { id = Colecao.Id });
         }
     }
 }
