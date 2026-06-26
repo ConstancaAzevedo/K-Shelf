@@ -61,7 +61,7 @@ namespace K_Shelf.Pages.Artistas
             }
 
             // Nacionalidade - máximo 50 caracteres
-            if (!string.IsNullOrWhiteSpace(Artista.Nacionalidade) && Artista.Nacionalidade.Length > 50)
+            if (!string.IsNullOrWhiteSpace(Artista.Pais) && Artista.Pais.Length > 50)
             {
                 ModelState.AddModelError("Artista.Nacionalidade", "A nacionalidade não pode exceder 50 caracteres.");
             }

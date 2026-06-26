@@ -45,7 +45,7 @@ namespace K_Shelf.Pages.Artistas
             {
                 query = query.Where(a => a.Nome.Contains(SearchTerm) ||
                                          (a.NomeArtistico != null && a.NomeArtistico.Contains(SearchTerm)) ||
-                                         (a.Nacionalidade != null && a.Nacionalidade.Contains(SearchTerm)) ||
+                                         (a.Pais != null && a.Pais.Contains(SearchTerm)) ||
                                          (a.Posicao != null && a.Posicao.Contains(SearchTerm)));
             }
 

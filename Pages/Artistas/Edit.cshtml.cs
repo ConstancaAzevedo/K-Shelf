@@ -75,7 +75,7 @@ namespace K_Shelf.Pages.Artistas
             }
 
             // Nacionalidade - máximo 50 caracteres
-            if (!string.IsNullOrWhiteSpace(Artista.Nacionalidade) && Artista.Nacionalidade.Length > 50)
+            if (!string.IsNullOrWhiteSpace(Artista.Pais) && Artista.Pais.Length > 50)
             {
                 ModelState.AddModelError("Artista.Nacionalidade", "A nacionalidade não pode exceder 50 caracteres.");
             }
@@ -130,7 +130,7 @@ namespace K_Shelf.Pages.Artistas
                 artistaOriginal.NomeArtistico = Artista.NomeArtistico;
                 artistaOriginal.DataNascimento = Artista.DataNascimento;
                 artistaOriginal.Posicao = Artista.Posicao;
-                artistaOriginal.Nacionalidade = Artista.Nacionalidade;
+                artistaOriginal.Pais = Artista.Pais;
                 artistaOriginal.ImagemUrl = Artista.ImagemUrl;
                 artistaOriginal.DataEntrada = Artista.DataEntrada;
                 artistaOriginal.DataSaida = Artista.DataSaida;
