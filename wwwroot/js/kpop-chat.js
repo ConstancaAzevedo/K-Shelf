@@ -186,11 +186,23 @@ document.addEventListener("DOMContentLoaded", function () {
     // Obter o nome do utilizador atual (para comparação)
     const userHeader = document.querySelector(".navbar-k-shelf .nav-link.text-white");
     if (userHeader) {
-        currentUser = userHeader.textContent.replace("Olá ", "").replace("!", "").trim();
-        if (currentUser.includes("@")) {
-            currentUser = currentUser.split('@')[0];
+        let userText = userHeader.textContent.trim();
+        // Remover "Olá " e "!" se existirem
+        userText = userText.replace(/^Olá\s*/, "").replace(/!$/, "").trim();
+        // Se for email, usar a parte antes do @
+        if (userText.includes("@")) {
+            currentUser = userText.split('@')[0];
+        } else {
+            currentUser = userText;
         }
     }
+
+    // Fallback: se não encontrar, usar "Anónimo" (mas o chat não vai funcionar bem)
+    if (!currentUser) {
+        currentUser = "Anónimo";
+    }
+
+    console.log("Utilizador atual:", currentUser);
 
     connection.start().then(function () {
         if (sendButton) sendButton.disabled = false;
