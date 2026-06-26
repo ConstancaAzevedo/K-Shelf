@@ -1,70 +1,149 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Criar a ligação ao Hub do SignalR
-    const connection = new signalR.HubConnectionBuilder()
-        .withUrl("/kpopChatHub")
-        .withAutomaticReconnect()
-        .build();
 
+    // ELEMENTOS DOM
     const sendButton = document.getElementById("chat-send-btn");
     const messageInput = document.getElementById("chat-message-input");
     const messagesContainer = document.getElementById("messages-container");
     const onlineCounterPage = document.getElementById("chat-online-count");
     const onlineCounterNavbar = document.getElementById("online-count-val");
+    const charCounter = document.getElementById("char-counter");
+    const typingIndicator = document.getElementById("typing-indicator");
+    const typingUsersSpan = document.getElementById("typing-users");
+
+    let currentUser = '';
+    let typingTimer = null;
+    let isTyping = false;
 
     // Desativar botão de envio até que a ligação seja estabelecida
     if (sendButton) sendButton.disabled = true;
 
-    // 2. Ouvir o evento de receção de mensagens do Servidor
+    // funções auxiliares
+
+    function escapeHtml(string) {
+        if (!string) return '';
+        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+            const map = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+                "/": "&#x2F;",
+                "`": "&#x60;",
+                "=": "&#x3D;"
+            };
+            return map[s] || s;
+        });
+    }
+
+    function getUserColor(username) {
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+            hash = username.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = Math.abs(hash) % 360;
+        return `hsl(${hue}, 70%, 55%)`;
+    }
+
+    function getInitials(username) {
+        return username.charAt(0).toUpperCase();
+    }
+
+    function updateCharCounter() {
+        if (!charCounter || !messageInput) return;
+        const maxLength = 300;
+        const currentLength = messageInput.value.length;
+        charCounter.textContent = `${currentLength}/${maxLength}`;
+        if (currentLength > maxLength * 0.9) {
+            charCounter.style.color = '#e74c3c';
+        } else if (currentLength > maxLength * 0.7) {
+            charCounter.style.color = '#f39c12';
+        } else {
+            charCounter.style.color = '#6c757d';
+        }
+    }
+
+    function insertEmoji(emoji) {
+        if (!messageInput) return;
+        const start = messageInput.selectionStart;
+        const end = messageInput.selectionEnd;
+        const text = messageInput.value;
+        messageInput.value = text.substring(0, start) + emoji + text.substring(end);
+        messageInput.focus();
+        messageInput.selectionStart = messageInput.selectionEnd = start + emoji.length;
+        updateCharCounter();
+    }
+
+    // Expor a função insertEmoji globalmente para os botões
+    window.insertEmoji = insertEmoji;
+
+    // criar ligação ao HUB
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/kpopChatHub")
+        .withAutomaticReconnect()
+        .build();
+
+    // ouvir eventos do servidor
+
+    // Receber mensagem
     connection.on("ReceiveMessage", function (user, message, timestamp) {
-        // Sanitizar a mensagem para evitar ataques XSS
         const cleanUser = escapeHtml(user);
         const cleanMessage = escapeHtml(message);
+        const color = getUserColor(user);
+        const initials = getInitials(user);
 
-        // Criar a bolha de mensagem HTML
+        // Determinar se a mensagem é do utilizador atual
+        const normalizedCurrentUser = currentUser.toLowerCase();
+        const normalizedUser = user.toLowerCase();
+        const isMe = normalizedCurrentUser === normalizedUser;
+
         const messageDiv = document.createElement("div");
-        messageDiv.className = "chat-message-wrapper animate-fade-in";
+        messageDiv.className = `chat-message-wrapper animate-fade-in ${isMe ? 'my-message' : 'other-message'}`;
 
-        // Determinar se a mensagem é do utilizador logado atualmente
-        const currentUserHeader = document.querySelector(".navbar-k-shelf .nav-link.text-white");
-        let isMe = false;
-        if (currentUserHeader) {
-            const currentUsername = currentUserHeader.textContent.replace("Olá ", "").replace("!", "").trim();
-            const normalizedCurrentUser = currentUsername.includes("@") ? currentUsername.split('@')[0] : currentUsername;
-            if (normalizedCurrentUser.toLowerCase() === user.toLowerCase()) {
-                isMe = true;
-            }
+        // Processar menções na mensagem
+        let processedMessage = cleanMessage;
+        // Destacar menções (@nome)
+        const mentionRegex = /@(\w+)/g;
+        const matches = cleanMessage.match(mentionRegex);
+        if (matches) {
+            matches.forEach(match => {
+                const username = match.substring(1);
+                const mentionColor = getUserColor(username);
+                const highlighted = `<span class="mention" style="color: ${mentionColor}; font-weight: bold; background: rgba(0,0,0,0.05); padding: 0 4px; border-radius: 4px;">${match}</span>`;
+                processedMessage = processedMessage.replace(match, highlighted);
+            });
         }
 
-        if (isMe) {
-            messageDiv.classList.add("my-message");
-            messageDiv.innerHTML = `
-                <div class="message-info text-end">
-                    <span class="fw-bold">${cleanUser} (Eu)</span> • ${timestamp}
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-start gap-2 ${isMe ? 'flex-row-reverse' : ''}">
+                <div class="avatar-circle" style="width: 36px; height: 36px; border-radius: 50%; background: ${color}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0;">
+                    ${initials}
                 </div>
-                <div class="message-content">
-                    ${cleanMessage}
+                <div style="max-width: 80%;">
+                    <div class="message-info ${isMe ? 'text-end' : 'text-start'}">
+                        <span class="fw-bold" style="color: ${color};">${isMe ? 'Eu' : cleanUser}</span>
+                        <span class="text-muted" style="font-size: 0.7rem;"> • ${escapeHtml(timestamp)}</span>
+                    </div>
+                    <div class="message-content" style="background: ${isMe ? 'linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple))' : 'white'}; color: ${isMe ? 'white' : 'var(--kpop-dark)'}; ${!isMe ? 'border: 1px solid rgba(0,0,0,0.08);' : ''}">
+                        ${processedMessage}
+                    </div>
                 </div>
-            `;
-        } else {
-            messageDiv.classList.add("other-message");
-            messageDiv.innerHTML = `
-                <div class="message-info text-start">
-                    <span class="fw-bold">${cleanUser}</span> • ${timestamp}
-                </div>
-                <div class="message-content">
-                    ${cleanMessage}
-                </div>
-            `;
-        }
+            </div>
+        `;
 
-        // Adicionar ao painel e fazer scroll automático para o fundo
         messagesContainer.appendChild(messageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Notificação de nova mensagem (se a página não estiver ativa)
+        if (document.hidden && !isMe) {
+            document.title = `💬 Nova mensagem de ${user} - K-Shelf Chat`;
+        }
     });
 
-    // 3. Ouvir a atualização do contador de utilizadores online
+    // Atualizar contador online
     connection.on("UpdateOnlineCount", function (count) {
         if (onlineCounterPage) {
             onlineCounterPage.textContent = count;
@@ -74,15 +153,84 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 4. Iniciar a ligação ao Hub
+    // 3. Mensagem do sistema (entrada/saída)
+    connection.on("SystemMessage", function (message) {
+        const systemDiv = document.createElement("div");
+        systemDiv.className = "text-center my-2 system-message animate-fade-in";
+        systemDiv.innerHTML = `
+            <span class="badge bg-light text-secondary rounded-pill px-3 py-2 border shadow-sm" style="font-weight: normal;">
+                📢 ${escapeHtml(message)}
+            </span>
+        `;
+        messagesContainer.appendChild(systemDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+
+    // 4. Indicador "a escrever..."
+    connection.on("UserTyping", function (user) {
+        if (user.toLowerCase() !== currentUser.toLowerCase()) {
+            typingUsersSpan.textContent = `${user} está a escrever`;
+            typingIndicator.style.display = 'block';
+        }
+    });
+
+    connection.on("UserStoppedTyping", function (user) {
+        if (user.toLowerCase() !== currentUser.toLowerCase()) {
+            typingUsersSpan.textContent = '';
+            typingIndicator.style.display = 'none';
+        }
+    });
+
+    // iniciar ligação
+
+    // Obter o nome do utilizador atual (para comparação)
+    const userHeader = document.querySelector(".navbar-k-shelf .nav-link.text-white");
+    if (userHeader) {
+        currentUser = userHeader.textContent.replace("Olá ", "").replace("!", "").trim();
+        if (currentUser.includes("@")) {
+            currentUser = currentUser.split('@')[0];
+        }
+    }
+
     connection.start().then(function () {
         if (sendButton) sendButton.disabled = false;
         console.log("SignalR: Ligação bem sucedida ao KpopChatHub!");
+
+        // Notificar entrada no chat
+        connection.invoke("UserJoined", currentUser);
+
     }).catch(function (err) {
-        return console.error("SignalR: Falha ao ligar ao Hub: " + err.toString());
+        console.error("SignalR: Falha ao ligar ao Hub: " + err.toString());
     });
 
-    // 5. Enviar Mensagem ao Submeter o Formulário
+    // eventos da interface
+
+    // Contador de caracteres
+    if (messageInput) {
+        messageInput.addEventListener('input', function () {
+            updateCharCounter();
+
+            // Detetar se o utilizador está a escrever
+            if (this.value.length > 0 && !isTyping) {
+                isTyping = true;
+                connection.invoke("SendTyping", currentUser);
+            } else if (this.value.length === 0 && isTyping) {
+                isTyping = false;
+                connection.invoke("StopTyping", currentUser);
+            }
+
+            // Limpar o timer para parar de escrever
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                if (isTyping && this.value.length === 0) {
+                    isTyping = false;
+                    connection.invoke("StopTyping", currentUser);
+                }
+            }, 1500);
+        });
+    }
+
+    // Enviar mensagem (Enter)
     const chatForm = document.getElementById("chat-form");
     if (chatForm) {
         chatForm.addEventListener("submit", function (event) {
@@ -99,24 +247,45 @@ document.addEventListener("DOMContentLoaded", function () {
         connection.invoke("SendMessage", messageText).then(function () {
             messageInput.value = "";
             messageInput.focus();
+            updateCharCounter();
+
+            // Parar indicador de escrita
+            if (isTyping) {
+                isTyping = false;
+                connection.invoke("StopTyping", currentUser);
+            }
         }).catch(function (err) {
-            return console.error("SignalR Erro de Envio: " + err.toString());
+            console.error("SignalR Erro de Envio: " + err.toString());
         });
     }
 
-    // Função utilitária para prevenir injeção de HTML no Chat
-    function escapeHtml(string) {
-        return String(string).replace(/[&<>"'`=\/]/g, function (s) {
-            return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;",
-                "/": "&#x2F;",
-                "`": "&#x60;",
-                "=": "&#x3D;"
-            }[s];
-        });
-    }
+    // reconexão
+    connection.onreconnecting(function (error) {
+        console.log("SignalR: A tentar reconectar...");
+        if (sendButton) sendButton.disabled = true;
+    });
+
+    connection.onreconnected(function (connectionId) {
+        console.log("SignalR: Reconectado! ID: " + connectionId);
+        if (sendButton) sendButton.disabled = false;
+        // Notificar que o utilizador está de volta
+        connection.invoke("UserJoined", currentUser);
+    });
+
+    connection.onclose(function (error) {
+        console.log("SignalR: Ligação fechada.");
+        if (sendButton) sendButton.disabled = true;
+    });
+
+    // restaurar título quando a página fica ativa
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+            document.title = 'Chat Global K-Pop - K-Shelf';
+        }
+    });
+
+    // Inicializar contador
+    updateCharCounter();
+
+    console.log('Chat inicializado com sucesso!');
 });
