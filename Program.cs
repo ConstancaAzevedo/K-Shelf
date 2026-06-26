@@ -58,21 +58,12 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
 // 2. CONFIGURAÇÃO DO PIPELINE DE PEDIDOS HTTP (Middlewares)
 
 if (app.Environment.IsDevelopment())
 {
     // Em desenvolvimento, ativa tratamento detalhado de erros e base de dados
     app.UseMigrationsEndPoint();
-
-    // Ativar a interface visual do Swagger no endpoint /swagger
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "K-Shelf API v1");
-        c.RoutePrefix = "swagger";
-    });
 }
 else
 {
@@ -80,6 +71,14 @@ else
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+// Ativar a interface visual do Swagger no endpoint /swagger (sempre ativo)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "K-Shelf API v1");
+    c.RoutePrefix = "swagger";
+});
 
 // Intercetar códigos de erro como 404 e 403 e reencaminhar para a nossa página de erro customizada
 app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
