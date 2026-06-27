@@ -53,11 +53,13 @@
                     @if (Model.Colecao.AlbumColecoes != null && Model.Colecao.AlbumColecoes.Any())
                     {
                         <div class="d-flex gap-2 flex-wrap mt-2">
-                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5)) <!-- mostra os primeiros 5 albuns -->
+                            <!-- mostra os primeiros 5 albuns -->
+                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5)) 
                             {
                                 <span class="badge bg-secondary">@ac.Album?.Titulo</span> <!-- badge com o titulo do album -->
                             }
-                            @if (Model.Colecao.AlbumColecoes.Count > 5) <!-- se houver mais de 5, mostra um badge com o resto -->
+                            <!-- se houver mais de 5, mostra um badge com o resto -->
+                            @if (Model.Colecao.AlbumColecoes.Count > 5)
                             {
                                 <span class="badge bg-secondary">+@(Model.Colecao.AlbumColecoes.Count - 5) mais</span>
                             }

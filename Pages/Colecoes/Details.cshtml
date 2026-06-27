@@ -44,7 +44,8 @@
             </div>
             <!-- botoes de acao -->
             <div class="d-flex gap-2 flex-wrap">
-                @if (Model.IsOwner || User.IsInRole("Admin")) <!-- verifica se o utilizador e dono ou admin -->
+                <!-- verifica se o utilizador e dono ou admin -->
+                @if (Model.IsOwner || User.IsInRole("Admin")) 
                 {
                     <a asp-page="./Edit" asp-route-id="@Model.Colecao.Id"
                        class="btn btn-warning rounded-pill px-3">✏️ Editar</a> <!-- botao de editar -->
