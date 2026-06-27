@@ -19,40 +19,48 @@
                 <form method="post">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Título -->
+                    <!-- Título (obrigatório) -->
                     <div class="mb-3">
-                        <label asp-for="Album.Titulo" class="form-label fw-bold"></label>
+                        <label asp-for="Album.Titulo" class="form-label fw-bold">
+                            Título <span class="text-danger">*</span>
+                        </label>
                         <input asp-for="Album.Titulo" class="form-control search-input-kpop" placeholder="Ex: Map of the Soul: 7" />
                         <span asp-validation-for="Album.Titulo" class="text-danger small"></span>
                     </div>
 
-                    <!-- Data de Lançamento -->
+                    <!-- Data de Lançamento (obrigatório) -->
                     <div class="mb-3">
-                        <label asp-for="Album.DataLancamento" class="form-label fw-bold"></label>
+                        <label asp-for="Album.DataLancamento" class="form-label fw-bold">
+                            Data de Lançamento <span class="text-danger">*</span>
+                        </label>
                         <input asp-for="Album.DataLancamento" type="date" class="form-control search-input-kpop" />
                         <span asp-validation-for="Album.DataLancamento" class="text-danger small"></span>
                     </div>
 
-                    <!-- URL da Capa -->
+                    <!-- URL da Capa (obrigatório) -->
                     <div class="mb-3">
-                        <label asp-for="Album.CapaUrl" class="form-label fw-bold"></label>
+                        <label asp-for="Album.CapaUrl" class="form-label fw-bold">
+                            URL da Capa <span class="text-danger">*</span>
+                        </label>
                         <input asp-for="Album.CapaUrl" class="form-control search-input-kpop" placeholder="https://..." />
                         <span asp-validation-for="Album.CapaUrl" class="text-danger small"></span>
                     </div>
 
+                    <!-- Tipo de Álbum (obrigatório) -->
                     <div class="row">
-                        <!-- Tipo de Álbum -->
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Album.Tipo" class="form-label fw-bold"></label>
+                            <label asp-for="Album.Tipo" class="form-label fw-bold">
+                                Tipo de Álbum <span class="text-danger">*</span>
+                            </label>
                             <select asp-for="Album.Tipo" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.TipoAlbum>()">
                             </select>
                             <span asp-validation-for="Album.Tipo" class="text-danger small"></span>
                         </div>
 
-                        <!-- Edição -->
+                        <!-- Edição (opcional) -->
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Album.Edicao" class="form-label fw-bold"></label>
+                            <label asp-for="Album.Edicao" class="form-label fw-bold">Edição</label>
                             <select asp-for="Album.Edicao" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.EdicaoAlbum>()">
                             </select>

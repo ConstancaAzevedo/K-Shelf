@@ -19,11 +19,13 @@ namespace K_Shelf.Models
         public string Titulo { get; set; } = string.Empty;
 
         /// <summary>Data de lançamento oficial do Álbum.</summary>
+        [Required(ErrorMessage = "A data de lançamento é obrigatória")]
         [DataType(DataType.Date)]
         [Display(Name = "Data de Lançamento")]
         public DateTime DataLancamento { get; set; }
 
         /// <summary>URL ou caminho local da imagem de capa do Álbum.</summary>
+        [Required(ErrorMessage = "A imagem da capa é obrigatória")]
         [Url(ErrorMessage = "URL inválido")]
         [Display(Name = "URL da Capa")]
         public string? CapaUrl { get; set; }
@@ -42,6 +44,7 @@ namespace K_Shelf.Models
         }
 
         /// <summary>Tipo do Álbum (ex: Studio, EP, Single).</summary>
+        [Required(ErrorMessage = "O tipo de álbum é obrigatório")]
         [Display(Name = "Tipo de Álbum")]
         public TipoAlbum Tipo { get; set; }
 
