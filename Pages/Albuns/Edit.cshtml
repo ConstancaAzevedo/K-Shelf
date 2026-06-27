@@ -80,7 +80,12 @@
                                             asp-items="Model.GruposSelectList">
                                         <option value="">-- Nenhum Grupo --</option>
                                     </select>
-                                    <a asp-page="/Grupos/Create" class="btn btn-outline-primary btn-sm" target="_blank">➕</a>
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalCriarGrupo"
+                                            onclick="carregarModalGrupo()">
+                                        ➕
+                                    </button>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -90,7 +95,12 @@
                                             asp-items="Model.SolistasSelectList">
                                         <option value="">-- Nenhum Solista --</option>
                                     </select>
-                                    <a asp-page="/Solistas/Create" class="btn btn-outline-primary btn-sm" target="_blank">➕</a>
+                                    <button type="button" class="btn btn-outline-primary btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalCriarSolista"
+                                            onclick="carregarModalSolista()">
+                                        ➕
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -154,17 +164,56 @@
                         <a asp-page="./Details" asp-route-id="@Model.Album.Id" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
                     </div>
                 </form>
+
+                <!-- ============================================================
+     MODAL: CRIAR GRUPO
+     ============================================================ -->
+                <div class="modal fade" id="modalCriarGrupo" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content glass-panel border-0">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold">👥 Criar Novo Grupo</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="conteudoModalGrupo">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-kpop" role="status">
+                                        <span class="visually-hidden">A carregar...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="modalCriarSolista" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content glass-panel border-0">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold">🎤 Criar Novo Solista</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="conteudoModalSolista">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-kpop" role="status">
+                                        <span class="visually-hidden">A carregar...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
+        // Impede selecionar Grupo e Solista ao mesmo tempo
         const grupoSelect = document.getElementById('Album_GrupoId');
         const solistaSelect = document.getElementById('Album_SolistaId');
 
@@ -175,18 +224,101 @@
         solistaSelect.addEventListener('change', function () {
             if (this.value) grupoSelect.value = '';
         });
-    </script>
 
+        // ============================================================
+        // CARREGAR MODAL - GRUPO
+        // ============================================================
+        function carregarModalGrupo() {
+            fetch('/Grupos/Create')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('conteudoModalGrupo').innerHTML = html;
+                    const form = document.querySelector('#conteudoModalGrupo form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const formData = new FormData(this);
+                            fetch('/Grupos/Create', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                if (result.includes('alert-danger')) {
+                                    document.getElementById('conteudoModalGrupo').innerHTML = result;
+                                } else {
+                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
+                                    location.reload();
+                                }
+                            });
+                        });
+                    }
+                });
+        }
 
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+        // ============================================================
+        // CARREGAR MODAL - SOLISTA
+        // ============================================================
+        function carregarModalSolista() {
+            fetch('/Solistas/Create')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('conteudoModalSolista').innerHTML = html;
+                    const form = document.querySelector('#conteudoModalSolista form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const formData = new FormData(this);
+                            fetch('/Solistas/Create', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                if (result.includes('alert-danger')) {
+                                    document.getElementById('conteudoModalSolista').innerHTML = result;
+                                } else {
+                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide();
+                                    location.reload();
+                                }
+                            });
+                        });
+                    }
+                });
+        }
 
-    <script>
+        // ============================================================
+        // FECHAR MODAL AO CLICAR FORA
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('hidden.bs.modal', function() {
+                    if (this.id === 'modalCriarGrupo') {
+                        document.getElementById('conteudoModalGrupo').innerHTML = `
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-kpop" role="status">
+                                    <span class="visually-hidden">A carregar...</span>
+                                </div>
+                            </div>
+                        `;
+                    } else if (this.id === 'modalCriarSolista') {
+                        document.getElementById('conteudoModalSolista').innerHTML = `
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-kpop" role="status">
+                                    <span class="visually-hidden">A carregar...</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        });
+
+        // ============================================================
+        // ADICIONAR MÚSICA AO ÁLBUM (AJAX)
+        // ============================================================
         $(document).ready(function () {
-            // ============================================================
-            // Adicionar música ao álbum
-            // ============================================================
             $('#btnAdicionarMusica').click(function () {
                 var musicaId = $('#selectMusicaExistente').val();
                 var albumId = @Model.Album.Id;
@@ -208,9 +340,6 @@
                 });
             });
 
-            // ============================================================
-            // Remover música do álbum
-            // ============================================================
             $('.btn-remover-musica').click(function () {
                 var musicaId = $(this).data('musica-id');
                 var albumId = @Model.Album.Id;
