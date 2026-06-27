@@ -27,6 +27,8 @@ namespace K_Shelf.Pages.Albuns
 
         public SelectList GruposSelectList { get; set; } = default!;
         public SelectList SolistasSelectList { get; set; } = default!;
+        public SelectList AlbunsSelectList { get; set; } = default!;
+
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -49,6 +51,8 @@ namespace K_Shelf.Pages.Albuns
 
             Album = album;
             await CarregarSelectLists();
+            await CarregarMusicasSelectList();
+
             return Page();
         }
 
@@ -169,6 +173,15 @@ namespace K_Shelf.Pages.Albuns
 
             GruposSelectList = new SelectList(grupos, "Id", "Nome", Album.GrupoId);
             SolistasSelectList = new SelectList(solistas, "Id", "Nome", Album.SolistaId);
+        }
+
+        private async Task CarregarMusicasSelectList()
+        {
+            var musicas = await _context.Musicas
+                .OrderBy(m => m.Titulo)
+                .ToListAsync();
+
+            AlbunsSelectList = new SelectList(musicas, "Id", "Titulo");
         }
     }
 }

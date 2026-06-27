@@ -160,5 +160,57 @@ namespace K_Shelf.Controllers
 
             return NoContent();
         }
+        /// <summary>
+        /// Adiciona uma música existente a um álbum (apenas Admin)
+        /// </summary>
+        [HttpPost("{id}/musicas/{musicaId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AdicionarMusica(int id, int musicaId)
+        {
+            var album = await _context.Albuns
+                .Include(a => a.Musicas)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (album == null)
+                return NotFound(new { mensagem = $"Álbum com ID {id} não encontrado." });
+
+            var musica = await _context.Musicas.FindAsync(musicaId);
+            if (musica == null)
+                return NotFound(new { mensagem = $"Música com ID {musicaId} não encontrada." });
+
+            // Verificar se a música já está no álbum
+            if (album.Musicas.Any(m => m.Id == musicaId))
+                return BadRequest(new { mensagem = "Esta música já está associada a este álbum." });
+
+            album.Musicas.Add(musica);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensagem = "Música adicionada com sucesso!" });
+        }
+
+        /// <summary>
+        /// Remove uma música de um álbum (apenas Admin)
+        /// </summary>
+        [HttpDelete("{id}/musicas/{musicaId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RemoverMusica(int id, int musicaId)
+        {
+            var album = await _context.Albuns
+                .Include(a => a.Musicas)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (album == null)
+                return NotFound(new { mensagem = $"Álbum com ID {id} não encontrado." });
+
+            var musica = album.Musicas.FirstOrDefault(m => m.Id == musicaId);
+            if (musica == null)
+                return NotFound(new { mensagem = $"Música com ID {musicaId} não encontrada neste álbum." });
+
+            album.Musicas.Remove(musica);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { mensagem = "Música removida com sucesso!" });
+        }
+
     }
 }
