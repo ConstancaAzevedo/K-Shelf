@@ -106,12 +106,12 @@
                                 <strong>Pais:</strong> @(artista.Pais ?? "N/A")
                             </p>
                         </div>
-                        <div class="card-footer">
-                            <a asp-page="./Details" asp-route-id="@artista.Id" class="btn btn-info btn-sm">Detalhes</a>
+                        <div class="card-footer d-flex gap-2">
+                            <a asp-page="./Details" asp-route-id="@artista.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">Detalhes</a>
                             @if (User.IsInRole("Admin"))
                             {
-                                <a asp-page="./Edit" asp-route-id="@artista.Id" class="btn btn-warning btn-sm">Editar</a>
-                                <a asp-page="./Delete" asp-route-id="@artista.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                                <a asp-page="./Edit" asp-route-id="@artista.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
+                                <a asp-page="./Delete" asp-route-id="@artista.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
                             }
                         </div>
                     </div>

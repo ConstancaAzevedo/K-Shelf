@@ -19,11 +19,13 @@ namespace K_Shelf.Models
         public string Nome { get; set; } = string.Empty;
 
         /// <summary>Nome artístico usado no palco (ex: Suga, Lisa).</summary>
+        [Required(ErrorMessage = "O nome artístico é obrigatório")]
         [StringLength(100)]
         [Display(Name = "Nome Artístico")]
         public string? NomeArtistico { get; set; }
 
         /// <summary>Data de nascimento do Artista (usada para calcular a idade).</summary>
+        [Required(ErrorMessage = "A data de nascimento é obrigatória")]
         [DataType(DataType.Date)]
         [Display(Name = "Data de Nascimento")]
         public DateTime DataNascimento { get; set; }
@@ -34,15 +36,18 @@ namespace K_Shelf.Models
         public string? Posicao { get; set; }
 
         /// <summary>País de origem do Artista.</summary>
+        [Required(ErrorMessage = "A nacionalidade é obrigatória")]
         [StringLength(50)]
         [Display(Name = "Nacionalidade")]
         public string? Pais { get; set; }
 
         /// <summary>Caminho local ou URL absoluto da foto do Artista.</summary>
+        [Required(ErrorMessage = "A imagem é obrigatória")]
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 
         /// <summary>Data em que o artista estreou ou entrou na agência.</summary>
+        [Required(ErrorMessage = "A data de entrada é obrigatória")]
         [Display(Name = "Data de Entrada")]
         [DataType(DataType.Date)]
         public DateTime? DataEntrada { get; set; }
