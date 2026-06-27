@@ -48,12 +48,12 @@ namespace K_Shelf.Pages.Solistas
                     Data = DateTime.Now
                 });
 
-                TempData["SuccessMessage"] = $"✅ Solista \"{Solista.Nome}\" criado com sucesso!";
+                TempData["SuccessMessage"] = $"Solista \"{Solista.Nome}\" criado com sucesso!";
                 return RedirectToPage("./Index");
             }
             catch (Exception ex)
             {
-                TempData["ErrorMessage"] = $"❌ Erro ao criar solista: {ex.Message}";
+                TempData["ErrorMessage"] = $"Erro ao criar solista: {ex.Message}";
                 return Page();
             }
         }

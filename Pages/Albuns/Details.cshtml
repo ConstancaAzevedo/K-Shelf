@@ -110,44 +110,111 @@
 
                 @if (Model.Album.Musicas != null && Model.Album.Musicas.Any())
                 {
-                    <ul class="list-unstyled mb-0">
-                        @foreach (var musica in Model.Album.Musicas)
+                    <div class="accordion" id="accordionMusicas">
+                        @foreach (var musica in Model.Album.Musicas.OrderBy(m => m.TrackNumber))
                         {
-                            <li class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
-                                <div class="d-flex align-items-center gap-2">
-                                    @if (!string.IsNullOrEmpty(musica.PreviewAudioUrl))
-                                    {
-                                        <button class="btn btn-play-audio btn-sm p-0 border-0 bg-transparent text-secondary hover-pink" 
-                                                data-audio-url="@musica.PreviewAudioUrl" 
-                                                data-track-id="@musica.Id"
-                                                title="Ouvir Preview">
-                                            <span class="play-icon">▶</span>
-                                        </button>
-                                        <div class="audio-wave-bars d-none" id="wave-@musica.Id">
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
+                            <div class="accordion-item border-0 mb-2" style="background: rgba(0,0,0,0.02); border-radius: 12px; overflow: hidden;">
+
+                                <h2 class="accordion-header" id="heading-@musica.Id">
+                                    <div class="accordion-button collapsed d-flex align-items-center"
+                                         style="cursor: default;">
+
+                                        <span class="text-secondary me-2" style="min-width: 22px; font-size: 0.85rem; font-weight: 600; flex-shrink: 0;">@musica.TrackNumber.</span>
+
+                                        @if (!string.IsNullOrEmpty(musica.PreviewAudioUrl))
+                                        {
+                                            <span class="btn-play-audio me-2"
+                                                  data-audio-url="@musica.PreviewAudioUrl"
+                                                  data-track-id="@musica.Id"
+                                                  title="Ouvir Preview">
+                                                <span class="play-icon">▶</span>
+                                            </span>
+                                            <div class="audio-wave-bars d-none me-2" id="wave-@musica.Id">
+                                                <span></span><span></span><span></span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span style="width: 28px; flex-shrink: 0;"></span>
+                                        }
+
+                                        <div style="flex: 1; min-width: 0; line-height: 1.2;">
+                                            <span class="fw-bold">@musica.Titulo</span>
+                                            <div class="d-flex gap-1 flex-wrap align-items-center mt-1">
+                                                @if (musica.IsTitleTrack)
+                                                {
+                                                    <span class="badge-neon-pink" style="font-size: 0.65rem; padding: 2px 8px;">★ Title Track</span>
+                                                }
+                                                @if (musica.IsSingle)
+                                                {
+                                                    <span class="badge-neon-purple" style="font-size: 0.65rem; padding: 2px 8px;">Single</span>
+                                                }
+                                                <span class="text-secondary" style="font-size: 0.75rem;">⏱️ @musica.DuracaoFormatada</span>
+                                            </div>
                                         </div>
-                                    }
-                                    <span class="text-secondary" style="min-width: 20px; font-size: 0.85rem;">@musica.TrackNumber.</span>
-                                    @if (musica.IsTitleTrack)
-                                    {
-                                        <span class="fw-bold" style="color: var(--kpop-pink);">★ @musica.Titulo</span>
-                                        <span class="badge-neon-pink" style="font-size: 0.7rem; padding: 3px 8px;">Title Track</span>
-                                    }
-                                    else
-                                    {
-                                        <span>@musica.Titulo</span>
-                                    }
-                                    @if (musica.IsSingle)
-                                    {
-                                        <span class="badge-neon-purple" style="font-size: 0.7rem; padding: 3px 8px;">Single</span>
-                                    }
+
+                                        <span class="btn-ver-detalhes text-secondary ms-auto"
+                                              data-target="collapse-@musica.Id"
+                                              title="Ver detalhes"
+                                              style="cursor: pointer; font-size: 0.8rem; white-space: nowrap; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.1);">
+                                            Ver detalhes <i class="bi bi-chevron-down track-chevron" style="font-size: 0.75rem;"></i>
+                                        </span>
+
+                                    </div>
+                                </h2>
+
+                                <div id="collapse-@musica.Id" class="accordion-collapse collapse"
+                                     aria-labelledby="heading-@musica.Id">
+                                    <div class="accordion-body px-3 pb-3 pt-2" style="background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.05);">
+                                        @{
+                                            bool temDetalhes = !string.IsNullOrEmpty(musica.Compositores)
+                                                            || !string.IsNullOrEmpty(musica.Produtores)
+                                                            || !string.IsNullOrEmpty(musica.Letra)
+                                                            || !string.IsNullOrEmpty(musica.YoutubeUrl);
+                                        }
+                                        @if (!temDetalhes)
+                                        {
+                                            <p class="text-secondary small mb-0">Sem detalhes disponíveis.</p>
+                                        }
+                                        else
+                                        {
+                                            <div class="row g-3">
+                                                @if (!string.IsNullOrEmpty(musica.Compositores))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <p class="text-secondary small mb-1"><strong>Compositores</strong></p>
+                                                        <p class="mb-0 small">@musica.Compositores</p>
+                                                    </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(musica.Produtores))
+                                                {
+                                                    <div class="col-md-6">
+                                                        <p class="text-secondary small mb-1"><strong>Produtores</strong></p>
+                                                        <p class="mb-0 small">@musica.Produtores</p>
+                                                    </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(musica.Letra))
+                                                {
+                                                    <div class="col-12">
+                                                        <p class="text-secondary small mb-1"><strong>Letra</strong></p>
+                                                        <p class="mb-0 small" style="white-space: pre-wrap;">@musica.Letra</p>
+                                                    </div>
+                                                }
+                                                @if (!string.IsNullOrEmpty(musica.YoutubeUrl))
+                                                {
+                                                    <div class="col-12">
+                                                        <a href="@musica.YoutubeUrl" target="_blank" class="btn btn-outline-danger btn-sm rounded-pill">
+                                                            ▶️ Ver no YouTube
+                                                        </a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                                <small class="text-secondary">@musica.DuracaoFormatada</small>
-                            </li>
+                            </div>
                         }
-                    </ul>
+                    </div>
                 }
                 else
                 {
@@ -222,18 +289,64 @@
             }
         }
 
+        .accordion-button:not(.collapsed) .track-chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-button {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+            padding: 10px 14px !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        .track-chevron {
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            transition: transform 0.2s ease;
+            margin-left: auto;
+        }
+
+        /* Remove seta padrão do Bootstrap */
+        .accordion-button::after {
+            display: none !important;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background: rgba(255, 107, 157, 0.08) !important;
+            color: var(--kpop-pink) !important;
+        }
+
+        .accordion-button:focus {
+            box-shadow: none !important;
+            border-color: transparent !important;
+        }
+
+        .accordion-item {
+            border: 1px solid rgba(0,0,0,0.05) !important;
+            background: rgba(0,0,0,0.02);
+        }
+
+        /* ── Play button ── */
         .btn-play-audio {
-            transition: all 0.2s ease;
-            outline: none;
+            flex-shrink: 0;
             width: 28px;
             height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: rgba(0, 0, 0, 0.05) !important;
-            font-size: 0.75rem;
+            border: none;
+            background: rgba(0,0,0,0.06) !important;
+            font-size: 0.7rem;
             color: var(--bs-secondary) !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+            outline: none;
         }
 
         .btn-play-audio:hover {
@@ -249,69 +362,90 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function () {
             let activeAudio = null;
             let activeBtn = null;
             let activeWave = null;
 
-            document.querySelectorAll('.btn-play-audio').forEach(button => {
-                button.addEventListener('click', function () {
+            // ── Play / Pause ──
+            document.querySelectorAll('.btn-play-audio').forEach(function (btn) {
+                btn.addEventListener('click', function () {
                     const audioUrl = this.getAttribute('data-audio-url');
-                    const trackId = this.getAttribute('data-track-id');
-                    const wave = document.getElementById('wave-' + trackId);
-                    const iconSpan = this.querySelector('.play-icon');
+                    const trackId  = this.getAttribute('data-track-id');
+                    const wave     = document.getElementById('wave-' + trackId);
+                    const icon     = this.querySelector('.play-icon');
 
-                    // Se já estiver a tocar este áudio
-                    if (activeAudio && activeAudio.src === audioUrl) {
+                    if (activeAudio && activeAudio.src.endsWith(encodeURI(audioUrl).replace(/%2F/g, '/')) || (activeAudio && activeAudio.src === audioUrl)) {
                         if (activeAudio.paused) {
                             activeAudio.play();
-                            iconSpan.innerText = '⏸';
-                            this.classList.add('playing');
+                            icon.innerText = '⏸';
+                            btn.classList.add('playing');
                             if (wave) wave.classList.remove('d-none');
                         } else {
                             activeAudio.pause();
-                            iconSpan.innerText = '▶';
-                            this.classList.remove('playing');
+                            icon.innerText = '▶';
+                            btn.classList.remove('playing');
                             if (wave) wave.classList.add('d-none');
                         }
                         return;
                     }
 
-                    // Se outro áudio estiver a tocar, pará-lo
+                    // Para o áudio anterior
                     if (activeAudio) {
                         activeAudio.pause();
                         if (activeBtn) {
                             activeBtn.querySelector('.play-icon').innerText = '▶';
                             activeBtn.classList.remove('playing');
                         }
-                        if (activeWave) {
-                            activeWave.classList.add('d-none');
-                        }
+                        if (activeWave) activeWave.classList.add('d-none');
                     }
 
-                    // Criar e iniciar novo áudio
                     activeAudio = new Audio(audioUrl);
-                    activeBtn = this;
-                    activeWave = wave;
+                    activeBtn   = btn;
+                    activeWave  = wave;
 
-                    activeAudio.play().then(() => {
-                        iconSpan.innerText = '⏸';
-                        this.classList.add('playing');
+                    activeAudio.play().then(function () {
+                        icon.innerText = '⏸';
+                        btn.classList.add('playing');
                         if (wave) wave.classList.remove('d-none');
-                    }).catch(error => {
-                        console.error("Erro ao reproduzir o áudio:", error);
-                        alert("Não foi possível carregar o preview de áudio.");
+                    }).catch(function (e) {
+                        console.error('Erro ao reproduzir:', e);
+                        alert('Não foi possível carregar o preview de áudio.');
                     });
 
-                    // Quando o áudio termina
                     activeAudio.addEventListener('ended', function () {
-                        iconSpan.innerText = '▶';
-                        button.classList.remove('playing');
+                        icon.innerText = '▶';
+                        btn.classList.remove('playing');
                         if (wave) wave.classList.add('d-none');
                         activeAudio = null;
-                        activeBtn = null;
-                        activeWave = null;
+                        activeBtn   = null;
+                        activeWave  = null;
                     });
+                });
+            });
+
+            // ── Ver Detalhes ──
+            document.querySelectorAll('.btn-ver-detalhes').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target');
+                    const collapse = document.getElementById(targetId);
+                    const chevron  = this.querySelector('.track-chevron');
+                    const isOpen   = collapse.classList.contains('show');
+
+                    // Fecha todos os outros
+                    document.querySelectorAll('.accordion-collapse.show').forEach(function (el) {
+                        el.classList.remove('show');
+                    });
+                    document.querySelectorAll('.btn-ver-detalhes').forEach(function (b) {
+                        b.querySelector('.track-chevron').style.transform = '';
+                        b.innerHTML = b.innerHTML.replace('Fechar', 'Ver detalhes');
+                    });
+
+                    if (!isOpen) {
+                        collapse.classList.add('show');
+                        chevron.style.transform = 'rotate(180deg)';
+                        this.innerHTML = 'Fechar <i class="bi bi-chevron-up track-chevron" style="font-size: 0.75rem;"></i>';
+                    }
                 });
             });
         });

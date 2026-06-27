@@ -20,12 +20,20 @@ namespace K_Shelf.Pages.Musicas
         {
             _context = context;
             _hubContext = hubContext;
-        }
+        
+       }
+
+
+        [BindProperty]
+        public IFormFile? AudioFile { get; set; }
 
         [BindProperty]
         public Musica Musica { get; set; } = new();
 
         public SelectList AlbunsSelectList { get; set; } = default!;
+
+        [BindProperty]
+        public string DuracaoInput { get; set; } = string.Empty;
 
         public async Task OnGetAsync(int? albumId)
         {
@@ -38,6 +46,38 @@ namespace K_Shelf.Pages.Musicas
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // converter a duração de string para TimeSpan
+            if (!string.IsNullOrWhiteSpace(DuracaoInput))
+            {
+                if (TimeSpan.TryParseExact(DuracaoInput, @"m\:ss", null, out var duracao))
+                {
+                    Musica.Duracao = duracao;
+                }
+                else
+                {
+                    ModelState.AddModelError("DuracaoInput", "Formato inválido. Use mm:ss (ex: 3:45)");
+                }
+            }
+
+            if (AudioFile != null && AudioFile.Length > 0)
+            {
+                // Pasta onde guardar os áudios
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "audios");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Nome único para o ficheiro
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(AudioFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await AudioFile.CopyToAsync(stream);
+                }
+
+                // Guardar o caminho na base de dados
+                Musica.PreviewAudioUrl = $"/audios/{fileName}";
+            }
+
             // Validações
             if (string.IsNullOrWhiteSpace(Musica.Titulo))
             {
@@ -59,6 +99,7 @@ namespace K_Shelf.Pages.Musicas
                 await CarregarAlbunsSelectList();
                 return Page();
             }
+
 
             try
             {

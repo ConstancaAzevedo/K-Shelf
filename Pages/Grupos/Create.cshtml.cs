@@ -33,7 +33,7 @@ namespace K_Shelf.Pages.Grupos
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = $"✅ Grupo \"{Grupo.Nome}\" criado com sucesso!";
-            return RedirectToPage("/Albuns/Create");
+            return RedirectToPage("./Index");
         }
     }
 }

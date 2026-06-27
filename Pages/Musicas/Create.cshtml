@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
                     <div class="mb-3">
@@ -30,9 +30,9 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Musica.Duracao" class="form-label fw-bold">Duração (mm:ss)</label>
-                            <input asp-for="Musica.Duracao" class="form-control search-input-kpop" placeholder="3:45" />
-                            <span asp-validation-for="Musica.Duracao" class="text-danger small"></span>
+                            <label asp-for="DuracaoInput" class="form-label fw-bold">Duração (mm:ss)</label>
+                            <input asp-for="DuracaoInput" class="form-control search-input-kpop" placeholder="3:45" />
+                            <span asp-validation-for="DuracaoInput" class="text-danger small"></span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.TrackNumber" class="form-label fw-bold">
@@ -96,10 +96,19 @@
                             <input asp-for="Musica.YoutubeUrl" class="form-control search-input-kpop" placeholder="https://www.youtube.com/watch?v=..." />
                             <span asp-validation-for="Musica.YoutubeUrl" class="text-danger small"></span>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Musica.PreviewAudioUrl" class="form-label fw-bold">Preview Áudio</label>
-                            <input asp-for="Musica.PreviewAudioUrl" class="form-control search-input-kpop" placeholder="https://..." />
-                            <span asp-validation-for="Musica.PreviewAudioUrl" class="text-danger small"></span>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ficheiro de Áudio (Preview)</label>
+                            <input type="file" name="AudioFile" class="form-control" accept=".mp3,.m4a,.wav" />
+                            <small class="text-muted">Upload de um ficheiro de áudio (MP3, M4A, WAV). Máx 2MB.</small>
+                            @if (!string.IsNullOrEmpty(Model.Musica.PreviewAudioUrl))
+                            {
+                                <div class="mt-2">
+                                    <audio controls>
+                                        <source src="@Model.Musica.PreviewAudioUrl" />
+                                    </audio>
+                                    <p class="text-muted small">Áudio atual</p>
+                                </div>
+                            }
                         </div>
                     </div>
 
@@ -117,4 +126,18 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Validação personalizada para o formato da duração (mm:ss)
+        $.validator.addMethod("duracaoFormat", function (value, element) {
+            if (!value) return true; // Campo opcional
+            return /^([0-9]{1,2}):([0-9]{2})$/.test(value);
+        }, "Formato inválido. Use mm:ss (ex: 3:45)");
+
+        // Aplicar a validação ao campo
+        $(document).ready(function () {
+            $('#Musica_Duracao').rules('add', {
+                duracaoFormat: true
+            });
+        });
+    </script>
 }
