@@ -1,0 +1,122 @@
+@page
+@model K_Shelf.Pages.Musicas.EditModel
+@{
+    ViewData["Title"] = "Editar Música";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">✏️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0">Editar Música</h2>
+                        <p class="text-secondary mb-0">@Model.Musica.Titulo</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Musica.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <!-- Mesmos campos do Create -->
+                    <div class="mb-3">
+                        <label asp-for="Musica.Titulo" class="form-label fw-bold">
+                            Título <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Musica.Titulo" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Musica.Titulo" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.Duracao" class="form-label fw-bold">Duração (mm:ss)</label>
+                            <input asp-for="Musica.Duracao" class="form-control search-input-kpop" />
+                            <span asp-validation-for="Musica.Duracao" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.TrackNumber" class="form-label fw-bold">
+                                Número da Faixa <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Musica.TrackNumber" type="number" class="form-control search-input-kpop" />
+                            <span asp-validation-for="Musica.TrackNumber" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.AlbumId" class="form-label fw-bold">
+                                Álbum <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Musica.AlbumId" class="form-select search-input-kpop" asp-items="Model.AlbunsSelectList">
+                                <option value="">-- Selecione o Álbum --</option>
+                            </select>
+                            <span asp-validation-for="Musica.AlbumId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check mt-4">
+                                <input asp-for="Musica.IsTitleTrack" class="form-check-input" />
+                                <label asp-for="Musica.IsTitleTrack" class="form-check-label fw-bold">É Title Track</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="Musica.IsSingle" class="form-check-input" />
+                                <label asp-for="Musica.IsSingle" class="form-check-label fw-bold">É Single</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.Compositores" class="form-label fw-bold">Compositores</label>
+                            <input asp-for="Musica.Compositores" class="form-control search-input-kpop" />
+                            <span asp-validation-for="Musica.Compositores" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.Produtores" class="form-label fw-bold">Produtores</label>
+                            <input asp-for="Musica.Produtores" class="form-control search-input-kpop" />
+                            <span asp-validation-for="Musica.Produtores" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Musica.Letra" class="form-label fw-bold">Letra</label>
+                        <textarea asp-for="Musica.Letra" class="form-control search-input-kpop" rows="4" placeholder="Letra da música..."></textarea>
+                        <span asp-validation-for="Musica.Letra" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Musica.SpotifyId" class="form-label fw-bold">Spotify ID</label>
+                        <input asp-for="Musica.SpotifyId" class="form-control search-input-kpop" placeholder="Ex: 4iV5W9uYEdYUVa79Axb7Rh" />
+                        <span asp-validation-for="Musica.SpotifyId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.YoutubeUrl" class="form-label fw-bold">YouTube URL</label>
+                            <input asp-for="Musica.YoutubeUrl" class="form-control search-input-kpop" placeholder="https://www.youtube.com/watch?v=..." />
+                            <span asp-validation-for="Musica.YoutubeUrl" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Musica.PreviewAudioUrl" class="form-label fw-bold">Preview Áudio</label>
+                            <input asp-for="Musica.PreviewAudioUrl" class="form-control search-input-kpop" placeholder="https://..." />
+                            <span asp-validation-for="Musica.PreviewAudioUrl" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

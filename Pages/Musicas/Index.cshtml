@@ -1,0 +1,80 @@
+@page
+@model K_Shelf.Pages.Musicas.IndexModel
+@{
+    ViewData["Title"] = "Gerir Músicas";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-4 fw-bold">🎵 Gerir Músicas</h1>
+            <p class="text-secondary lead">Lista de todas as músicas do sistema</p>
+        </div>
+        <a asp-page="./Create" class="btn btn-kpop rounded-pill">➕ Adicionar Música</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="glass-panel p-4 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Título</th>
+                        <th>Álbum</th>
+                        <th>Duração</th>
+                        <th>Faixa</th>
+                        <th>Title Track</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Musicas.Any())
+                    {
+                        int count = 1;
+                        @foreach (var musica in Model.Musicas)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td><strong>@musica.Titulo</strong></td>
+                                <td>@(musica.Album?.Titulo ?? "N/A")</td>
+                                <td>@musica.DuracaoFormatada</td>
+                                <td>@musica.TrackNumber</td>
+                                <td>
+                                    @if (musica.IsTitleTrack)
+                                    {
+                                        <span class="badge-neon-pink">★ Title</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">-</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <a asp-page="./Edit" asp-route-id="@musica.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
+                                        <a asp-page="./Delete" asp-route-id="@musica.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-secondary">Nenhuma música encontrada</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

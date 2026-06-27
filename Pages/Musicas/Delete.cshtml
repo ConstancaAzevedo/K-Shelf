@@ -1,0 +1,51 @@
+@page
+@model K_Shelf.Pages.Musicas.DeleteModel
+@{
+    ViewData["Title"] = "Eliminar Música";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">🗑️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Música</h2>
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning rounded-3 mb-4">
+                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar esta música?</h5>
+                    <p class="mb-0">A música será removida do álbum permanentemente.</p>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 mb-4">
+                    <h4 class="fw-bold mb-1">@Model.Musica.Titulo</h4>
+                    <p class="text-secondary mb-1">
+                        <strong>Álbum:</strong> @(Model.Musica.Album?.Titulo ?? "N/A")
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <strong>Faixa:</strong> @Model.Musica.TrackNumber
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <strong>Duração:</strong> @Model.Musica.DuracaoFormatada
+                    </p>
+                    @if (Model.Musica.IsTitleTrack)
+                    {
+                        <span class="badge-neon-pink">★ Title Track</span>
+                    }
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Musica.Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using K_Shelf.Data;
+using K_Shelf.Models;
+
+namespace K_Shelf.Pages.Musicas
+{
+    [Authorize(Roles = "Admin")]
+    public class IndexModel : PageModel
+    {
+        private readonly ApplicationDbContext _context;
+
+        public IndexModel(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IList<Musica> Musicas { get; set; } = new List<Musica>();
+
+        public async Task OnGetAsync()
+        {
+            Musicas = await _context.Musicas
+                .Include(m => m.Album)
+                .OrderBy(m => m.AlbumId)
+                .ThenBy(m => m.TrackNumber)
+                .ToListAsync();
+        }
+    }
+}
