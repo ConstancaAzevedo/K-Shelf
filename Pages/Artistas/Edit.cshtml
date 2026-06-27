@@ -14,6 +14,7 @@
                 <div class="card-body">
                     <form method="post">
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="Artista.Id" />
 
                         <div class="mb-3">
                             <label asp-for="Artista.Nome" class="form-label fw-bold">

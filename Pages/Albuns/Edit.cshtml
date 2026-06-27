@@ -127,11 +127,9 @@
                                     ➕ Adicionar
                                 </button>
                             </div>
-                            <div class="col-md-4 mb-2">
-                                <a asp-page="/Musicas/Create" asp-route-albumId="@Model.Album.Id" class="btn btn-outline-primary w-100" target="_blank">
-                                    ✨ Criar Nova Música
-                                </a>
-                            </div>
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCriarMusica">
+                                ✨ Criar Nova Música
+                            </button>
                         </div>
 
                         <!-- Lista de músicas atuais -->
@@ -165,9 +163,26 @@
                     </div>
                 </form>
 
-                <!-- ============================================================
-     MODAL: CRIAR GRUPO
-     ============================================================ -->
+                <!-- MODAL: CRIAR MÚSICA -->
+                <div class="modal fade" id="modalCriarMusica" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content glass-panel border-0">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold">🎵 Criar Nova Música</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="conteudoModalMusica">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-kpop" role="status">
+                                        <span class="visually-hidden">A carregar...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODAL: CRIAR GRUPO -->
                 <div class="modal fade" id="modalCriarGrupo" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -223,6 +238,46 @@
 
         solistaSelect.addEventListener('change', function () {
             if (this.value) grupoSelect.value = '';
+        });
+
+        // CARREGAR MODAL - MÚSICA
+        function carregarModalMusica() {
+            const albumId = @Model.Album.Id;
+            fetch('/Musicas/Create?albumId=' + albumId)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('conteudoModalMusica').innerHTML = html;
+                    const form = document.querySelector('#conteudoModalMusica form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            const formData = new FormData(this);
+                            fetch('/Musicas/Create', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                if (result.includes('alert-danger')) {
+                                    document.getElementById('conteudoModalMusica').innerHTML = result;
+                                } else {
+                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarMusica')).hide();
+                                    location.reload();
+                                }
+                            });
+                        });
+                    }
+                });
+        }
+
+        // Quando o modal for aberto, carrega o conteúdo
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalMusica = document.getElementById('modalCriarMusica');
+            if (modalMusica) {
+                modalMusica.addEventListener('show.bs.modal', function() {
+                    carregarModalMusica();
+                });
+            }
         });
 
         // ============================================================
