@@ -26,6 +26,18 @@
                 }
 
                 <form method="post">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p>@error.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
+                    @Html.AntiForgeryToken()
+
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
                     <!-- Nome -->
@@ -51,7 +63,7 @@
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Criar Coleção</button>
+                        <button type="button" class="btn btn-kpop px-4" onclick="document.querySelector('.glass-panel form').submit()">💾 Criar Coleção</button>
                         <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
                     </div>
                 </form>
@@ -61,7 +73,4 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
 }

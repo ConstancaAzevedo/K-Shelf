@@ -1,3 +1,6 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
 /* K-Shelf theme variables */
 :root {
     --kpop-pink: #ff6b9d;
@@ -5,9 +8,6 @@
     --kpop-dark: #2c3e50;
     --kpop-light: #f8f9fa;
 }
-
-/* Import font */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 body {
     font-family: 'Outfit', sans-serif;
