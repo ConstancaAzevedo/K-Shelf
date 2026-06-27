@@ -54,26 +54,11 @@
             <button id="login-submit" type="submit" class="login-btn">Entrar</button>
 
             <div class="links">
-                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login de um utilizador existente</a>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registar um novo utilizador</a>
                 <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar confirmação de email</a>
             </div>
         </form>
 
-        @{
-            if ((Model.ExternalLogins?.Count ?? 0) > 0)
-            {
-                <div class="external-login">
-                    <h3>Ou use outro serviço para entrar</h3>
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-                        @foreach (var provider in Model.ExternalLogins!)
-                        {
-                            <button type="submit" name="provider" value="@provider.Name" title="Entrar usando a sua conta @provider.DisplayName">@provider.DisplayName</button>
-                        }
-                    </form>
-                </div>
-            }
-        }
-    </div>
 
     <div class="footer-login">
         © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a>
