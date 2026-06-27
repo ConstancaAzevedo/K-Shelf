@@ -2,6 +2,7 @@
 @model K_Shelf.Pages.Musicas.CreateModel
 @{
     ViewData["Title"] = "Adicionar Música";
+    Layout = Request.Headers.ContainsKey("X-Requested-With") ? null : "_Layout";
 }
 
 <div class="container py-4 animate-fade-in-up">

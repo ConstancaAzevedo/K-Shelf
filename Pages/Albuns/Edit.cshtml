@@ -127,7 +127,7 @@
                                     ➕ Adicionar
                                 </button>
                             </div>
-                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCriarMusica">
+                            <button type="button" class="btn btn-outline-primary w-100" onclick="carregarModalMusica()">
                                 ✨ Criar Nova Música
                             </button>
                         </div>
@@ -228,8 +228,7 @@
     }
 
     <script>
-        // Impede selecionar Grupo e Solista ao mesmo tempo
-        const grupoSelect = document.getElementById('Album_GrupoId');
+                const grupoSelect = document.getElementById('Album_GrupoId');
         const solistaSelect = document.getElementById('Album_SolistaId');
 
         grupoSelect.addEventListener('change', function () {
@@ -240,178 +239,104 @@
             if (this.value) grupoSelect.value = '';
         });
 
-        // CARREGAR MODAL - MÚSICA
         function carregarModalMusica() {
             const albumId = @Model.Album.Id;
-            fetch('/Musicas/Create?albumId=' + albumId)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('conteudoModalMusica').innerHTML = html;
-                    const form = document.querySelector('#conteudoModalMusica form');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const formData = new FormData(this);
-                            fetch('/Musicas/Create', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.text())
-                            .then(result => {
-                                if (result.includes('alert-danger')) {
-                                    document.getElementById('conteudoModalMusica').innerHTML = result;
-                                } else {
-                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarMusica')).hide();
-                                    location.reload();
-                                }
-                            });
+            const modalEl = document.getElementById('modalCriarMusica');
+            let modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            document.getElementById('conteudoModalMusica').innerHTML = '<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>';
+            modal.show();
+            fetch('/Musicas/Create?albumId=' + albumId, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('conteudoModalMusica').innerHTML = html;
+                const form = document.querySelector('#conteudoModalMusica form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        fetch('/Musicas/Create', { method: 'POST', body: new FormData(this) })
+                        .then(r => r.text())
+                        .then(result => {
+                            if (result.includes('alert-danger')) {
+                                document.getElementById('conteudoModalMusica').innerHTML = result;
+                            } else { modal.hide(); location.reload(); }
                         });
-                    }
-                });
+                    });
+                }
+            });
         }
 
-        // Quando o modal for aberto, carrega o conteúdo
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalMusica = document.getElementById('modalCriarMusica');
-            if (modalMusica) {
-                modalMusica.addEventListener('show.bs.modal', function() {
-                    carregarModalMusica();
-                });
-            }
-        });
-
-        // ============================================================
-        // CARREGAR MODAL - GRUPO
-        // ============================================================
         function carregarModalGrupo() {
-            fetch('/Grupos/Create')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('conteudoModalGrupo').innerHTML = html;
-                    const form = document.querySelector('#conteudoModalGrupo form');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const formData = new FormData(this);
-                            fetch('/Grupos/Create', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.text())
-                            .then(result => {
-                                if (result.includes('alert-danger')) {
-                                    document.getElementById('conteudoModalGrupo').innerHTML = result;
-                                } else {
-                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
-                                    location.reload();
-                                }
-                            });
+            fetch('/Grupos/Create', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('conteudoModalGrupo').innerHTML = html;
+                const form = document.querySelector('#conteudoModalGrupo form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        fetch('/Grupos/Create', { method: 'POST', body: new FormData(this) })
+                        .then(r => r.text())
+                        .then(result => {
+                            if (result.includes('alert-danger')) {
+                                document.getElementById('conteudoModalGrupo').innerHTML = result;
+                            } else { bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide(); location.reload(); }
                         });
-                    }
-                });
+                    });
+                }
+            });
         }
 
-        // ============================================================
-        // CARREGAR MODAL - SOLISTA
-        // ============================================================
         function carregarModalSolista() {
-            fetch('/Solistas/Create')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('conteudoModalSolista').innerHTML = html;
-                    const form = document.querySelector('#conteudoModalSolista form');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const formData = new FormData(this);
-                            fetch('/Solistas/Create', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.text())
-                            .then(result => {
-                                if (result.includes('alert-danger')) {
-                                    document.getElementById('conteudoModalSolista').innerHTML = result;
-                                } else {
-                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide();
-                                    location.reload();
-                                }
-                            });
+            fetch('/Solistas/Create', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('conteudoModalSolista').innerHTML = html;
+                const form = document.querySelector('#conteudoModalSolista form');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        fetch('/Solistas/Create', { method: 'POST', body: new FormData(this) })
+                        .then(r => r.text())
+                        .then(result => {
+                            if (result.includes('alert-danger')) {
+                                document.getElementById('conteudoModalSolista').innerHTML = result;
+                            } else { bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide(); location.reload(); }
                         });
-                    }
-                });
+                    });
+                }
+            });
         }
 
-        // ============================================================
-        // FECHAR MODAL AO CLICAR FORA
-        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
+            document.querySelectorAll('.modal').forEach(function(modal) {
                 modal.addEventListener('hidden.bs.modal', function() {
                     if (this.id === 'modalCriarGrupo') {
-                        document.getElementById('conteudoModalGrupo').innerHTML = `
-                            <div class="text-center py-4">
-                                <div class="spinner-border text-kpop" role="status">
-                                    <span class="visually-hidden">A carregar...</span>
-                                </div>
-                            </div>
-                        `;
+                        document.getElementById('conteudoModalGrupo').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-kpop" role="status"></div></div>';
                     } else if (this.id === 'modalCriarSolista') {
-                        document.getElementById('conteudoModalSolista').innerHTML = `
-                            <div class="text-center py-4">
-                                <div class="spinner-border text-kpop" role="status">
-                                    <span class="visually-hidden">A carregar...</span>
-                                </div>
-                            </div>
-                        `;
+                        document.getElementById('conteudoModalSolista').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-kpop" role="status"></div></div>';
                     }
                 });
             });
         });
 
-        // ============================================================
-        // ADICIONAR MÚSICA AO ÁLBUM (AJAX)
-        // ============================================================
         $(document).ready(function () {
             $('#btnAdicionarMusica').click(function () {
                 var musicaId = $('#selectMusicaExistente').val();
                 var albumId = @Model.Album.Id;
-
-                if (!musicaId) {
-                    alert('Selecione uma música para adicionar.');
-                    return;
-                }
-
-                $.ajax({
-                    url: '/api/Albuns/' + albumId + '/musicas/' + musicaId,
-                    type: 'POST',
-                    success: function () {
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Erro ao adicionar música: ' + xhr.responseText);
-                    }
+                if (!musicaId) { alert('Selecione uma música para adicionar.'); return; }
+                $.ajax({ url: '/api/Albuns/' + albumId + '/musicas/' + musicaId, type: 'POST',
+                    success: function () { location.reload(); },
+                    error: function (xhr) { alert('Erro ao adicionar música: ' + xhr.responseText); }
                 });
             });
 
             $('.btn-remover-musica').click(function () {
                 var musicaId = $(this).data('musica-id');
                 var albumId = @Model.Album.Id;
-
-                if (!confirm('Tem a certeza que pretende remover esta música do álbum?')) {
-                    return;
-                }
-
-                $.ajax({
-                    url: '/api/Albuns/' + albumId + '/musicas/' + musicaId,
-                    type: 'DELETE',
-                    success: function () {
-                        location.reload();
-                    },
-                    error: function (xhr) {
-                        alert('Erro ao remover música: ' + xhr.responseText);
-                    }
+                if (!confirm('Tem a certeza que pretende remover esta música do álbum?')) return;
+                $.ajax({ url: '/api/Albuns/' + albumId + '/musicas/' + musicaId, type: 'DELETE',
+                    success: function () { location.reload(); },
+                    error: function (xhr) { alert('Erro ao remover música: ' + xhr.responseText); }
                 });
             });
         });

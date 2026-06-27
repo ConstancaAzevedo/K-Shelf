@@ -58,7 +58,7 @@
         <!-- Utilizadores por Role -->
         <div class="col-md-6">
             <div class="glass-panel p-4 shadow-sm">
-                <h5 class="fw-bold mb-3">Utilizadores por Role</h5>
+                <h5 class="fw-bold mb-3">Utilizadores por Cargos</h5>
                 <div class="list-group list-group-flush">
                     @foreach (var role in Model.UsersByRole)
                     {
@@ -137,9 +137,6 @@
                     </a>
                     <a asp-page="/Photocards/Index" class="btn btn-outline-primary rounded-pill px-4">
                         Gerir Photocards
-                    </a>
-                    <a asp-page="/Admin/Roles/Index" class="btn btn-outline-primary rounded-pill px-4">
-                        Gerir Cargos
                     </a>
                     <a asp-page="/MakeMeAdmin" class="btn btn-outline-warning rounded-pill px-4">
                         Tornar-me Admin
