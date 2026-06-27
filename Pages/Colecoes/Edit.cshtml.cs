@@ -44,9 +44,10 @@ namespace K_Shelf.Pages.Colecoes
             return Page();
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OnPostAsync()
         {
-
+            ModelState.Remove("Colecao.UtilizadorId");
             // validações manuais 
 
             // Nome obrigatório
