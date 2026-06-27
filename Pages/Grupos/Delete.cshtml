@@ -1,0 +1,50 @@
+@page
+@model K_Shelf.Pages.Grupos.DeleteModel
+@{
+    ViewData["Title"] = "Eliminar Grupo";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">🗑️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Grupo</h2>
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning rounded-3 mb-4">
+                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar este grupo?</h5>
+                    <p class="mb-0">Todos os artistas e álbuns associados serão afetados.</p>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 mb-4">
+                    <h4 class="fw-bold mb-1">@Model.Grupo.Nome</h4>
+                    <p class="text-secondary mb-1">
+                        <strong>Data Estreia:</strong> @Model.Grupo.DataEstreia.ToString("dd/MM/yyyy")
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <strong>Companhia:</strong> @(Model.Grupo.Companhia ?? "N/A")
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <strong>Fansigno:</strong> @(Model.Grupo.Fansigno ?? "N/A")
+                    </p>
+                    <p class="text-secondary mb-1">
+                        <strong>Status:</strong> @(Model.Grupo.IsAtivo ? "Ativo" : "Inativo")
+                    </p>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Grupo.Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

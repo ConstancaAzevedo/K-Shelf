@@ -1,0 +1,76 @@
+@page
+@model K_Shelf.Pages.Grupos.EditModel
+@{
+    ViewData["Title"] = "Editar Grupo";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="glass-panel p-4 shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-1 me-3">✏️</span>
+                    <div>
+                        <h2 class="fw-bold mb-0">Editar Grupo</h2>
+                        <p class="text-secondary mb-0">@Model.Grupo.Nome</p>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Grupo.Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Grupo.Nome" class="form-label fw-bold">
+                            Nome <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Grupo.Nome" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Grupo.Nome" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Grupo.DataEstreia" class="form-label fw-bold">
+                            Data de Estreia <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Grupo.DataEstreia" type="date" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Grupo.DataEstreia" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Grupo.Companhia" class="form-label fw-bold">Companhia</label>
+                        <input asp-for="Grupo.Companhia" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Grupo.Companhia" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Grupo.Fansigno" class="form-label fw-bold">Fansigno</label>
+                        <input asp-for="Grupo.Fansigno" class="form-control search-input-kpop" />
+                        <span asp-validation-for="Grupo.Fansigno" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Grupo.ImagemUrl" class="form-label fw-bold">URL da Imagem</label>
+                        <input asp-for="Grupo.ImagemUrl" class="form-control search-input-kpop" placeholder="https://..." />
+                        <span asp-validation-for="Grupo.ImagemUrl" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input asp-for="Grupo.IsAtivo" class="form-check-input" />
+                        <label asp-for="Grupo.IsAtivo" class="form-check-label fw-bold">Ativo</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

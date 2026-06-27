@@ -1,0 +1,87 @@
+@page
+@model K_Shelf.Pages.Grupos.IndexModel
+@{
+    ViewData["Title"] = "Gerir Grupos";
+}
+
+<div class="container py-4 animate-fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-4 fw-bold">👥 Gerir Grupos</h1>
+            <p class="text-secondary lead">Lista de todos os grupos de K-Pop</p>
+        </div>
+        <a asp-page="/Grupos/Create" class="btn btn-kpop rounded-pill">➕ Adicionar Grupo</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="glass-panel p-4 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Data Estreia</th>
+                        <th>Companhia</th>
+                        <th>Fansigno</th>
+                        <th>Ativo</th>
+                        <th class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Grupos.Any())
+                    {
+                        int count = 1;
+                        @foreach (var grupo in Model.Grupos)
+                        {
+                            <tr>
+                                <td>@count</td>
+                                <td><strong>@grupo.Nome</strong></td>
+                                <td>@grupo.DataEstreia.ToString("dd/MM/yyyy")</td>
+                                <td>@(grupo.Companhia ?? "N/A")</td>
+                                <td>@(grupo.Fansigno ?? "N/A")</td>
+                                <td>
+                                    @if (grupo.IsAtivo)
+                                    {
+                                        <span class="badge bg-success">Ativo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inativo</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <a asp-page="./Edit" asp-route-id="@grupo.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
+                                        <a asp-page="./Delete" asp-route-id="@grupo.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-secondary">Nenhum grupo encontrado.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
