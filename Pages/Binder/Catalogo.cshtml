@@ -4,7 +4,7 @@
     ViewData["Title"] = "Catálogo de Photocards";
 }
 
-<!-- Mensagens de Feedback -->
+<!-- mensagens de feedback -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
@@ -22,13 +22,14 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
-    <!-- Cabeçalho -->
+    <!-- cabecalho da pagina -->
     <div class="row align-items-center mb-5">
         <div class="col-lg-7">
             <h1 class="title-kpop display-4 fw-bold">Catálogo de Photocards</h1>
             <p class="text-secondary lead">Explore a base de dados oficial de photocards do K-Shelf e adicione-os à sua coleção.</p>
         </div>
         <div class="col-lg-5 text-lg-end">
+            <!-- botao para ver o binder do utilizador -->
             @if (User.Identity?.IsAuthenticated == true)
             {
                 <a asp-page="./Index" class="btn btn-kpop rounded-pill px-4 py-2">📖 Ver O Meu Binder</a>
@@ -40,7 +41,7 @@
         </div>
     </div>
 
-    <!-- Barra de Pesquisa e Filtros -->
+    <!-- barra de pesquisa e filtros -->
     <div class="glass-panel p-4 mb-5 shadow-sm">
         <form method="get" class="row g-3">
             <div class="col-md-6">
@@ -52,12 +53,14 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label fw-bold text-dark">Filtrar por Grupo</label>
+                <!-- dropdown com a lista de grupos -->
                 <select asp-for="GrupoFilter" class="form-select search-input-kpop rounded-pill" asp-items="Model.GruposSelectList">
                     <option value="">Todos os Grupos</option>
                 </select>
             </div>
             <div class="col-md-2 d-flex align-items-end gap-2">
                 <button type="submit" class="btn btn-kpop w-100 rounded-pill py-2">Filtrar</button>
+                <!-- botao para limpar os filtros -->
                 @if (!string.IsNullOrEmpty(Model.SearchQuery) || Model.GrupoFilter.HasValue)
                 {
                     <a asp-page="./Catalogo" class="btn btn-outline-secondary rounded-circle px-3 py-2" title="Limpar Filtros">❌</a>
@@ -66,31 +69,31 @@
         </form>
     </div>
 
-    <!-- Grelha de Photocards -->
+    <!-- grelha de photocards -->
     @if (Model.Photocards != null && Model.Photocards.Any())
     {
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            @foreach (var item in Model.Photocards)
+            @foreach (var item in Model.Photocards) // percorre a lista de photocards
             {
                 <div class="col">
                     <div class="glass-panel p-2 shadow-sm text-center h-100 d-flex flex-column justify-content-between transition-hover" style="border-radius: 1.25rem;">
                         <div>
-                            <!-- Imagem do Photocard -->
+                            <!-- imagem do photocard -->
                             <div class="rounded-4 overflow-hidden shadow-sm mb-3 position-relative" style="aspect-ratio: 2.5/3.5; background: #eaeaea;">
                                 <img src="@item.ImagemUrl" alt="@item.Versao" style="width: 100%; height: 100%; object-fit: cover;" />
                             </div>
                             
-                            <!-- Metadados -->
+                            <!-- metadados -->
                             <span class="badge-neon-pink mb-2 d-inline-block px-3 py-1 rounded-pill" style="font-size: 0.75rem;">
-                                🎤 @(item.Artista?.NomeArtistico ?? "Artista")
+                                🎤 @(item.Artista?.NomeArtistico ?? "Artista") <!-- nome artistico do artista ou "artista" -->
                             </span>
                             <h6 class="fw-bold mb-1 text-dark text-truncate" title="@(item.Artista?.Grupo?.Nome ?? item.Artista?.Solista?.Nome ?? "Solista")">
-                                @(item.Artista?.Grupo?.Nome ?? item.Artista?.Solista?.Nome ?? "Solista")
+                                @(item.Artista?.Grupo?.Nome ?? item.Artista?.Solista?.Nome ?? "Solista") <!-- nome do grupo/solista -->
                             </h6>
-                            <small class="text-secondary text-truncate d-block" title="@item.Versao">🎴 @item.Versao</small>
+                            <small class="text-secondary text-truncate d-block" title="@item.Versao">🎴 @item.Versao</small> <!-- versao do photocard -->
                             @if (item.Album != null)
                             {
-                                <small class="text-secondary text-truncate d-block" title="@item.Album.Titulo">💿 @item.Album.Titulo</small>
+                                <small class="text-secondary text-truncate d-block" title="@item.Album.Titulo">💿 @item.Album.Titulo</small> <!-- titulo do album -->
                             }
                             else
                             {
@@ -98,10 +101,11 @@
                             }
                         </div>
 
-                        <!-- Ações -->
+                        <!-- acoes -->
                         <div class="mt-3">
                             @if (User.Identity?.IsAuthenticated == true)
                             {
+                                <!-- botao para abrir o modal de adicao ao binder -->
                                 <button type="button" class="btn btn-sm btn-kpop rounded-pill w-100 py-2" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#addBinderModal" 
@@ -114,6 +118,7 @@
                             }
                             else
                             {
+                                <!-- link para login para utilizadores nao autenticados -->
                                 <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-sm btn-outline-secondary rounded-pill w-100 py-2">
                                     Adicionar
                                 </a>
@@ -126,6 +131,7 @@
     }
     else
     {
+        <!-- mensagem quando nao ha photocards -->
         <div class="glass-panel p-5 text-center text-secondary">
             <p style="font-size: 3rem;">🎴</p>
             <h4 class="fw-bold text-dark">Nenhum photocard encontrado</h4>
@@ -134,7 +140,7 @@
     }
 </div>
 
-<!-- Modal de Adição ao Binder -->
+<!-- modal de adicao ao binder -->
 <div class="modal fade" id="addBinderModal" tabindex="-1" aria-labelledby="addBinderModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass-panel text-dark" style="border: 1px solid rgba(255,255,255,0.4); background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
@@ -144,29 +150,31 @@
             </div>
             <form method="post" asp-page-handler="Adicionar">
                 <div class="modal-body">
+                    <!-- campo escondido para o id do photocard -->
                     <input type="hidden" id="modalPhotocardId" name="AddPhotocardId" />
                     
+                    <!-- pre-visualizacao do photocard -->
                     <div class="text-center mb-4">
                         <div class="rounded-4 overflow-hidden shadow-md mx-auto mb-2" style="width: 100px; height: 140px; background: #eee;">
                             <img id="modalPhotocardImg" src="" style="width:100%; height:100%; object-fit:cover;" />
                         </div>
-                        <h6 id="modalPhotocardTitle" class="fw-bold mb-0 text-dark"></h6>
-                        <small id="modalPhotocardArtist" class="badge bg-light border text-dark rounded-pill px-2 py-1 mt-1"></small>
+                        <h6 id="modalPhotocardTitle" class="fw-bold mb-0 text-dark"></h6> <!-- titulo do photocard -->
+                        <small id="modalPhotocardArtist" class="badge bg-light border text-dark rounded-pill px-2 py-1 mt-1"></small> <!-- nome do artista -->
                     </div>
 
-                    <!-- Estado -->
+                    <!-- estado do photocard -->
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark">Onde guardar este card?</label>
                         <select name="AddEstado" class="form-select search-input-kpop rounded-pill" asp-items="Html.GetEnumSelectList<K_Shelf.Models.EstadoPhotocard>()"></select>
                     </div>
 
-                    <!-- Quantidade -->
+                    <!-- quantidade -->
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark">Quantidade</label>
                         <input type="number" name="AddQuantidade" value="1" min="1" max="100" class="form-control search-input-kpop rounded-pill" />
                     </div>
 
-                    <!-- Notas -->
+                    <!-- notas pessoais -->
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark">Notas Pessoais</label>
                         <input type="text" name="AddNotas" class="form-control search-input-kpop rounded-pill" placeholder="Ex: Troco por RM, primeira tiragem, etc." />
@@ -181,17 +189,21 @@
     </div>
 </div>
 
+<!-- scripts do lado do cliente -->
 @section Scripts {
     <script>
+        // quando o modal e aberto, preenche os campos com os dados do photocard selecionado
         const addBinderModal = document.getElementById('addBinderModal');
         if (addBinderModal) {
             addBinderModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
+                const button = event.relatedTarget; // botao que abriu o modal
+                // obtem os atributos data do botao
                 const id = button.getAttribute('data-id');
                 const title = button.getAttribute('data-title');
                 const artist = button.getAttribute('data-artist');
                 const img = button.getAttribute('data-img');
 
+                // preenche os campos do modal
                 document.getElementById('modalPhotocardId').value = id;
                 document.getElementById('modalPhotocardTitle').textContent = title;
                 document.getElementById('modalPhotocardArtist').textContent = artist;

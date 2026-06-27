@@ -5,13 +5,14 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
-    <!-- Cabeçalho -->
+    <!-- cabecalho da pagina -->
     <div class="row align-items-center mb-5">
         <div class="col-lg-7">
             <h1 class="title-kpop display-4 fw-bold">Estante de Coleções</h1>
             <p class="text-secondary lead">Organize a sua discografia física e digital de K-Pop numa estante virtual interativa.</p>
         </div>
         <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+            <!-- botao para criar nova colecao (apenas para utilizadores autenticados) -->
             @if (Model.IsUserAuthenticated)
             {
                 <a asp-page="./Create" class="btn btn-kpop btn-lg shadow-sm rounded-pill px-4 py-2 hover-elevate">
@@ -21,6 +22,7 @@
         </div>
     </div>
 
+    <!-- mensagem de sucesso -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
@@ -29,7 +31,7 @@
         </div>
     }
 
-    <!-- BANNER DE CONVITE SE NÃO ESTIVER AUTENTICADO -->
+    <!-- banner de convite para utilizadores nao autenticados -->
     @if (!Model.IsUserAuthenticated)
     {
         <div class="glass-panel-dark p-5 mb-5 shadow-lg border-0 animate-fade-in-up">
@@ -55,7 +57,7 @@
         </div>
     }
 
-    <!-- CONTEÚDO PRINCIPAL (COLEÇÕES) -->
+    <!-- conteudo principal (colecoes) -->
     <div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold text-dark mb-0">
@@ -67,10 +69,12 @@
             }
         </div>
 
+        <!-- define a lista de colecoes a exibir (reais ou mock) -->
         @{
             var colecoesExibir = Model.IsUserAuthenticated ? Model.Colecoes : Model.MockColecoes;
         }
 
+        <!-- mensagem quando nao ha colecoes -->
         @if (!colecoesExibir.Any())
         {
             <div class="text-center py-5 glass-panel shadow-sm">
@@ -82,24 +86,24 @@
         }
         else
         {
-            <!-- ESTANTE VIRTUAL (DESIGN PREMIUM) -->
+            <!-- estante virtual (design premium) -->
             <div class="shelf-container shadow-sm mb-5">
                 <div class="row row-cols-1 row-cols-md-2 g-4">
-                    @foreach (var colecao in colecoesExibir)
+                    @foreach (var colecao in colecoesExibir) // percorre a lista de colecoes
                     {
                         <div class="col">
                             <div class="card collection-card glass-panel p-4 h-100 border-0 shadow-sm transition-all position-relative" style="background: rgba(255,255,255,0.85);">
-                                <!-- MOSAICO TRIDIMENSIONAL DE ÁLBUNS -->
+                                <!-- mosaico tridimensional de albuns -->
                                 <div class="mini-album-pile">
                                     @if (colecao.AlbumColecoes != null && colecao.AlbumColecoes.Any())
                                     {
                                         var count = 0;
-                                        @foreach (var ac in colecao.AlbumColecoes.Take(3))
+                                        @foreach (var ac in colecao.AlbumColecoes.Take(3)) // mostra as capas dos primeiros 3 albuns
                                         {
                                             <img src="@(ac.Album?.CapaUrl ?? "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500")" class="mini-cover" alt="Capa" />
                                             count++;
                                         }
-                                        @for (var i = count; i < 3; i++)
+                                        @for (var i = count; i < 3; i++) // preenche com placeholders se houver menos de 3 albuns
                                         {
                                             <div class="mini-cover d-flex align-items-center justify-content-center text-white" style="background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple)); font-size: 1.5rem;">
                                                 💿
@@ -108,33 +112,33 @@
                                     }
                                     else
                                     {
-                                        <!-- Sem álbuns -->
+                                        <!-- placeholders para colecao sem albuns -->
                                         <div class="mini-cover d-flex align-items-center justify-content-center text-white" style="background: #ccc; font-size: 1.5rem; transform: translateX(-25px) rotate(-10deg);">💿</div>
                                         <div class="mini-cover d-flex align-items-center justify-content-center text-white" style="background: #ddd; font-size: 1.5rem; translateY(-5px);">💿</div>
                                         <div class="mini-cover d-flex align-items-center justify-content-center text-white" style="background: #bbb; font-size: 1.5rem; transform: translateX(25px) rotate(10deg);">💿</div>
                                     }
                                 </div>
 
-                                <!-- Detalhes da Coleção -->
+                                <!-- detalhes da colecao -->
                                 <div class="text-center mt-3">
-                                    <h3 class="fw-bold fs-4 text-dark mb-1">@colecao.Nome</h3>
+                                    <h3 class="fw-bold fs-4 text-dark mb-1">@colecao.Nome</h3> <!-- nome da colecao -->
                                     <p class="text-secondary small mb-3 text-truncate-2" style="height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                                        @(colecao.Descricao ?? "Nenhuma descrição adicionada para esta coleção.")
+                                        @(colecao.Descricao ?? "Nenhuma descrição adicionada para esta coleção.") <!-- descricao ou mensagem padrao -->
                                     </p>
                                 </div>
 
-                                <!-- Status / Stats da Coleção -->
+                                <!-- estatisticas da colecao -->
                                 <div class="bg-light rounded-3 p-3 my-3">
                                     <div class="d-flex justify-content-between text-secondary mb-1" style="font-size: 0.85rem;">
                                         <span>Total de Álbuns:</span>
-                                        <strong class="text-dark">@(colecao.AlbumColecoes?.Count ?? 0) álbuns</strong>
+                                        <strong class="text-dark">@(colecao.AlbumColecoes?.Count ?? 0) álbuns</strong> <!-- numero de albuns na colecao -->
                                     </div>
-                                    <!-- Barra de progresso fictícia de preenchimento de estante -->
+                                    <!-- barra de progresso ficticia de preenchimento de estante -->
                                     <div class="progress" style="height: 6px;">
                                         @{
                                             var numAlbuns = colecao.AlbumColecoes?.Count ?? 0;
                                             var progress = Math.Min(numAlbuns * 10, 100);
-                                            if (progress == 0) progress = 15; // Mínimo visual
+                                            if (progress == 0) progress = 15; // minimo visual
                                         }
                                         <div class="progress-bar" role="progressbar" style="width: @(progress)%; background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));" aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
@@ -144,15 +148,16 @@
                                     </div>
                                 </div>
 
-                                <!-- Rodapé do Cartão -->
+                                <!-- rodape do cartao -->
                                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top gap-2">
                                     <span class="text-secondary small">
-                                        📅 @colecao.DataCriacao.ToString("dd/MM/yyyy")
+                                        📅 @colecao.DataCriacao.ToString("dd/MM/yyyy") <!-- data de criacao formatada -->
                                     </span>
                                     <div class="d-flex gap-1">
                                         <a asp-page="./Details" asp-route-id="@colecao.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">
                                             🔍 Ver Detalhes
                                         </a>
+                                        <!-- botoes de edicao e eliminacao (apenas para utilizadores autenticados) -->
                                         @if (Model.IsUserAuthenticated)
                                         {
                                             <a asp-page="./Edit" asp-route-id="@colecao.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
@@ -165,7 +170,7 @@
                     }
                 </div>
 
-                <!-- Efeito Estante de Madeira Virtual -->
+                <!-- efeito estante de madeira virtual -->
                 <div class="shelf-row mt-4"></div>
             </div>
         }

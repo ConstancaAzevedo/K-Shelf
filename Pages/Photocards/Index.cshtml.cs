@@ -10,36 +10,37 @@ using System.Threading.Tasks;
 namespace K_Shelf.Pages.Photocards
 {
     /// <summary>
-    /// Página de administração que lista todos os photocards registados no catálogo.
-    /// Acesso restrito a utilizadores com o papel de Administrador.
+    /// pagina de administracao que lista todos os photocards registados no catalogo
+    /// acesso restrito a utilizadores com o papel de administrador
     /// </summary>
     [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
+        // contexto da base de dados para aceder as tabelas
         private readonly ApplicationDbContext _context;
 
         /// <summary>
-        /// Construtor com injeção de dependência do contexto da base de dados.
+        /// construtor com injecao de dependencia do contexto da base de dados
         /// </summary>
         public IndexModel(ApplicationDbContext context)
         {
             _context = context;
-
         }
 
-        /// <summary>Lista completa de photocards para exibição na tabela administrativa.</summary>
+        /// <summary>lista completa de photocards para exibicao na tabela administrativa</summary>
         public IList<Photocard> Photocards { get; set; } = default!;
 
         /// <summary>
-        /// Carrega todos os photocards com os dados do artista e álbum associados.
+        /// carrega todos os photocards com os dados do artista e album associados
         /// </summary>
         public async Task OnGetAsync()
         {
-            // Inclui dados relacionados (Artista e Álbum) para evitar N+1 queries
+            // obtem todos os photocards da base de dados com os dados relacionados
+            // inclui dados relacionados (artista e album) para evitar n+1 queries
             Photocards = await _context.Photocards
-                .Include(p => p.Artista)
-                .Include(p => p.Album)
-                .ToListAsync();
+                .Include(p => p.Artista) // inclui o artista associado
+                .Include(p => p.Album) // inclui o album associado
+                .ToListAsync(); // converte para lista
         }
     }
 }

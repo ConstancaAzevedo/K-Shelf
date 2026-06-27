@@ -9,84 +9,92 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Artistas
 {
+    // restringe o acesso apenas a utilizadores com o role admin
     [Authorize(Roles = "Admin")]
     public class EditModel : PageModel
     {
+        // contexto da base de dados para aceder as tabelas
         private readonly ApplicationDbContext _context;
-        private readonly IHubContext<NotificacaoHub> _hubContext; // NOVO
+        // hub do signalr para enviar notificacoes em tempo real
+        private readonly IHubContext<NotificacaoHub> _hubContext;
 
-
+        // construtor que recebe os servicos por injecao de dependencias
         public EditModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
             _hubContext = hubContext;
-
         }
 
+        // propriedade que recebe os dados do artista por binding
         [BindProperty]
         public Artista Artista { get; set; } = new();
 
+        // metodo executado quando a pagina e carregada via get
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            // verifica se o id foi fornecido
             if (id == null)
             {
                 TempData["ErrorMessage"] = "ID do artista não fornecido";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
+            // procura o artista pelo id
             var artista = await _context.Artistas.FindAsync(id);
+            // se o artista nao existir, retorna erro
             if (artista == null)
             {
                 TempData["ErrorMessage"] = "Artista não encontrado";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
+            // atribui o artista a propriedade da pagina
             Artista = artista;
-            return Page();
+            return Page(); // retorna a pagina
         }
 
+        // metodo executado quando o formulario e submetido via post
         public async Task<IActionResult> OnPostAsync()
         {
-            
-            // Validações
+            // validacoes manuais
 
-            // Nome obrigatório
+            // nome obrigatorio
             if (string.IsNullOrWhiteSpace(Artista.Nome))
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista é obrigatório.");
             }
 
-            // Nome com mínimo de 2 caracteres
+            // nome com minimo de 2 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Nome) && Artista.Nome.Length < 2)
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista deve ter pelo menos 2 caracteres.");
             }
 
-            // Nome com máximo de 100 caracteres
+            // nome com maximo de 100 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Nome) && Artista.Nome.Length > 100)
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista não pode exceder 100 caracteres.");
             }
 
-            // Nome Artístico - máximo 100 caracteres
+            // nome artistico - maximo 100 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.NomeArtistico) && Artista.NomeArtistico.Length > 100)
             {
                 ModelState.AddModelError("Artista.NomeArtistico", "O nome artístico não pode exceder 100 caracteres.");
             }
 
-            // Posição - máximo 50 caracteres
+            // posicao - maximo 50 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Posicao) && Artista.Posicao.Length > 50)
             {
                 ModelState.AddModelError("Artista.Posicao", "A posição não pode exceder 50 caracteres.");
             }
 
-            // Nacionalidade - máximo 50 caracteres
+            // nacionalidade - maximo 50 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Pais) && Artista.Pais.Length > 50)
             {
                 ModelState.AddModelError("Artista.Pais", "A nacionalidade não pode exceder 50 caracteres.");
             }
 
-            // Verificar se já existe OUTRO artista com o mesmo nome (excluindo o próprio)
+            // verifica se ja existe outro artista com o mesmo nome (excluindo o proprio)
             var artistaExistente = await _context.Artistas
                 .AnyAsync(a => a.Nome.ToLower() == Artista.Nome.ToLower() && a.Id != Artista.Id);
 
@@ -95,7 +103,7 @@ namespace K_Shelf.Pages.Artistas
                 ModelState.AddModelError("Artista.Nome", $"Já existe um artista com o nome \"{Artista.Nome}\"!");
             }
 
-            // Validação: Data de Saída deve ser posterior à Data de Entrada
+            // validacao: data de saida deve ser posterior a data de entrada
             if (Artista.DataEntrada.HasValue && Artista.DataSaida.HasValue)
             {
                 if (Artista.DataSaida <= Artista.DataEntrada)
@@ -104,47 +112,49 @@ namespace K_Shelf.Pages.Artistas
                 }
             }
 
-            // Validação: Data de Nascimento não pode ser no futuro
+            // validacao: data de nascimento nao pode ser no futuro
             if (Artista.DataNascimento > DateTime.Now)
             {
                 ModelState.AddModelError("Artista.DataNascimento", "A data de nascimento não pode ser no futuro.");
             }
 
-
-            // Validação: Data de Entrada não pode ser no futuro
+            // validacao: data de entrada nao pode ser no futuro
             if (Artista.DataEntrada.HasValue && Artista.DataEntrada > DateTime.Now)
             {
                 ModelState.AddModelError("Artista.DataEntrada", "A data de entrada não pode ser no futuro.");
             }
 
+            // verifica se o modelo e valido
             if (!ModelState.IsValid)
             {
-                return Page();
+                return Page(); // volta para a pagina com os erros
             }
 
             try
             {
+                // procura o artista original pelo id
                 var artistaOriginal = await _context.Artistas.FindAsync(Artista.Id);
+                // se o artista nao existir, retorna erro
                 if (artistaOriginal == null)
                 {
                     TempData["ErrorMessage"] = "Artista não encontrado";
-                    return NotFound();
+                    return NotFound(); // retorna erro 404
                 }
 
-                // Atualizar campos
-                artistaOriginal.Nome = Artista.Nome;
-                artistaOriginal.NomeArtistico = Artista.NomeArtistico;
-                artistaOriginal.DataNascimento = Artista.DataNascimento;
-                artistaOriginal.Posicao = Artista.Posicao;
-                artistaOriginal.Pais = Artista.Pais;
-                artistaOriginal.ImagemUrl = Artista.ImagemUrl;
-                artistaOriginal.DataEntrada = Artista.DataEntrada;
-                artistaOriginal.DataSaida = Artista.DataSaida;
-                artistaOriginal.IsAtivo = Artista.IsAtivo;
+                // atualiza os campos editaveis do artista
+                artistaOriginal.Nome = Artista.Nome; // atualiza o nome
+                artistaOriginal.NomeArtistico = Artista.NomeArtistico; // atualiza o nome artistico
+                artistaOriginal.DataNascimento = Artista.DataNascimento; // atualiza a data de nascimento
+                artistaOriginal.Posicao = Artista.Posicao; // atualiza a posicao
+                artistaOriginal.Pais = Artista.Pais; // atualiza o pais
+                artistaOriginal.ImagemUrl = Artista.ImagemUrl; // atualiza a url da imagem
+                artistaOriginal.DataEntrada = Artista.DataEntrada; // atualiza a data de entrada
+                artistaOriginal.DataSaida = Artista.DataSaida; // atualiza a data de saida
+                artistaOriginal.IsAtivo = Artista.IsAtivo; // atualiza o status ativo/inativo
 
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // guarda as alteracoes
 
-                // notificação em tempo real
+                // notificacao signalr para todos os clientes
                 await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
                 {
                     Tipo = "Artista",
@@ -153,24 +163,26 @@ namespace K_Shelf.Pages.Artistas
                     Data = DateTime.Now
                 });
 
+                // guarda mensagem de sucesso nos dados temporarios
                 TempData["SuccessMessage"] = $"Artista \"{Artista.NomeExibicao}\" atualizado com sucesso!";
-                return RedirectToPage("./Index");
+                return RedirectToPage("./Index"); // redireciona para a lista de artistas
             }
             catch (DbUpdateConcurrencyException)
             {
+                // verifica se o artista ainda existe
                 if (!await _context.Artistas.AnyAsync(a => a.Id == Artista.Id))
                 {
                     TempData["ErrorMessage"] = "Artista não encontrado.";
-                    return NotFound();
+                    return NotFound(); // retorna erro 404
                 }
-                throw;
+                throw; // relanca a excecao
             }
             catch (Exception ex)
             {
+                // guarda mensagem de erro nos dados temporarios
                 TempData["ErrorMessage"] = $"Erro ao atualizar artista: {ex.Message}";
-                return Page();
+                return Page(); // volta para a pagina com o erro
             }
-
         }
     }
 }

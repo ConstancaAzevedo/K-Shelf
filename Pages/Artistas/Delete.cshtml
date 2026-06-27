@@ -23,19 +23,21 @@
         </div>
     }
 
-    
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
+                <!-- cabecalho do cartao em vermelho -->
                 <div class="card-header bg-danger text-white">
                     <h2 class="mb-0">@ViewData["Title"]</h2>
                 </div>
                 <div class="card-body">
+                    <!-- alerta de confirmacao de eliminacao -->
                     <div class="alert alert-warning">
                         <h4 class="mb-2">Tem a certeza que pretende eliminar este artista?</h4>
                         <p class="mb-0">Esta ação é irreversível!</p>
                     </div>
 
+                    <!-- imagem do artista -->
                     <div class="mb-4">
                         @if (!string.IsNullOrEmpty(Model.Artista?.ImagemUrl))
                         {
@@ -43,30 +45,32 @@
                         }
                     </div>
 
+                    <!-- detalhes do artista a eliminar -->
                     <dl class="row">
-                        <dt class="col-sm-3">Nome</dt>
+                        <dt class="col-sm-3">Nome</dt> <!-- nome real do artista -->
                         <dd class="col-sm-9">@Model.Artista?.Nome</dd>
 
-                        <dt class="col-sm-3">Nome Artístico</dt>
+                        <dt class="col-sm-3">Nome Artístico</dt> <!-- nome artistico do artista -->
                         <dd class="col-sm-9">@(Model.Artista?.NomeArtistico ?? "N/A")</dd>
 
-                        <dt class="col-sm-3">Posição</dt>
+                        <dt class="col-sm-3">Posição</dt> <!-- posicao no grupo -->
                         <dd class="col-sm-9">@(Model.Artista?.Posicao ?? "N/A")</dd>
 
-                        <dt class="col-sm-3">Pais</dt>
+                        <dt class="col-sm-3">Pais</dt> <!-- nacionalidade -->
                         <dd class="col-sm-9">@(Model.Artista?.Pais ?? "N/A")</dd>
 
-                        <dt class="col-sm-3">Data Nascimento</dt>
+                        <dt class="col-sm-3">Data Nascimento</dt> <!-- data de nascimento -->
                         <dd class="col-sm-9">@(Model.Artista?.DataNascimento.ToString("dd/MM/yyyy") ?? "N/A")</dd>
 
-                        <dt class="col-sm-3">Ativo</dt>
+                        <dt class="col-sm-3">Ativo</dt> <!-- indica se o artista esta ativo -->
                         <dd class="col-sm-9">@(Model.Artista?.IsAtivo == true ? "Sim" : "Não")</dd>
                     </dl>
 
+                    <!-- formulario de confirmacao de eliminacao -->
                     <form method="post">
-                        <input type="hidden" asp-for="Artista.Id" />
-                        <button type="submit" class="btn btn-danger">Confirmar Eliminação</button>
-                        <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+                        <input type="hidden" asp-for="Artista.Id" /> <!-- campo escondido para o id -->
+                        <button type="submit" class="btn btn-danger">Confirmar Eliminação</button> <!-- botao de confirmacao -->
+                        <a asp-page="Index" class="btn btn-secondary">Cancelar</a> <!-- volta para a lista -->
                     </form>
                 </div>
             </div>

@@ -1,6 +1,6 @@
-/* Página de Gestão de Conta - Estilos específicos */
+/* pagina de gestao de conta - estilos especificos */
 
-/* Garantir que o footer fica no final */
+/* garante que o footer fica no final da pagina */
 html, body {
     height: 100%;
     margin: 0;
@@ -12,18 +12,19 @@ body {
     min-height: 100vh;
 }
 
+/* area de conteudo principal que ocupa o espaco restante */
 .main-content {
     flex: 1;
 }
 
-/* Container da página Manage */
+/* container da pagina manage */
 .manage-page-container {
     margin-top: 2rem;
     margin-bottom: 2rem;
     min-height: calc(100vh - 300px);
 }
 
-/* Card/container do conteúdo */
+/* card/container do conteudo */
 .manage-card {
     background: white;
     border-radius: 20px;
@@ -32,14 +33,14 @@ body {
     margin-bottom: 2rem;
 }
 
-    /* Títulos */
+    /* titulos */
     .manage-card h3 {
         color: var(--kpop-dark);
         margin-bottom: 1.5rem;
         font-weight: 600;
     }
 
-    /* Formulários */
+    /* formularios */
     .manage-card .form-floating {
         margin-bottom: 1.2rem;
     }
@@ -55,7 +56,7 @@ body {
                 box-shadow: 0 0 0 0.2rem rgba(155, 89, 182, 0.25);
             }
 
-/* Botão guardar */
+/* botao guardar com gradiente */
 .btn-save {
     background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
     color: white;
@@ -72,7 +73,7 @@ body {
         color: white;
     }
 
-/* Navegação lateral */
+/* navegacao lateral */
 .manage-nav .nav-link {
     color: var(--kpop-dark);
     border-radius: 12px;
@@ -91,7 +92,7 @@ body {
         color: var(--kpop-purple);
     }
 
-/* Mensagens de status */
+/* mensagens de status */
 .status-message {
     border-radius: 10px;
     padding: 0.75rem 1rem;

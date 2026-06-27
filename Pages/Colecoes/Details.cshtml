@@ -31,38 +31,40 @@
         </div>
     }
 
-    <!-- Cabeçalho da Coleção -->
+    <!-- cabecalho da colecao -->
     <div class="glass-panel p-4 shadow-sm mb-4">
         <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
             <div>
-                <h1 class="fw-bold mb-1">📚 @Model.Colecao.Nome</h1>
-                <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
+                <h1 class="fw-bold mb-1">📚 @Model.Colecao.Nome</h1> <!-- nome da colecao -->
+                <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p> <!-- descricao ou mensagem padrao -->
                 <small class="text-secondary">
-                    Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
-                    @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                    Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") • <!-- data de criacao formatada -->
+                    @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns <!-- numero de albuns na colecao -->
                 </small>
             </div>
+            <!-- botoes de acao -->
             <div class="d-flex gap-2 flex-wrap">
-                @if (Model.IsOwner || User.IsInRole("Admin"))
+                @if (Model.IsOwner || User.IsInRole("Admin")) <!-- verifica se o utilizador e dono ou admin -->
                 {
                     <a asp-page="./Edit" asp-route-id="@Model.Colecao.Id"
-                       class="btn btn-warning rounded-pill px-3">✏️ Editar</a>
+                       class="btn btn-warning rounded-pill px-3">✏️ Editar</a> <!-- botao de editar -->
                     <a asp-page="./Delete" asp-route-id="@Model.Colecao.Id"
-                       class="btn btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a>
+                       class="btn btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a> <!-- botao de eliminar -->
                 }
-                <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-3">← Voltar</a>
+                <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-3">← Voltar</a> <!-- volta para a lista -->
             </div>
         </div>
     </div>
 
     <div class="row g-4">
-        <!-- Coluna Esquerda: Adicionar Álbum -->
+        <!-- coluna esquerda: adicionar album -->
         <div class="col-md-4">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Adicionar Álbum</h5>
                 <form method="post" asp-page-handler="AdicionarAlbum" asp-route-id="@Model.Colecao.Id">
                     <div class="mb-3">
                         <label class="form-label text-secondary small">Selecione um álbum</label>
+                        <!-- dropdown com os albuns disponiveis para adicionar -->
                         <select asp-for="AlbumIdParaAdicionar" class="form-select search-input-kpop"
                                 asp-items="Model.AlbunsDisponiveis">
                             <option value="0">-- Escolha um álbum --</option>
@@ -71,6 +73,7 @@
                     <button type="submit" class="btn btn-kpop w-100 rounded-pill">Adicionar</button>
                 </form>
 
+                <!-- mensagem quando todos os albuns ja estao na colecao -->
                 @if (Model.AlbunsDisponiveis != null && !Model.AlbunsDisponiveis.Any())
                 {
                     <div class="mt-3 text-center">
@@ -80,16 +83,17 @@
             </div>
         </div>
 
-        <!-- Coluna Direita: Álbuns na Coleção -->
+        <!-- coluna direita: albuns na colecao -->
         <div class="col-md-8">
             <div class="glass-panel p-4 shadow-sm">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold mb-0">📀 Álbuns na Coleção</h5>
-                    <span class="badge bg-secondary rounded-pill">@(Model.Colecao.AlbumColecoes?.Count ?? 0)</span>
+                    <h5 class="fw-bold mb-0">Álbuns na Coleção</h5>
+                    <span class="badge bg-secondary rounded-pill">@(Model.Colecao.AlbumColecoes?.Count ?? 0)</span> <!-- contador de albuns -->
                 </div>
 
                 @if (Model.Colecao.AlbumColecoes == null || !Model.Colecao.AlbumColecoes.Any())
                 {
+                    <!-- mensagem quando a colecao esta vazia -->
                     <div class="text-center py-5">
                         <span class="display-3">📭</span>
                         <p class="text-secondary mt-3">Ainda não tem álbuns nesta coleção.<br />Use o painel ao lado para adicionar.</p>
@@ -97,12 +101,13 @@
                 }
                 else
                 {
+                    <!-- lista de albuns na colecao -->
                     <div class="row row-cols-1 row-cols-md-2 g-3">
                         @foreach (var ac in Model.Colecao.AlbumColecoes)
                         {
                             <div class="col">
                                 <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3">
-                                    <!-- Capa do álbum -->
+                                    <!-- capa do album -->
                                     @if (!string.IsNullOrEmpty(ac.Album?.CapaUrl))
                                     {
                                         <img src="@ac.Album.CapaUrl" alt="@ac.Album.Titulo"
@@ -110,35 +115,36 @@
                                     }
                                     else
                                     {
+                                        <!-- placeholder para album sem capa -->
                                         <div class="d-flex align-items-center justify-content-center bg-secondary text-white"
                                              style="width: 60px; height: 60px; border-radius: 8px; font-size: 1.5rem;">
                                             💿
                                         </div>
                                     }
 
-                                    <!-- Info -->
+                                    <!-- informacoes do album -->
                                     <div class="flex-grow-1 overflow-hidden">
-                                        <p class="fw-bold mb-0 text-truncate">@ac.Album?.Titulo</p>
+                                        <p class="fw-bold mb-0 text-truncate">@ac.Album?.Titulo</p> <!-- titulo do album -->
                                         <small class="text-secondary">
-                                            @(ac.Album?.Grupo?.Nome ?? ac.Album?.Solista?.Nome ?? "Independente")
+                                            @(ac.Album?.Grupo?.Nome ?? ac.Album?.Solista?.Nome ?? "Independente") <!-- nome do artista -->
                                         </small>
                                         <br />
                                         <small class="text-secondary">
-                                            📅 Adicionado em @ac.DataAdicao.ToString("dd/MM/yyyy")
+                                            Adicionado em @ac.DataAdicao.ToString("dd/MM/yyyy") <!-- data de adicao formatada -->
                                         </small>
                                     </div>
 
-                                    <!-- Remover -->
+                                    <!-- botao para remover o album da colecao -->
                                     <form method="post"
                                           asp-page-handler="RemoverAlbum"
                                           asp-route-id="@Model.Colecao.Id"
                                           asp-route-albumId="@ac.AlbumId"
                                           class="d-inline"
                                           onsubmit="return confirmarRemocao(this, '@ac.Album?.Titulo')">
-                                        @Html.AntiForgeryToken()
+                                        @Html.AntiForgeryToken() <!-- token csrf -->
                                         <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"
                                                 title="Remover da coleção">
-                                            ✕
+                                            ✕ <!-- icone de remover -->
                                         </button>
                                     </form>
                                 </div>
@@ -147,24 +153,27 @@
                     </div>
                 }
             </div>
+        </div>
     </div>
 </div>
 
-    @section Scripts {
-        <script>
-                function confirmarRemocao(form, titulo) {
-                    return confirm('Remover o álbum "' + titulo + '" da coleção?');
-                }
+<!-- scripts do lado do cliente -->
+@section Scripts {
+    <script>
+        // funcao que pede confirmacao antes de remover um album da colecao
+        function confirmarRemocao(form, titulo) {
+            return confirm('Remover o álbum "' + titulo + '" da coleção?');
+        }
 
-                // Auto-fechar alerts após 5 segundos
-                document.addEventListener('DOMContentLoaded', function() {
-                    const alerts = document.querySelectorAll('.alert');
-                    alerts.forEach(function(alert) {
-                        setTimeout(function() {
-                            const closeBtn = alert.querySelector('.btn-close');
-                            if (closeBtn) closeBtn.click();
-                        }, 5000);
-                    });
-                });
-        </script>
-    }
+        // fecha automaticamente os alerts apos 5 segundos
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const closeBtn = alert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click(); // clica no botao de fechar
+                }, 5000); // 5 segundos
+            });
+        });
+    </script>
+}

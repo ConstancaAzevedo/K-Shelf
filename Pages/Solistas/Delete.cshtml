@@ -7,38 +7,45 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone de alerta e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🗑️</span>
+                    <span class="fs-1 me-3">🗑️</span> <!-- icone de eliminar -->
                     <div>
-                        <h2 class="fw-bold mb-0 text-danger">Eliminar Solista</h2>
-                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Solista</h2> <!-- titulo em vermelho -->
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p> <!-- aviso de irreversibilidade -->
                     </div>
                 </div>
 
+                <!-- alerta de confirmacao de eliminacao -->
                 <div class="alert alert-warning rounded-3 mb-4">
-                    <h5 class="fw-bold mb-1">⚠️ Tem a certeza que pretende eliminar este solista?</h5>
-                    <p class="mb-0">Todos os álbuns associados serão afetados.</p>
+                    <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar este solista?</h5>
+                    <p class="mb-0">Todos os álbuns associados serão afetados.</p> <!-- aviso sobre os albuns associados -->
                 </div>
 
+                <!-- informacoes do solista a eliminar -->
                 <div class="p-3 bg-light rounded-3 mb-4">
-                    <h4 class="fw-bold mb-1">@Model.Solista.Nome</h4>
+                    <h4 class="fw-bold mb-1">@Model.Solista.Nome</h4> <!-- nome do solista -->
                     <p class="text-secondary mb-1">
-                        <strong>Data Estreia:</strong> @Model.Solista.DataEstreia.ToString("dd/MM/yyyy")
+                        <strong>Data Estreia:</strong> @Model.Solista.DataEstreia.ToString("dd/MM/yyyy") <!-- data de estreia formatada -->
                     </p>
                     <p class="text-secondary mb-1">
-                        <strong>Companhia:</strong> @(Model.Solista.Companhia ?? "N/A")
+                        <strong>Companhia:</strong> @(Model.Solista.Companhia ?? "N/A") <!-- companhia ou N/A se for nula -->
                     </p>
                     <p class="text-secondary mb-1">
-                        <strong>Status:</strong> @(Model.Solista.IsAtivo ? "Ativo" : "Inativo")
+                        <strong>Status:</strong> @(Model.Solista.IsAtivo ? "Ativo" : "Inativo") <!-- indica se o solista esta ativo ou inativo -->
                     </p>
                 </div>
 
+                <!-- formulario de confirmacao de eliminacao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id do solista -->
                     <input type="hidden" asp-for="Solista.Id" />
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">🗑️ Confirmar Eliminação</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button> <!-- botao de confirmacao -->
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
             </div>

@@ -7,48 +7,61 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<!-- folha de estilos especifica para a pagina de registo -->
 <link rel="stylesheet" href="~/css/registo.css" />
 
+<!-- container principal da pagina de registo -->
 <div class="register-container">
+    <!-- cabecalho com logo e titulo -->
     <div class="header">
         <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" style="max-height: 80px;" />
         <h2 class="fw-bold mt-3">@ViewData["Title"]</h2>
         <p class="text-white">@ViewData["Subtitle"]</p>
     </div>
 
+    <!-- conteudo do formulario de registo -->
     <div class="content">
+        <!-- caixa informativa -->
         <div class="info-box">
             Preencha os dados abaixo para criar a sua conta.
         </div>
 
+        <!-- formulario de registo -->
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <!-- resumo de erros de validacao -->
             <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
-            
+
+            <!-- campo do email -->
             <div class="form-group">
                 <label asp-for="Input.Email">Email</label>
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="nome@exemplo.com" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
+            <!-- campo da password -->
             <div class="form-group">
                 <label asp-for="Input.Password">Password</label>
                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
+            <!-- campo da confirmacao da password -->
             <div class="form-group">
                 <label asp-for="Input.ConfirmPassword">Confirmar Password</label>
                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
+            <!-- botao de submit para registar -->
             <button id="registerSubmit" type="submit" class="register-btn">Registar</button>
 
+            <!-- link para pagina de login (utilizadores que ja tem conta) -->
             <div class="login-link">
                 <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Já tem conta? Entrar</a>
             </div>
         </form>
 
+        <!-- area para registo com servicos externos (google, facebook, etc) -->
         @{
             if ((Model.ExternalLogins?.Count ?? 0) > 0)
             {
@@ -65,11 +78,13 @@
         }
     </div>
 
+    <!-- rodape da pagina -->
     <div class="footer-register">
-        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a>
+        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a> <!-- link para a pagina de informacoes -->
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

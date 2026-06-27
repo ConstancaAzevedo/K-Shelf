@@ -3,63 +3,63 @@ using System.ComponentModel.DataAnnotations;
 namespace K_Shelf.Models
 {
     /// <summary>
-    /// Representa um grupo musical ou banda de K-Pop.
-    /// Contém informações sobre o grupo, membros (Artistas) e os seus álbuns.
+    /// representa um grupo musical ou banda de k-pop
+    /// contem informacoes sobre o grupo, membros (artistas) e os seus albuns
     /// </summary>
     public class Grupo
     {
         /// <summary>
-        /// Identificador único do grupo.
+        /// identificador unico do grupo
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Nome do grupo musical (ex: BTS, BLACKPINK).
+        /// nome do grupo musical (ex: bts, blackpink)
         /// </summary>
-        [Required(ErrorMessage = "O nome do grupo é obrigatório")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")]
+        [Required(ErrorMessage = "O nome do grupo é obrigatório")] // campo obrigatorio
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")] // tamanho entre 2 e 100
         public string Nome { get; set; } = string.Empty;
 
         /// <summary>
-        /// Data oficial de estreia (debut) do grupo.
+        /// data oficial de estreia (debut) do grupo
         /// </summary>
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date)] // tipo de dados date
         [Display(Name = "Data de Estreia")]
         public DateTime DataEstreia { get; set; }
 
         /// <summary>
-        /// Agência/Companhia discográfica responsável pelo grupo (ex: HYBE, YG Entertainment).
+        /// agencia/companhia discografica responsavel pelo grupo (ex: hybe, yg entertainment)
         /// </summary>
-        [StringLength(100)]
+        [StringLength(100)] // tamanho maximo de 100 caracteres
         [Display(Name = "Companhia")]
         public string? Companhia { get; set; }
 
         /// <summary>
-        /// Nome oficial do fandom do grupo (ex: ARMY, BLINK).
+        /// nome oficial do fandom do grupo (ex: army, blink)
         /// </summary>
-        [StringLength(50)]
+        [StringLength(50)] // tamanho maximo de 50 caracteres
         [Display(Name = "Fansigno")]
-        public string? Fansigno { get; set; } // Nome do fandom (ex: ARMY, BLINK)
+        public string? Fansigno { get; set; }
 
         /// <summary>
-        /// URL de uma imagem representativa do grupo.
+        /// url de uma imagem representativa do grupo
         /// </summary>
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 
         /// <summary>
-        /// Indica se o grupo continua ativo na indústria musical.
+        /// indica se o grupo continua ativo na industria musical
         /// </summary>
         [Display(Name = "Ativo")]
-        public bool IsAtivo { get; set; } = true;
+        public bool IsAtivo { get; set; } = true; // ativo por padrao
 
         /// <summary>
-        /// Relacionamento: Coleção de artistas que pertencem ou pertenceram a este grupo (membros).
+        /// relacionamento: colecao de artistas que pertencem ou pertenceram a este grupo (membros)
         /// </summary>
         public virtual ICollection<Artista>? Artistas { get; set; }
 
         /// <summary>
-        /// Relacionamento: Coleção de álbuns lançados por este grupo.
+        /// relacionamento: colecao de albuns lancados por este grupo
         /// </summary>
         public virtual ICollection<Album>? Albuns { get; set; }
     }

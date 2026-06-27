@@ -5,30 +5,31 @@
 }
 
 <div class="text-center">
-    <!-- Banner principal -->
+    <!-- banner principal -->
     <div class="hero-banner">
         <div class="col-md-8 mx-auto">
-            <!-- Logo -->
+            <!-- logo da aplicacao -->
             <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" style="max-height: 200px;" />
-            <!-- Título da página principal -->
+            <!-- titulo da pagina principal -->
             <h1 class="title-kpop display-1">K-Shelf</h1>
             <h2 class="display-6 fw-bold text-secondary">Plataforma de Gestão de Coleções de Kpop</h2>
             <p class="lead mb-4 mt-4">
                 Organize, descubra e partilhe a sua coleção de álbuns de Kpop de forma simples e intuitiva
             </p>
+            <!-- botoes de navegacao principal -->
             <div class="d-flex gap-3 justify-content-center">
-                <a class="btn btn-kpop btn-lg" asp-page="/Albuns/Index">Explorar Álbuns</a>
-                <a class="btn btn-kpop btn-lg" asp-page="/Artistas/Index">Ver Artistas</a>
+                <a class="btn btn-kpop btn-lg" asp-page="/Albuns/Index">Explorar Álbuns</a> <!-- link para lista de albuns -->
+                <a class="btn btn-kpop btn-lg" asp-page="/Artistas/Index">Ver Artistas</a> <!-- link para lista de artistas -->
             </div>
         </div>
     </div>
 
-    <!-- Características -->
+    <!-- caracteristicas da plataforma -->
     <div class="row mt-5">
         <div class="col-md-4">
             <div class="card card-kpop h-100 shadow-sm">
                 <div class="card-body text-center">
-                    <div class="display-1">📀</div>
+                    <div class="display-1">📀</div> <!-- icone de album -->
                     <h3 class="card-title mt-3">Gerir Coleções</h3>
                     <p class="card-text">Crie coleções personalizadas com os seus álbuns favoritos</p>
                 </div>
@@ -37,7 +38,7 @@
         <div class="col-md-4">
             <div class="card card-kpop h-100 shadow-sm">
                 <div class="card-body text-center">
-                    <div class="display-1">🎤</div>
+                    <div class="display-1">🎤</div> <!-- icone de artista -->
                     <h3 class="card-title mt-3">Explorar Artistas</h3>
                     <p class="card-text">Descubra artistas de Kpop, veja os seus álbuns e informações detalhadas</p>
                 </div>
@@ -46,7 +47,7 @@
         <div class="col-md-4">
             <div class="card card-kpop h-100 shadow-sm">
                 <div class="card-body text-center">
-                    <div class="display-1">⚡</div>
+                    <div class="display-1">⚡</div> <!-- icone de tempo real -->
                     <h3 class="card-title mt-3">Tempo Real</h3>
                     <p class="card-text">Receba notificações ao vivo quando novos álbuns são adicionados</p>
                 </div>
@@ -54,33 +55,34 @@
         </div>
     </div>
 
-    <!-- Estatísticas -->
+    <!-- estatisticas do sistema -->
     <div class="row mt-5 justify-content-center" style="background: linear-gradient(135deg, #ff6b9d, #9b59b6); color: white; border-radius: 20px; padding: 2rem;">
         <div class="col-6 col-md-3 text-center">
-            <h2 class="display-4 fw-bold" id="artistasCount">0+</h2>
+            <h2 class="display-4 fw-bold" id="artistasCount">0+</h2> <!-- total de artistas -->
             <p class="lead">Artistas</p>
         </div>
         <div class="col-6 col-md-3 text-center">
-            <h2 class="display-4 fw-bold" id="albunsCount">0+</h2>
+            <h2 class="display-4 fw-bold" id="albunsCount">0+</h2> <!-- total de albuns -->
             <p class="lead">Álbuns</p>
         </div>
         <div class="col-6 col-md-3 text-center">
-            <h2 class="display-4 fw-bold" id="photocardsCount">0+</h2>
+            <h2 class="display-4 fw-bold" id="photocardsCount">0+</h2> <!-- total de photocards -->
             <p class="lead">Photocards</p>
         </div>
         <div class="col-6 col-md-3 text-center">
-            <h2 class="display-4 fw-bold" id="colecoesCount">0+</h2>
+            <h2 class="display-4 fw-bold" id="colecoesCount">0+</h2> <!-- total de colecoes -->
             <p class="lead">Coleções</p>
         </div>
     </div>
 </div>
 
+<!-- scripts do lado do cliente -->
 @section Scripts {
     <script>
-        // Atualizar estatísticas com valores do servidor
-        document.getElementById('artistasCount').innerText = '@Model.ArtistasCount';
-        document.getElementById('albunsCount').innerText = '@Model.AlbunsCount';
-        document.getElementById('colecoesCount').innerText = '@Model.ColecoesCount';
-        document.getElementById('photocardsCount').innerText = '@Model.PhotocardsCount';
+        // atualiza as estatisticas com os valores do servidor
+        document.getElementById('artistasCount').innerText = '@Model.ArtistasCount'; // artistas
+        document.getElementById('albunsCount').innerText = '@Model.AlbunsCount'; // albuns
+        document.getElementById('colecoesCount').innerText = '@Model.ColecoesCount'; // colecoes
+        document.getElementById('photocardsCount').innerText = '@Model.PhotocardsCount'; // photocards
     </script>
 }

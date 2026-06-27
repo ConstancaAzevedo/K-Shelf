@@ -6,45 +6,51 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
-    <!-- Cabeçalho -->
+    <!-- cabecalho com titulo e status do sistema -->
     <div class="row align-items-center mb-4">
         <div class="col">
             <h1 class="display-4 fw-bold">Dashboard</h1>
             <p class="text-secondary lead">Visão geral do sistema K-Shelf</p>
         </div>
         <div class="col-auto">
+            <!-- indicador de que o sistema esta online -->
             <span class="badge bg-success rounded-pill px-3 py-2 fs-6">
                 🟢 Sistema Online
             </span>
         </div>
     </div>
 
-    <!-- Estatísticas -->
+    <!-- estatisticas principais do sistema -->
     <div class="row g-4 mb-5">
+        <!-- total de utilizadores -->
         <div class="col-md-3">
             <div class="glass-panel p-4 text-center shadow-sm hover-elevate">
                 <div class="display-4 fw-bold" style="color: var(--kpop-pink);">@Model.TotalUsers</div>
                 <p class="text-secondary mb-0">Utilizadores</p>
             </div>
         </div>
+        <!-- total de artistas -->
         <div class="col-md-3">
             <div class="glass-panel p-4 text-center shadow-sm hover-elevate">
                 <div class="display-4 fw-bold" style="color: var(--kpop-purple);">@Model.TotalArtistas</div>
                 <p class="text-secondary mb-0">Artistas</p>
             </div>
         </div>
+        <!-- total de albuns -->
         <div class="col-md-3">
             <div class="glass-panel p-4 text-center shadow-sm hover-elevate">
                 <div class="display-4 fw-bold" style="color: #f39c12;">@Model.TotalAlbuns</div>
                 <p class="text-secondary mb-0">Álbuns</p>
             </div>
         </div>
+        <!-- total de photocards -->
         <div class="col-md-3 col-sm-6 col-12">
             <div class="glass-panel p-4 text-center shadow-sm hover-elevate">
                 <div class="display-4 fw-bold" style="color: #e74c3c;">@Model.TotalPhotocards</div>
                 <p class="text-secondary mb-0">Photocards</p>
             </div>
         </div>
+        <!-- total de colecoes -->
         <div class="col-md-3">
             <div class="glass-panel p-4 text-center shadow-sm hover-elevate">
                 <div class="display-4 fw-bold" style="color: #2ecc71;">@Model.TotalColecoes</div>
@@ -53,9 +59,9 @@
         </div>
     </div>
 
-    <!-- Detalhes adicionais -->
+    <!-- detalhes adicionais -->
     <div class="row g-4">
-        <!-- Utilizadores por Role -->
+        <!-- distribuicao de utilizadores por role -->
         <div class="col-md-6">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Utilizadores por Cargos</h5>
@@ -66,14 +72,17 @@
                             <span>
                                 @if (role.RoleName == "Admin")
                                 {
+                                    <!-- icone para admin -->
                                     <span class="badge bg-danger me-2">🛡️</span>
                                 }
                                 else
                                 {
+                                    <!-- icone para user normal -->
                                     <span class="badge bg-info me-2">👤</span>
                                 }
                                 @role.RoleName
                             </span>
+                            <!-- numero de utilizadores com este role -->
                             <span class="badge bg-secondary rounded-pill">@role.Count</span>
                         </div>
                     }
@@ -81,7 +90,7 @@
             </div>
         </div>
 
-        <!-- Atividades Recentes -->
+        <!-- lista de atividades recentes no sistema -->
         <div class="col-md-6">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Atividades Recentes</h5>
@@ -91,9 +100,11 @@
                         @foreach (var activity in Model.RecentActivities)
                         {
                             <li class="d-flex align-items-center gap-3 py-2 border-bottom border-light">
+                                <!-- icone da atividade -->
                                 <span class="fs-5">@activity.Icon</span>
                                 <div class="flex-grow-1">
                                     <p class="mb-0 fw-semibold">@activity.Description</p>
+                                    <!-- tempo decorrido desde a atividade -->
                                     <small class="text-secondary">@activity.TimeAgo</small>
                                 </div>
                             </li>
@@ -108,7 +119,7 @@
         </div>
     </div>
 
-    <!-- Links Rápidos -->
+    <!-- botoes de acesso rapido para as principais areas administrativas -->
     <div class="row g-4 mt-3">
         <div class="col-12">
             <div class="glass-panel p-4 shadow-sm">

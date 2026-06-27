@@ -4,44 +4,47 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace K_Shelf.Models
 {
     /// <summary>
-    /// Representa um Photocard colecionável disponível no catálogo do sistema.
+    /// representa um photocard colecionavel disponivel no catalogo do sistema
     /// </summary>
     public class Photocard
     {
+        // identificador unico do photocard
         public int Id { get; set; }
 
         /// <summary>
-        /// Nome, descrição ou versão do photocard (ex: "Selfie Ver. A", "Concept Card")
+        /// nome, descricao ou versao do photocard (ex: "selfie ver. a", "concept card")
         /// </summary>
-        [Required(ErrorMessage = "A legenda/versão do photocard é obrigatória.")]
-        [StringLength(100, ErrorMessage = "A legenda/versão não pode ter mais de 100 caracteres.")]
+        [Required(ErrorMessage = "A legenda/versão do photocard é obrigatória.")] // campo obrigatorio
+        [StringLength(100, ErrorMessage = "A legenda/versão não pode ter mais de 100 caracteres.")] // tamanho maximo de 100
         public string Versao { get; set; } = string.Empty;
 
         /// <summary>
-        /// URL ou caminho relativo para a imagem do photocard
+        /// url ou caminho relativo para a imagem do photocard
         /// </summary>
-        [Required(ErrorMessage = "A imagem do photocard é obrigatória.")]
-        public string ImagemUrl { get; set; } = "/imagens/photocards/default.png";
+        [Required(ErrorMessage = "A imagem do photocard é obrigatória.")] // campo obrigatorio
+        public string ImagemUrl { get; set; } = "/imagens/photocards/default.png"; // imagem padrao
 
         /// <summary>
-        /// ID do Artista (membro ou solista) retratado no photocard
+        /// id do artista (membro ou solista) retratado no photocard
         /// </summary>
-        [Required(ErrorMessage = "O artista é obrigatório.")]
+        [Required(ErrorMessage = "O artista é obrigatório.")] // campo obrigatorio
         public int ArtistaId { get; set; }
 
-        [ForeignKey("ArtistaId")]
+        // relacionamento: artista associado ao photocard
+        [ForeignKey("ArtistaId")] // chave estrangeira para a tabela artistas
         public Artista? Artista { get; set; }
 
         /// <summary>
-        /// ID do Álbum opcional do qual este photocard faz parte
+        /// id do album opcional do qual este photocard faz parte
         /// </summary>
         public int? AlbumId { get; set; }
 
-        [ForeignKey("AlbumId")]
+        // relacionamento: album associado ao photocard (opcional)
+        [ForeignKey("AlbumId")] // chave estrangeira para a tabela albuns
         public Album? Album { get; set; }
 
         /// <summary>
-        /// Relação muitos-para-muitos indireta: utilizadores que adicionaram este photocard
+        /// relacao muitos-para-muitos indireta: utilizadores que adicionaram este photocard
         /// </summary>
         public ICollection<UtilizadorPhotocard>? UtilizadorPhotocards { get; set; }
     }

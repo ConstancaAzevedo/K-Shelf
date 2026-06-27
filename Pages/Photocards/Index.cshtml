@@ -4,7 +4,7 @@
     ViewData["Title"] = "Gestão de Photocards - Admin";
 }
 
-<!-- Mensagens de Feedback -->
+<!-- mensagens de feedback (sucesso ou erro) -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
@@ -22,54 +22,59 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
-    <!-- Cabeçalho -->
+    <!-- cabecalho da pagina -->
     <div class="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
         <div>
             <h1 class="title-kpop display-5 fw-bold">Gestão de Photocards</h1>
             <p class="text-secondary lead mb-0">Adicione e controle as versões de photocards disponíveis no catálogo.</p>
         </div>
         <div>
+            <!-- botao para adicionar um novo photocard -->
             <a asp-page="./Create" class="btn btn-kpop rounded-pill px-4">Adicionar Photocard</a>
         </div>
     </div>
 
-    <!-- Tabela Geral -->
+    <!-- tabela de photocards -->
     <div class="glass-panel p-4 shadow-sm overflow-hidden">
-        @if (Model.Photocards != null && Model.Photocards.Any())
+        @if (Model.Photocards != null && Model.Photocards.Any()) // verifica se existem photocards
         {
             <div class="table-responsive">
                 <table class="table align-middle text-dark mb-0">
+                    <!-- cabecalho da tabela -->
                     <thead class="text-secondary">
                         <tr>
-                            <th scope="col" style="width: 80px;">Imagem</th>
-                            <th scope="col">Versão/Legenda</th>
-                            <th scope="col">Artista</th>
-                            <th scope="col">Álbum Associado</th>
-                            <th scope="col" class="text-end" style="width: 180px;">Ações</th>
+                            <th scope="col" style="width: 80px;">Imagem</th> <!-- coluna da imagem -->
+                            <th scope="col">Versão/Legenda</th> <!-- coluna da versao -->
+                            <th scope="col">Artista</th> <!-- coluna do artista -->
+                            <th scope="col">Álbum Associado</th> <!-- coluna do album -->
+                            <th scope="col" class="text-end" style="width: 180px;">Ações</th> <!-- coluna de botoes -->
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Photocards)
+                        @foreach (var item in Model.Photocards) // percorre a lista de photocards
                         {
                             <tr>
                                 <td>
+                                    <!-- miniatura da imagem do photocard -->
                                     <div class="rounded-3 overflow-hidden shadow-sm" style="width: 50px; height: 70px;">
                                         <img src="@item.ImagemUrl" alt="@item.Versao" style="width: 100%; height: 100%; object-fit: cover;" />
                                     </div>
                                 </td>
-                                <td class="fw-bold">@item.Versao</td>
+                                <td class="fw-bold">@item.Versao</td> <!-- versao do photocard -->
                                 <td>
+                                    <!-- badge com o nome do artista -->
                                     <span class="badge bg-light text-dark rounded-pill border py-1.5 px-3">
-                                        🎤 @(item.Artista?.NomeArtistico ?? "Desconhecido")
+                                        @(item.Artista?.NomeArtistico ?? "Desconhecido")
                                     </span>
                                 </td>
                                 <td class="text-secondary">
-                                    @(item.Album?.Titulo ?? "Sem Álbum Associado")
+                                    @(item.Album?.Titulo ?? "Sem Álbum Associado") <!-- nome do album ou mensagem padrao -->
                                 </td>
                                 <td class="text-end">
+                                    <!-- botoes de acao -->
                                     <div class="d-flex gap-2 justify-content-end">
-                                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill px-3">✏️ Editar</a>
-                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a>
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-pill px-3">✏️ Editar</a> <!-- botao de editar -->
+                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-pill px-3">🗑️ Eliminar</a> <!-- botao de eliminar -->
                                     </div>
                                 </td>
                             </tr>
@@ -80,10 +85,11 @@
         }
         else
         {
+            <!-- mensagem quando nao ha photocards -->
             <div class="text-center py-5 text-secondary">
-                <p style="font-size: 3rem;">🎴</p>
+                <p style="font-size: 3rem;">🎴</p> <!-- icone grande -->
                 <h5 class="fw-bold">Nenhum photocard registado</h5>
-                <p>Crie o primeiro photocard utilizando o botão acima.</p>
+                <p>Crie o primeiro photocard utilizando o botão acima</p>
             </div>
         }
     </div>

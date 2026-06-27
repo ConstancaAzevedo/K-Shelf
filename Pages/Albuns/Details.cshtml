@@ -6,6 +6,7 @@
 
 <div class="container py-4 animate-fade-in-up">
 
+    <!-- mensagem de sucesso -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
@@ -15,10 +16,10 @@
     }
 
     <div class="row g-4">
-        <!-- Coluna Esquerda: Capa + Ações -->
+        <!-- coluna esquerda: capa + acoes -->
         <div class="col-md-4">
             <div class="glass-panel p-3 shadow-sm text-center">
-                <!-- Efeito Vinil -->
+                <!-- efeito vinil -->
                 <div class="vinyl-container-wrapper mx-auto mb-3" style="width: 220px; height: 220px;">
                     <div class="vinyl-album" style="width: 220px; height: 220px;">
                         @if (!string.IsNullOrEmpty(Model.Album.CapaUrl))
@@ -33,17 +34,17 @@
                     <div class="vinyl-disc" style="width: 200px; height: 200px;"></div>
                 </div>
 
-                <h3 class="fw-bold mt-3">@Model.Album.Titulo</h3>
+                <h3 class="fw-bold mt-3">@Model.Album.Titulo</h3> <!-- titulo do album -->
 
                 <div class="d-flex gap-2 justify-content-center mb-3 flex-wrap">
-                    <span class="badge-neon-pink">@Model.Album.Tipo</span>
-                    <span class="badge-neon-purple">@Model.Album.Edicao</span>
+                    <span class="badge-neon-pink">@Model.Album.Tipo</span> <!-- tipo do album -->
+                    <span class="badge-neon-purple">@Model.Album.Edicao</span> <!-- edicao do album -->
                 </div>
 
-                <p class="text-secondary">📅 @Model.Album.DataLancamento.ToString("dd MMMM yyyy")</p>
-
+                <p class="text-secondary">📅 @Model.Album.DataLancamento.ToString("dd MMMM yyyy")</p> <!-- data de lancamento formatada -->
                 @if (User.IsInRole("Admin"))
                 {
+                    <!-- botoes de acao para admin -->
                     <div class="d-flex flex-column gap-2 mt-3">
                         <a asp-page="./Edit" asp-route-id="@Model.Album.Id" class="btn btn-warning rounded-pill">✏️ Editar</a>
                         <a asp-page="./Delete" asp-route-id="@Model.Album.Id" class="btn btn-outline-danger rounded-pill">🗑️ Eliminar</a>
@@ -51,18 +52,19 @@
                 }
 
                 <div class="mt-3">
-                    <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill w-100">← Voltar</a>
+                    <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill w-100">← Voltar</a> <!-- volta para a lista -->
                 </div>
             </div>
         </div>
 
-        <!-- Coluna Direita: Informações + Faixas -->
+        <!-- coluna direita: informacoes + faixas -->
         <div class="col-md-8">
-            <!-- Artista -->
+            <!-- artista -->
             <div class="glass-panel p-4 shadow-sm mb-4">
                 <h5 class="fw-bold mb-3">🎤 Artista</h5>
                 @if (Model.Album.Grupo != null)
                 {
+                    <!-- mostra o grupo -->
                     <div class="d-flex align-items-center gap-3">
                         @if (!string.IsNullOrEmpty(Model.Album.Grupo.ImagemUrl))
                         {
@@ -77,6 +79,7 @@
                 }
                 else if (Model.Album.Solista != null)
                 {
+                    <!-- mostra o solista -->
                     <div class="d-flex align-items-center gap-3">
                         @if (!string.IsNullOrEmpty(Model.Album.Solista.ImagemUrl))
                         {
@@ -95,11 +98,11 @@
                 }
             </div>
 
-            <!-- Lista de Faixas -->
+            <!-- lista de faixas -->
             <div class="glass-panel p-4 shadow-sm mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold mb-0">🎵 Faixas</h5>
-                    <span class="badge bg-secondary rounded-pill">@(Model.Album.Musicas?.Count ?? 0) tracks</span>
+                    <span class="badge bg-secondary rounded-pill">@(Model.Album.Musicas?.Count ?? 0) tracks</span> <!-- numero de musicas -->
                     @if (User.IsInRole("Admin"))
                     {
                         <a asp-page="/Musicas/Create" asp-route-albumId="@Model.Album.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">
@@ -110,8 +113,9 @@
 
                 @if (Model.Album.Musicas != null && Model.Album.Musicas.Any())
                 {
+                    <!-- accordion com as musicas -->
                     <div class="accordion" id="accordionMusicas">
-                        @foreach (var musica in Model.Album.Musicas.OrderBy(m => m.TrackNumber))
+                        @foreach (var musica in Model.Album.Musicas.OrderBy(m => m.TrackNumber)) // ordena por numero de faixa
                         {
                             <div class="accordion-item border-0 mb-2" style="background: rgba(0,0,0,0.02); border-radius: 12px; overflow: hidden;">
 
@@ -119,10 +123,10 @@
                                     <div class="accordion-button collapsed d-flex align-items-center"
                                          style="cursor: default;">
 
-                                        <span class="text-secondary me-2" style="min-width: 22px; font-size: 0.85rem; font-weight: 600; flex-shrink: 0;">@musica.TrackNumber.</span>
-
+                                        <span class="text-secondary me-2" style="min-width: 22px; font-size: 0.85rem; font-weight: 600; flex-shrink: 0;">@musica.TrackNumber.</span> <!-- numero da faixa -->
                                         @if (!string.IsNullOrEmpty(musica.PreviewAudioUrl))
                                         {
+                                            <!-- botao de preview de audio -->
                                             <span class="btn-play-audio me-2"
                                                   data-audio-url="@musica.PreviewAudioUrl"
                                                   data-track-id="@musica.Id"
@@ -139,7 +143,7 @@
                                         }
 
                                         <div style="flex: 1; min-width: 0; line-height: 1.2;">
-                                            <span class="fw-bold">@musica.Titulo</span>
+                                            <span class="fw-bold">@musica.Titulo</span> <!-- titulo da musica -->
                                             <div class="d-flex gap-1 flex-wrap align-items-center mt-1">
                                                 @if (musica.IsTitleTrack)
                                                 {
@@ -149,10 +153,11 @@
                                                 {
                                                     <span class="badge-neon-purple" style="font-size: 0.65rem; padding: 2px 8px;">Single</span>
                                                 }
-                                                <span class="text-secondary" style="font-size: 0.75rem;">⏱️ @musica.DuracaoFormatada</span>
+                                                <span class="text-secondary" style="font-size: 0.75rem;">⏱️ @musica.DuracaoFormatada</span> <!-- duracao formatada -->
                                             </div>
                                         </div>
 
+                                        <!-- botao para ver detalhes -->
                                         <span class="btn-ver-detalhes text-secondary ms-auto"
                                               data-target="collapse-@musica.Id"
                                               title="Ver detalhes"
@@ -163,6 +168,7 @@
                                     </div>
                                 </h2>
 
+                                <!-- detalhes da musica (expandivel) -->
                                 <div id="collapse-@musica.Id" class="accordion-collapse collapse"
                                      aria-labelledby="heading-@musica.Id">
                                     <div class="accordion-body px-3 pb-3 pt-2" style="background: rgba(0,0,0,0.03); border-top: 1px solid rgba(0,0,0,0.05);">
@@ -222,7 +228,7 @@
                 }
             </div>
 
-            <!-- Coleções onde aparece (só para utilizadores autenticados) -->
+            <!-- colecoes onde aparece (apenas para utilizadores autenticados) -->
             @if (User.Identity?.IsAuthenticated == true && Model.Album.AlbumColecoes != null && Model.Album.AlbumColecoes.Any())
             {
                 <div class="glass-panel p-4 shadow-sm">
@@ -245,9 +251,10 @@
     </div>
 </div>
 
+<!-- scripts do lado do cliente -->
 @section Scripts {
     <style>
-        /* Estilos das ondas de áudio */
+        /* estilos das ondas de audio */
         .audio-wave-bars {
             display: inline-flex;
             align-items: flex-end;
@@ -257,33 +264,34 @@
             margin-right: 5px;
         }
 
-        .audio-wave-bars span {
-            display: inline-block;
-            width: 2px;
-            background-color: var(--kpop-pink);
-            animation: bounceWave 0.8s ease-in-out infinite alternate;
-            border-radius: 1px;
-        }
+            .audio-wave-bars span {
+                display: inline-block;
+                width: 2px;
+                background-color: var(--kpop-pink);
+                animation: bounceWave 0.8s ease-in-out infinite alternate;
+                border-radius: 1px;
+            }
 
-        .audio-wave-bars span:nth-child(1) {
-            height: 4px;
-            animation-delay: -0.6s;
-        }
+                .audio-wave-bars span:nth-child(1) {
+                    height: 4px;
+                    animation-delay: -0.6s;
+                }
 
-        .audio-wave-bars span:nth-child(2) {
-            height: 10px;
-            animation-delay: -0.3s;
-        }
+                .audio-wave-bars span:nth-child(2) {
+                    height: 10px;
+                    animation-delay: -0.3s;
+                }
 
-        .audio-wave-bars span:nth-child(3) {
-            height: 6px;
-            animation-delay: 0s;
-        }
+                .audio-wave-bars span:nth-child(3) {
+                    height: 6px;
+                    animation-delay: 0s;
+                }
 
-        @@keyframes bounceWave {
+        @keyframes bounceWave {
             0% {
                 height: 2px;
             }
+
             100% {
                 height: 14px;
             }
@@ -310,7 +318,7 @@
             margin-left: auto;
         }
 
-        /* Remove seta padrão do Bootstrap */
+        /* remove seta padrao do bootstrap */
         .accordion-button::after {
             display: none !important;
         }
@@ -330,7 +338,7 @@
             background: rgba(0,0,0,0.02);
         }
 
-        /* ── Play button ── */
+        /* botao de play */
         .btn-play-audio {
             flex-shrink: 0;
             width: 28px;
@@ -349,25 +357,26 @@
             outline: none;
         }
 
-        .btn-play-audio:hover {
-            color: var(--kpop-pink) !important;
-            background: rgba(231, 76, 60, 0.1) !important;
-            transform: scale(1.1);
-        }
+            .btn-play-audio:hover {
+                color: var(--kpop-pink) !important;
+                background: rgba(231, 76, 60, 0.1) !important;
+                transform: scale(1.1);
+            }
 
-        .btn-play-audio.playing {
-            color: #fff !important;
-            background: var(--kpop-pink) !important;
-        }
+            .btn-play-audio.playing {
+                color: #fff !important;
+                background: var(--kpop-pink) !important;
+            }
     </style>
 
     <script>
-                document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
+            // controlo do audio
             let activeAudio = null;
             let activeBtn = null;
             let activeWave = null;
 
-            // ── Play / Pause ──
+            // evento de play/pause
             document.querySelectorAll('.btn-play-audio').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     const audioUrl = this.getAttribute('data-audio-url');
@@ -390,7 +399,7 @@
                         return;
                     }
 
-                    // Para o áudio anterior
+                    // para o audio anterior
                     if (activeAudio) {
                         activeAudio.pause();
                         if (activeBtn) {
@@ -424,7 +433,7 @@
                 });
             });
 
-            // ── Ver Detalhes ──
+            // botao de ver detalhes
             document.querySelectorAll('.btn-ver-detalhes').forEach(function (btn) {
                 btn.addEventListener('click', function () {
                     const targetId = this.getAttribute('data-target');
@@ -432,7 +441,7 @@
                     const chevron  = this.querySelector('.track-chevron');
                     const isOpen   = collapse.classList.contains('show');
 
-                    // Fecha todos os outros
+                    // fecha todos os outros
                     document.querySelectorAll('.accordion-collapse.show').forEach(function (el) {
                         el.classList.remove('show');
                     });

@@ -10,151 +10,160 @@ using System.Security.Claims;
 namespace K_Shelf.Pages.Colecoes
 {
     /// <summary>
-    /// Modelo de Página para os detalhes de uma Coleção específica.
-    /// Exige autenticação de utilizador. Permite ver álbuns inseridos, adicionar novos ou removê-los.
+    /// modelo de pagina para os detalhes de uma colecao especifica
+    /// exige autenticacao de utilizador. permite ver albuns inseridos, adicionar novos ou remove-los
     /// </summary>
-    [Authorize]
+    [Authorize] // requer autenticacao para aceder a esta pagina
     public class DetailsModel : PageModel
     {
+        // contexto da base de dados para aceder as tabelas
         private readonly ApplicationDbContext _context;
 
         /// <summary>
-        /// Construtor do DetailsModel.
+        /// construtor do detailsmodel
         /// </summary>
-        /// <param name="context">Contexto da base de dados injetado.</param>
+        /// <param name="context">contexto da base de dados injetado</param>
         public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>A coleção cujos detalhes estão a ser consultados.</summary>
+        /// <summary>a colecao cujos detalhes estao a ser consultados</summary>
         public Colecao Colecao { get; set; } = default!;
 
-        /// <summary>Indica se o utilizador autenticado é o dono desta coleção.</summary>
+        /// <summary>indica se o utilizador autenticado e o dono desta colecao</summary>
         public bool IsOwner { get; set; }
 
-        /// <summary>Lista de seleção (dropdown) com álbuns do sistema disponíveis para adicionar.</summary>
+        /// <summary>lista de selecao (dropdown) com albuns do sistema disponiveis para adicionar</summary>
         public SelectList AlbunsDisponiveis { get; set; } = default!;
 
-        /// <summary>Propriedade ligada ao formulário para armazenar o ID do álbum selecionado para adicionar.</summary>
+        /// <summary>propriedade ligada ao formulario para armazenar o id do album selecionado para adicionar</summary>
         [BindProperty]
         public int AlbumIdParaAdicionar { get; set; }
 
         /// <summary>
-        /// Carrega os dados da coleção, valida se o utilizador tem permissões de acesso,
-        /// e carrega a lista de álbuns elegíveis para adição.
+        /// carrega os dados da colecao, valida se o utilizador tem permissoes de acesso,
+        /// e carrega a lista de albuns elegiveis para adicao
         /// </summary>
-        /// <param name="id">ID da coleção.</param>
+        /// <param name="id">id da colecao</param>
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            // verifica se o id foi fornecido
             if (id == null)
             {
                 TempData["ErrorMessage"] = "ID da coleção não fornecido";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
-            // Carrega a coleção incluindo as relações muitos-para-muitos com Álbuns e respetivos criadores (Grupos/Solistas)
+            // carrega a colecao incluindo as relacoes muitos-para-muitos com albuns e respetivos criadores (grupos/solistas)
             var colecao = await _context.Colecoes
+                .Include(c => c.AlbumColecoes!) // inclui a relacao com os albuns
+                    .ThenInclude(ac => ac.Album) // inclui os dados do album
+                        .ThenInclude(a => a!.Grupo) // inclui o grupo do album
                 .Include(c => c.AlbumColecoes!)
-                    .ThenInclude(ac => ac.Album)
-                        .ThenInclude(a => a!.Grupo)
-                .Include(c => c.AlbumColecoes!)
-                    .ThenInclude(ac => ac.Album)
-                        .ThenInclude(a => a!.Solista)
-                .Include(c => c.Utilizador)
+                    .ThenInclude(ac => ac.Album) // inclui os dados do album
+                        .ThenInclude(a => a!.Solista) // inclui o solista do album
+                .Include(c => c.Utilizador) // inclui os dados do utilizador
                 .FirstOrDefaultAsync(c => c.Id == id);
 
+            // se a colecao nao existir, retorna erro
             if (colecao == null)
             {
                 TempData["ErrorMessage"] = "Coleção não encontrada";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
-            // Regra de Controlo de Acesso: Apenas o dono ou um Administrador pode ver os detalhes da coleção
+            // regra de controlo de acesso: apenas o dono ou administrador pode ver os detalhes da colecao
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
             {
                 TempData["ErrorMessage"] = "Não tem permissão para aceder a esta coleção";
-                return Forbid();
+                return Forbid(); // retorna erro 403
             }
 
+            // atribui a colecao a propriedade da pagina
             Colecao = colecao;
+            // define se o utilizador e o dono da colecao
             IsOwner = colecao.UtilizadorId == userId;
 
-            // Carrega apenas os álbuns que ainda NÃO pertencem a esta coleção
+            // carrega apenas os albuns que ainda nao pertencem a esta colecao
             var albumIdsNaColecao = colecao.AlbumColecoes?.Select(ac => ac.AlbumId).ToList() ?? new List<int>();
             var albunsPossiveis = await _context.Albuns
-                .Include(a => a.Grupo)
-                .Include(a => a.Solista)
-                .Where(a => !albumIdsNaColecao.Contains(a.Id))
-                .OrderBy(a => a.Titulo)
+                .Include(a => a.Grupo) // inclui o grupo do album
+                .Include(a => a.Solista) // inclui o solista do album
+                .Where(a => !albumIdsNaColecao.Contains(a.Id)) // filtra os albuns que ja estao na colecao
+                .OrderBy(a => a.Titulo) // ordena por titulo
                 .ToListAsync();
 
-            // Monta a lista do dropdown com "Título do Álbum — Nome do Artista/Grupo"
+            // monta a lista do dropdown com "titulo do album — nome do artista/grupo"
             AlbunsDisponiveis = new SelectList(
                 albunsPossiveis.Select(a => new {
                     a.Id,
-                    Nome = $"{a.Titulo} — {a.Grupo?.Nome ?? a.Solista?.Nome ?? "Independente"}"
+                    Nome = $"{a.Titulo} — {a.Grupo?.Nome ?? a.Solista?.Nome ?? "Independente"}" // formato amigavel
                 }),
-                "Id", "Nome"
+                "Id", "Nome" // valor = id, texto = nome
             );
 
-            return Page();
+            return Page(); // retorna a pagina
         }
 
         /// <summary>
-        /// Endpoint POST para associar um novo álbum à coleção do utilizador.
+        /// endpoint post para associar um novo album a colecao do utilizador
         /// </summary>
-        /// <param name="id">ID da coleção.</param>
+        /// <param name="id">id da colecao</param>
         public async Task<IActionResult> OnPostAdicionarAlbumAsync(int id)
         {
+            // procura a colecao pelo id com os albuns associados
             var colecao = await _context.Colecoes
-                .Include(c => c.AlbumColecoes)
+                .Include(c => c.AlbumColecoes) // inclui a relacao com os albuns
                 .FirstOrDefaultAsync(c => c.Id == id);
-            
+
+            // se a colecao nao existir, retorna erro
             if (colecao == null)
             {
                 TempData["ErrorMessage"] = "Coleção não encontrada";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
-            // Garante que só o proprietário ou Admin podem adicionar álbuns
+            // garante que so o proprietario ou admin podem adicionar albuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
             {
                 TempData["ErrorMessage"] = "Não tem permissão para adicionar álbuns a esta coleção";
-                return Forbid();
+                return Forbid(); // retorna erro 403
             }
 
-            // Verificar se o álbum existe
+            // verifica se o album existe
             var album = await _context.Albuns.FindAsync(AlbumIdParaAdicionar);
             if (album == null)
             {
                 TempData["ErrorMessage"] = "Álbum não encontrado";
-                return RedirectToPage("./Details", new { id });
+                return RedirectToPage("./Details", new { id }); // redireciona para os detalhes
             }
 
-            // Evita duplicações de registo na tabela Muitos-para-Muitos
+            // evita duplicacoes de registo na tabela muitos-para-muitos
             var jaExiste = await _context.AlbumColecoes
                 .AnyAsync(ac => ac.AlbumId == AlbumIdParaAdicionar && ac.ColecaoId == id);
 
             if (jaExiste)
             {
                 TempData["WarningMessage"] = $"O álbum \"{album.Titulo}\" já está nesta coleção!";
-                return RedirectToPage("./Details", new { id });
+                return RedirectToPage("./Details", new { id }); // redireciona para os detalhes
             }
 
+            // adiciona o album a colecao se o id for valido
             if (AlbumIdParaAdicionar > 0)
             {
                 try
                 {
+                    // cria a associacao muitos-para-muitos
                     _context.AlbumColecoes.Add(new AlbumColecao
                     {
                         AlbumId = AlbumIdParaAdicionar,
                         ColecaoId = id,
-                        DataAdicao = DateTime.Now
+                        DataAdicao = DateTime.Now // define a data de adicao como agora
                     });
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // guarda na base de dados
                     TempData["SuccessMessage"] = $"Álbum \"{album.Titulo}\" adicionado à coleção com sucesso!";
                 }
                 catch (Exception ex)
@@ -163,50 +172,55 @@ namespace K_Shelf.Pages.Colecoes
                 }
             }
 
-            return RedirectToPage("./Details", new { id });
+            return RedirectToPage("./Details", new { id }); // redireciona para os detalhes
         }
 
         /// <summary>
-        /// Endpoint POST para remover a associação de um álbum da coleção.
+        /// endpoint post para remover a associacao de um album da colecao
         /// </summary>
-        /// <param name="id">ID da coleção.</param>
-        /// <param name="albumId">ID do álbum a remover.</param>
+        /// <param name="id">id da colecao</param>
+        /// <param name="albumId">id do album a remover</param>
         public async Task<IActionResult> OnPostRemoverAlbumAsync(int id, int albumId)
         {
+            // procura a colecao pelo id com os albuns associados
             var colecao = await _context.Colecoes
-                            .Include(c => c.AlbumColecoes)
+                            .Include(c => c.AlbumColecoes) // inclui a relacao com os albuns
                             .FirstOrDefaultAsync(c => c.Id == id);
-            
+
+            // se a colecao nao existir, retorna erro
             if (colecao == null)
             {
                 TempData["ErrorMessage"] = "Coleção não encontrada";
-                return NotFound();
+                return NotFound(); // retorna erro 404
             }
 
-            // Garante que só o proprietário ou Admin podem remover álbuns
+            // garante que so o proprietario ou admin podem remover albuns
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (colecao.UtilizadorId != userId && !User.IsInRole("Admin"))
             {
                 TempData["ErrorMessage"] = "Não tem permissão para remover álbuns desta coleção";
-                return Forbid();
+                return Forbid(); // retorna erro 403
             }
 
+            // verifica se o album existe
             var album = await _context.Albuns.FindAsync(albumId);
             if (album == null)
             {
                 TempData["ErrorMessage"] = "Álbum não encontrado";
-                return RedirectToPage("./Details", new { id });
+                return RedirectToPage("./Details", new { id }); // redireciona para os detalhes
             }
 
+            // procura a associacao entre o album e a colecao
             var albumColecao = await _context.AlbumColecoes
                   .FirstOrDefaultAsync(ac => ac.AlbumId == albumId && ac.ColecaoId == id);
 
+            // se a associacao existir, remove
             if (albumColecao != null)
             {
                 try
                 {
-                    _context.AlbumColecoes.Remove(albumColecao);
-                    await _context.SaveChangesAsync();
+                    _context.AlbumColecoes.Remove(albumColecao); // remove a associacao
+                    await _context.SaveChangesAsync(); // guarda na base de dados
                     TempData["SuccessMessage"] = $"Álbum \"{album.Titulo}\" removido da coleção com sucesso";
                 }
                 catch (Exception ex)
@@ -219,7 +233,7 @@ namespace K_Shelf.Pages.Colecoes
                 TempData["WarningMessage"] = $"O álbum \"{album.Titulo}\" não está nesta coleção";
             }
 
-            return RedirectToPage("./Details", new { id });
+            return RedirectToPage("./Details", new { id }); // redireciona para os detalhes
         }
     }
 }

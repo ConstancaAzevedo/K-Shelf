@@ -8,22 +8,28 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                <!-- cabecalho do cartao em amarelo -->
                 <div class="card-header bg-warning">
                     <h2>@ViewData["Title"]</h2>
                 </div>
                 <div class="card-body">
+                    <!-- formulario de edicao -->
                     <form method="post">
+                        <!-- resumo de erros de validacao -->
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <!-- campo escondido para enviar o id do artista -->
                         <input type="hidden" asp-for="Artista.Id" />
 
+                        <!-- campo do nome (obrigatorio) -->
                         <div class="mb-3">
                             <label asp-for="Artista.Nome" class="form-label fw-bold">
-                                Nome <span class="text-danger">*</span>
+                                Nome <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                             </label>
                             <input asp-for="Artista.Nome" class="form-control" />
                             <span asp-validation-for="Artista.Nome" class="text-danger small"></span>
                         </div>
 
+                        <!-- campo do nome artistico (obrigatorio) -->
                         <div class="mb-3">
                             <label asp-for="Artista.NomeArtistico" class="form-label fw-bold">
                                 Nome Artístico <span class="text-danger">*</span>
@@ -33,6 +39,7 @@
                         </div>
 
                         <div class="row">
+                            <!-- campo da data de nascimento (obrigatorio) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.DataNascimento" class="form-label fw-bold">
                                     Data de Nascimento <span class="text-danger">*</span>
@@ -40,6 +47,7 @@
                                 <input asp-for="Artista.DataNascimento" type="date" class="form-control" />
                                 <span asp-validation-for="Artista.DataNascimento" class="text-danger small"></span>
                             </div>
+                            <!-- campo da nacionalidade (obrigatorio) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.Pais" class="form-label fw-bold">
                                     Nacionalidade <span class="text-danger">*</span>
@@ -50,11 +58,13 @@
                         </div>
 
                         <div class="row">
+                            <!-- campo da posicao (opcional) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.Posicao" class="form-label fw-bold"></label>
                                 <input asp-for="Artista.Posicao" class="form-control" />
                                 <span asp-validation-for="Artista.Posicao" class="text-danger small"></span>
                             </div>
+                            <!-- campo da url da imagem (obrigatorio) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.ImagemUrl" class="form-label fw-bold">
                                     URL da Imagem <span class="text-danger">*</span>
@@ -65,6 +75,7 @@
                         </div>
 
                         <div class="row">
+                            <!-- campo da data de entrada (obrigatorio) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.DataEntrada" class="form-label fw-bold">
                                     Data de Entrada <span class="text-danger">*</span>
@@ -72,6 +83,7 @@
                                 <input asp-for="Artista.DataEntrada" type="date" class="form-control" />
                                 <span asp-validation-for="Artista.DataEntrada" class="text-danger small"></span>
                             </div>
+                            <!-- campo da data de saida (opcional) -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Artista.DataSaida" class="form-label fw-bold"></label>
                                 <input asp-for="Artista.DataSaida" type="date" class="form-control" />
@@ -79,14 +91,16 @@
                             </div>
                         </div>
 
+                        <!-- checkbox para indicar se o artista esta ativo -->
                         <div class="mb-3 form-check">
                             <input asp-for="Artista.IsAtivo" class="form-check-input" />
                             <label asp-for="Artista.IsAtivo" class="form-check-label fw-bold"></label>
                         </div>
 
+                        <!-- botoes de acao -->
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">💾 Guardar</button>
-                            <a asp-page="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">💾 Guardar</button> <!-- botao de submit -->
+                            <a asp-page="Index" class="btn btn-secondary">Cancelar</a> <!-- volta para a lista -->
                         </div>
                     </form>
                 </div>
@@ -95,6 +109,7 @@
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

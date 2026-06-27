@@ -1,15 +1,18 @@
 ﻿"use strict";
 
-// sistema de notificações em tempo real com SignalR
+// sistema de notificacoes em tempo real com signalr
 
 let notificacaoConnection = null;
 
+// inicia a ligacao ao hub de notificacoes
 function iniciarNotificacoes() {
+    // verifica se o signalr esta disponivel
     if (typeof signalR === 'undefined') {
         console.warn('SignalR não está carregado.');
         return;
     }
 
+    // evita criar multiplas ligacoes
     if (notificacaoConnection && notificacaoConnection.state === signalR.HubConnectionState.Connected) {
         console.log('Notificações: Conexão já ativa.');
         return;
@@ -17,44 +20,49 @@ function iniciarNotificacoes() {
 
     console.log('Notificações: A iniciar conexão...');
 
+    // cria a ligacao ao hub
     notificacaoConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/notificacaoHub")
-        .withAutomaticReconnect()
+        .withUrl("/notificacaoHub") // endpoint do hub de notificacoes
+        .withAutomaticReconnect() // tenta reconectar automaticamente
         .build();
 
+    // ouve o evento de receber notificacao
     notificacaoConnection.on("ReceberNotificacao", function (notificacao) {
         console.log('Notificação recebida:', notificacao);
-        mostrarToast(notificacao);
+        mostrarToast(notificacao); // mostra a notificacao na interface
     });
 
+    // inicia a ligacao
     notificacaoConnection.start()
         .then(function () {
             console.log('Notificações: Conectado com sucesso!');
         })
         .catch(function (err) {
             console.error('Notificações: Erro ao conectar:', err);
+            // tenta reconectar apos 5 segundos em caso de erro
             setTimeout(iniciarNotificacoes, 5000);
         });
 }
 
+// mostra a notificacao como um toast
 function mostrarToast(notificacao) {
+    // cria o container se nao existir
     const toastContainer = document.getElementById('toast-container') || criarToastContainer();
 
-    // ============================================================
-    // CORREÇÃO: Verificar se a data existe antes de formatar
-    // ============================================================
+    // formata a data da notificacao
     let dataFormatada = '';
     if (notificacao.Data) {
         try {
             const data = new Date(notificacao.Data);
             if (!isNaN(data.getTime())) {
-                dataFormatada = data.toLocaleTimeString('pt-PT');
+                dataFormatada = data.toLocaleTimeString('pt-PT'); // formato portugues
             }
         } catch (e) {
             console.warn('Erro ao formatar data:', e);
         }
     }
 
+    // cria o elemento do toast
     const toast = document.createElement('div');
     toast.className = `toast-notification animate-slide-in`;
     toast.innerHTML = `
@@ -69,17 +77,21 @@ function mostrarToast(notificacao) {
         </div>
     `;
 
+    // adiciona o toast ao container
     toastContainer.appendChild(toast);
 
+    // remove o toast automaticamente apos 5 segundos
     setTimeout(function () {
         toast.classList.add('animate-slide-out');
         setTimeout(function () { toast.remove(); }, 300);
     }, 5000);
 }
 
+// cria o container para os toasts
 function criarToastContainer() {
     const container = document.createElement('div');
     container.id = 'toast-container';
+    // posiciona o container no canto superior direito da tela
     container.style.cssText = `
         position: fixed;
         top: 80px;
@@ -96,12 +108,12 @@ function criarToastContainer() {
     return container;
 }
 
-// Iniciar automaticamente
+// inicia as notificacoes automaticamente apos o carregamento da pagina
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(iniciarNotificacoes, 1000);
 });
 
-// Estilos dos toasts
+// estilos dos toasts
 const estiloToasts = document.createElement('style');
 estiloToasts.textContent = `
     #toast-container .toast-notification {
@@ -131,13 +143,14 @@ estiloToasts.textContent = `
     .animate-slide-out {
         animation: slideOut 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
     }
-    @@keyframes slideIn {
+    @keyframes slideIn {
         from { opacity: 0; transform: translateX(100%) scale(0.9); }
         to { opacity: 1; transform: translateX(0) scale(1); }
     }
-    @@keyframes slideOut {
+    @keyframes slideOut {
         from { opacity: 1; transform: translateX(0) scale(1); }
         to { opacity: 0; transform: translateX(100%) scale(0.9); }
     }
 `;
+// adiciona os estilos ao head da pagina
 document.head.appendChild(estiloToasts);

@@ -7,34 +7,42 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">✏️</span>
+                    <span class="fs-1 me-3">✏️</span> <!-- icone de edicao -->
                     <div>
                         <h2 class="fw-bold mb-0">Editar Música</h2>
+                        <!-- mostra o titulo da musica que esta a ser editada -->
                         <p class="text-secondary mb-0">@Model.Musica.Titulo</p>
                     </div>
                 </div>
 
+                <!-- formulario de edicao com suporte a upload de ficheiros -->
                 <form method="post" enctype="multipart/form-data">
+                    <!-- campo escondido para enviar o id da musica -->
                     <input type="hidden" asp-for="Musica.Id" />
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Mesmos campos do Create -->
+                    <!-- campo do titulo (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Musica.Titulo" class="form-label fw-bold">
-                            Título <span class="text-danger">*</span>
+                            Título <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Musica.Titulo" class="form-control search-input-kpop" />
                         <span asp-validation-for="Musica.Titulo" class="text-danger small"></span>
                     </div>
 
                     <div class="row">
+                        <!-- campo da duracao (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="DuracaoInput" class="form-label fw-bold">Duração (mm:ss)</label>
                             <input asp-for="DuracaoInput" class="form-control search-input-kpop" placeholder="3:45" />
                             <span asp-validation-for="DuracaoInput" class="text-danger small"></span>
                         </div>
+                        <!-- campo do numero da faixa (obrigatorio) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.TrackNumber" class="form-label fw-bold">
                                 Número da Faixa <span class="text-danger">*</span>
@@ -44,17 +52,19 @@
                         </div>
                     </div>
 
-                    
                     <div class="row">
+                        <!-- campo do album (obrigatorio) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.AlbumId" class="form-label fw-bold">
                                 Álbum <span class="text-danger">*</span>
                             </label>
+                            <!-- dropdown com a lista de albuns -->
                             <select asp-for="Musica.AlbumId" class="form-select search-input-kpop" asp-items="Model.AlbunsSelectList">
                                 <option value="">-- Selecione o Álbum --</option>
                             </select>
                             <span asp-validation-for="Musica.AlbumId" class="text-danger small"></span>
                         </div>
+                        <!-- checkboxes para indicar se e title track ou single -->
                         <div class="col-md-6 mb-3">
                             <div class="form-check mt-4">
                                 <input asp-for="Musica.IsTitleTrack" class="form-check-input" />
@@ -68,11 +78,13 @@
                     </div>
 
                     <div class="row">
+                        <!-- campo dos compositores (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.Compositores" class="form-label fw-bold">Compositores</label>
                             <input asp-for="Musica.Compositores" class="form-control search-input-kpop" />
                             <span asp-validation-for="Musica.Compositores" class="text-danger small"></span>
                         </div>
+                        <!-- campo dos produtores (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.Produtores" class="form-label fw-bold">Produtores</label>
                             <input asp-for="Musica.Produtores" class="form-control search-input-kpop" />
@@ -80,12 +92,14 @@
                         </div>
                     </div>
 
+                    <!-- campo da letra (opcional) -->
                     <div class="mb-3">
                         <label asp-for="Musica.Letra" class="form-label fw-bold">Letra</label>
                         <textarea asp-for="Musica.Letra" class="form-control search-input-kpop" rows="4" placeholder="Letra da música..."></textarea>
                         <span asp-validation-for="Musica.Letra" class="text-danger small"></span>
                     </div>
 
+                    <!-- campo do spotify id (opcional) -->
                     <div class="mb-3">
                         <label asp-for="Musica.SpotifyId" class="form-label fw-bold">Spotify ID</label>
                         <input asp-for="Musica.SpotifyId" class="form-control search-input-kpop" placeholder="Ex: 4iV5W9uYEdYUVa79Axb7Rh" />
@@ -93,15 +107,18 @@
                     </div>
 
                     <div class="row">
+                        <!-- campo do youtube url (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Musica.YoutubeUrl" class="form-label fw-bold">YouTube URL</label>
                             <input asp-for="Musica.YoutubeUrl" class="form-control search-input-kpop" placeholder="https://www.youtube.com/watch?v=..." />
                             <span asp-validation-for="Musica.YoutubeUrl" class="text-danger small"></span>
                         </div>
+                        <!-- campo de upload do ficheiro de audio (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Ficheiro de Áudio (Preview)</label>
                             <input type="file" name="AudioFile" class="form-control" accept=".mp3,.m4a,.wav" />
                             <small class="text-muted">Upload de um ficheiro de áudio (MP3, M4A, WAV). Máx 2MB.</small>
+                            <!-- se ja existir audio, mostra o player -->
                             @if (!string.IsNullOrEmpty(Model.Musica.PreviewAudioUrl))
                             {
                                 <div class="mt-2">
@@ -114,9 +131,10 @@
                         </div>
                     </div>
 
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button> <!-- botao de submit -->
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
             </div>
@@ -124,23 +142,24 @@
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <!-- validacao personalizada para o formato da duracao (mm:ss) -->
     <script>
-        // Validação personalizada para o formato da duração (mm:ss)
+        // adiciona um metodo de validacao personalizado para o formato mm:ss
         $.validator.addMethod("duracaoFormat", function (value, element) {
-            if (!value) return true; // Campo opcional
-            return /^([0-9]{1,2}):([0-9]{2})$/.test(value);
+            if (!value) return true; // campo opcional
+            return /^([0-9]{1,2}):([0-9]{2})$/.test(value); // valida o formato mm:ss
         }, "Formato inválido. Use mm:ss (ex: 3:45)");
 
-        // Aplicar a validação ao campo
+        // aplica a validacao ao campo duracaoinput quando a pagina carrega
         $(document).ready(function () {
-            $('#DuracaoInput').rules('add',
+            $('#DuracaoInput').rules('add', {
                 duracaoFormat: true
             });
         });
     </script>
-
 }

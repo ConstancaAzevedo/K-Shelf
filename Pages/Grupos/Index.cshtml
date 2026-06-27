@@ -5,14 +5,17 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
+    <!-- cabecalho da pagina -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="display-4 fw-bold">👥 Gerir Grupos</h1>
             <p class="text-secondary lead">Lista de todos os grupos de K-Pop</p>
         </div>
+        <!-- botao para adicionar um novo grupo -->
         <a asp-page="/Grupos/Create" class="btn btn-kpop rounded-pill">➕ Adicionar Grupo</a>
     </div>
 
+    <!-- mensagens de feedback (sucesso ou erro) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
@@ -28,33 +31,36 @@
         </div>
     }
 
+    <!-- tabela de grupos -->
     <div class="glass-panel p-4 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle">
+                <!-- cabecalho da tabela -->
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                        <th>Data Estreia</th>
-                        <th>Companhia</th>
-                        <th>Fansigno</th>
-                        <th>Ativo</th>
-                        <th class="text-center">Ações</th>
+                        <th>#</th> <!-- coluna do numero de ordem -->
+                        <th>Nome</th> <!-- coluna do nome -->
+                        <th>Data Estreia</th> <!-- coluna da data de estreia -->
+                        <th>Companhia</th> <!-- coluna da companhia -->
+                        <th>Fansigno</th> <!-- coluna do fansigno -->
+                        <th>Ativo</th> <!-- coluna do status -->
+                        <th class="text-center">Ações</th> <!-- coluna de botoes -->
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.Grupos.Any())
+                    @if (Model.Grupos.Any()) // verifica se existem grupos
                     {
-                        int count = 1;
-                        @foreach (var grupo in Model.Grupos)
+                        int count = 1; // contador para numerar as linhas
+                        @foreach (var grupo in Model.Grupos) // percorre a lista de grupos
                         {
                             <tr>
-                                <td>@count</td>
-                                <td><strong>@grupo.Nome</strong></td>
-                                <td>@grupo.DataEstreia.ToString("dd/MM/yyyy")</td>
-                                <td>@(grupo.Companhia ?? "N/A")</td>
-                                <td>@(grupo.Fansigno ?? "N/A")</td>
+                                <td>@count</td> <!-- numero da linha -->
+                                <td><strong>@grupo.Nome</strong></td> <!-- nome do grupo -->
+                                <td>@grupo.DataEstreia.ToString("dd/MM/yyyy")</td> <!-- data de estreia formatada -->
+                                <td>@(grupo.Companhia ?? "N/A")</td> <!-- companhia ou N/A se for nula -->
+                                <td>@(grupo.Fansigno ?? "N/A")</td> <!-- fansigno ou N/A se for nulo -->
                                 <td>
+                                    <!-- badge verde para ativo, cinza para inativo -->
                                     @if (grupo.IsAtivo)
                                     {
                                         <span class="badge bg-success">Ativo</span>
@@ -65,19 +71,21 @@
                                     }
                                 </td>
                                 <td>
+                                    <!-- botoes de acao -->
                                     <div class="d-flex gap-1 justify-content-center">
-                                        <a asp-page="./Edit" asp-route-id="@grupo.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
-                                        <a asp-page="./Delete" asp-route-id="@grupo.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                        <a asp-page="./Edit" asp-route-id="@grupo.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a> <!-- botao de editar -->
+                                        <a asp-page="./Delete" asp-route-id="@grupo.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a> <!-- botao de eliminar -->
                                     </div>
                                 </td>
                             </tr>
-                            count++;
+                            count++; // incrementa o contador
                         }
                     }
                     else
                     {
+                        <!-- mensagem quando nao ha grupos -->
                         <tr>
-                            <td colspan="7" class="text-center py-4 text-secondary">Nenhum grupo encontrado.</td>
+                            <td colspan="7" class="text-center py-4 text-secondary">Nenhum grupo encontrado</td>
                         </tr>
                     }
                 </tbody>

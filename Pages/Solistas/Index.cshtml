@@ -5,14 +5,17 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
+    <!-- cabecalho da pagina -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="display-4 fw-bold">🎤 Gerir Solistas</h1>
             <p class="text-secondary lead">Lista de todos os solistas de K-Pop</p>
         </div>
+        <!-- botao para adicionar um novo solista -->
         <a asp-page="/Solistas/Create" class="btn btn-kpop rounded-pill">➕ Adicionar Solista</a>
     </div>
 
+    <!-- mensagens de feedback (sucesso ou erro) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3" role="alert">
@@ -28,31 +31,34 @@
         </div>
     }
 
+    <!-- tabela de solistas -->
     <div class="glass-panel p-4 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle">
+                <!-- cabecalho da tabela -->
                 <thead class="table-light">
                     <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                        <th>Data Estreia</th>
-                        <th>Companhia</th>
-                        <th>Ativo</th>
-                        <th class="text-center">Ações</th>
+                        <th>#</th> <!-- coluna do numero de ordem -->
+                        <th>Nome</th> <!-- coluna do nome -->
+                        <th>Data Estreia</th> <!-- coluna da data de estreia -->
+                        <th>Companhia</th> <!-- coluna da companhia -->
+                        <th>Ativo</th> <!-- coluna do status -->
+                        <th class="text-center">Ações</th> <!-- coluna de botoes -->
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.Solistas.Any())
+                    @if (Model.Solistas.Any()) // verifica se existem solistas
                     {
-                        int count = 1;
-                        @foreach (var solista in Model.Solistas)
+                        int count = 1; // contador para numerar as linhas
+                        @foreach (var solista in Model.Solistas) // percorre a lista de solistas
                         {
                             <tr>
-                                <td>@count</td>
-                                <td><strong>@solista.Nome</strong></td>
-                                <td>@solista.DataEstreia.ToString("dd/MM/yyyy")</td>
-                                <td>@(solista.Companhia ?? "N/A")</td>
+                                <td>@count</td> <!-- numero da linha -->
+                                <td><strong>@solista.Nome</strong></td> <!-- nome do solista -->
+                                <td>@solista.DataEstreia.ToString("dd/MM/yyyy")</td> <!-- data de estreia formatada -->
+                                <td>@(solista.Companhia ?? "N/A")</td> <!-- companhia ou N/A se for nula -->
                                 <td>
+                                    <!-- badge verde para ativo, cinza para inativo -->
                                     @if (solista.IsAtivo)
                                     {
                                         <span class="badge bg-success">Ativo</span>
@@ -63,19 +69,21 @@
                                     }
                                 </td>
                                 <td>
+                                    <!-- botoes de acao -->
                                     <div class="d-flex gap-1 justify-content-center">
-                                        <a asp-page="./Edit" asp-route-id="@solista.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
-                                        <a asp-page="./Delete" asp-route-id="@solista.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                        <a asp-page="./Edit" asp-route-id="@solista.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a> <!-- botao de editar -->
+                                        <a asp-page="./Delete" asp-route-id="@solista.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a> <!-- botao de eliminar -->
                                     </div>
                                 </td>
                             </tr>
-                            count++;
+                            count++; // incrementa o contador
                         }
                     }
                     else
                     {
+                        <!-- mensagem quando nao ha solistas -->
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-secondary">Nenhum solista encontrado.</td>
+                            <td colspan="6" class="text-center py-4 text-secondary">Nenhum solista encontrado</td>
                         </tr>
                     }
                 </tbody>

@@ -4,90 +4,91 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace K_Shelf.Models
 {
     /// <summary>
-    /// Representa um artista individual de K-Pop.
-    /// Pode ser membro de um Grupo, um artista Solista, ou ambos.
+    /// representa um artista individual de k-pop
+    /// pode ser membro de um grupo, um artista solista, ou ambos
     /// </summary>
     public class Artista
     {
-        /// <summary>Identificador único do Artista.</summary>
+        /// <summary>identificador unico do artista</summary>
         public int Id { get; set; }
 
-        /// <summary>Nome real/completo do Artista.</summary>
-        [Required(ErrorMessage = "O nome é obrigatório")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")]
+        /// <summary>nome real/completo do artista</summary>
+        [Required(ErrorMessage = "O nome é obrigatório")] // campo obrigatorio
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")] // tamanho entre 2 e 100
         [Display(Name = "Nome Real")]
         public string Nome { get; set; } = string.Empty;
 
-        /// <summary>Nome artístico usado no palco (ex: Suga, Lisa).</summary>
-        [Required(ErrorMessage = "O nome artístico é obrigatório")]
-        [StringLength(100)]
+        /// <summary>nome artistico usado no palco (ex: suga, lisa)</summary>
+        [Required(ErrorMessage = "O nome artístico é obrigatório")] // campo obrigatorio
+        [StringLength(100)] // tamanho maximo de 100 caracteres
         [Display(Name = "Nome Artístico")]
         public string? NomeArtistico { get; set; }
 
-        /// <summary>Data de nascimento do Artista (usada para calcular a idade).</summary>
-        [Required(ErrorMessage = "A data de nascimento é obrigatória")]
-        [DataType(DataType.Date)]
+        /// <summary>data de nascimento do artista (usada para calcular a idade)</summary>
+        [Required(ErrorMessage = "A data de nascimento é obrigatória")] // campo obrigatorio
+        [DataType(DataType.Date)] // tipo de dados date
         [Display(Name = "Data de Nascimento")]
         public DateTime DataNascimento { get; set; }
 
-        /// <summary>Posição/Papel principal do artista no grupo (ex: Rapper, Dançarino).</summary>
-        [StringLength(50)]
+        /// <summary>posicao/papel principal do artista no grupo (ex: rapper, dancarino)</summary>
+        [StringLength(50)] // tamanho maximo de 50 caracteres
         [Display(Name = "Posição")]
         public string? Posicao { get; set; }
 
-        /// <summary>País de origem do Artista.</summary>
-        [Required(ErrorMessage = "A nacionalidade é obrigatória")]
-        [StringLength(50)]
+        /// <summary>pais de origem do artista</summary>
+        [Required(ErrorMessage = "A nacionalidade é obrigatória")] // campo obrigatorio
+        [StringLength(50)] // tamanho maximo de 50 caracteres
         [Display(Name = "Nacionalidade")]
         public string? Pais { get; set; }
 
-        /// <summary>Caminho local ou URL absoluto da foto do Artista.</summary>
-        [Required(ErrorMessage = "A imagem é obrigatória")]
+        /// <summary>caminho local ou url absoluto da foto do artista</summary>
+        [Required(ErrorMessage = "A imagem é obrigatória")] // campo obrigatorio
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 
-        /// <summary>Data em que o artista estreou ou entrou na agência.</summary>
-        [Required(ErrorMessage = "A data de entrada é obrigatória")]
+        /// <summary>data em que o artista estreou ou entrou na agencia</summary>
+        [Required(ErrorMessage = "A data de entrada é obrigatória")] // campo obrigatorio
         [Display(Name = "Data de Entrada")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date)] // tipo de dados date
         public DateTime? DataEntrada { get; set; }
 
-        /// <summary>Data de saída (caso tenha deixado o grupo/agência).</summary>
+        /// <summary>data de saida (caso tenha deixado o grupo/agencia)</summary>
         [Display(Name = "Data de Saída")]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date)] // tipo de dados date
         public DateTime? DataSaida { get; set; }
 
-        /// <summary>Indica se o artista se encontra no ativo na indústria musical.</summary>
+        /// <summary>indica se o artista se encontra no ativo na industria musical</summary>
         [Display(Name = "Ativo")]
-        public bool IsAtivo { get; set; } = true;
+        public bool IsAtivo { get; set; } = true; // ativo por padrao
 
-        /// <summary>Chave Estrangeira opcional que liga o Artista a um Grupo.</summary>
+        /// <summary>chave estrangeira opcional que liga o artista a um grupo</summary>
         public int? GrupoId { get; set; }
 
-        /// <summary>Propriedade de Navegação para o Grupo associado.</summary>
-        [ForeignKey("GrupoId")]
+        /// <summary>propriedade de navegacao para o grupo associado</summary>
+        [ForeignKey("GrupoId")] // chave estrangeira para a tabela grupos
         [Display(Name = "Grupo")]
         public virtual Grupo? Grupo { get; set; }
 
-        /// <summary>Chave Estrangeira opcional que liga o Artista ao seu perfil de Solista.</summary>
+        /// <summary>chave estrangeira opcional que liga o artista ao seu perfil de solista</summary>
         public int? SolistaId { get; set; }
 
-        /// <summary>Propriedade de Navegação para o perfil de Solista associado.</summary>
-        [ForeignKey("SolistaId")]
+        /// <summary>propriedade de navegacao para o perfil de solista associado</summary>
+        [ForeignKey("SolistaId")] // chave estrangeira para a tabela solistas
         [Display(Name = "Solista")]
         public virtual Solista? Solista { get; set; }
 
-        /// <summary>Lista de Álbuns associados a este Artista.</summary>
+        /// <summary>lista de albuns associados a este artista</summary>
         public virtual ICollection<Album>? Albuns { get; set; } = new List<Album>();
 
         /// <summary>
-        /// Propriedade Calculada (não guardada na BD) que classifica o tipo de artista.
+        /// propriedade calculada (nao guardada na bd) que classifica o tipo de artista
         /// </summary>
-        [NotMapped]
+        [NotMapped] // nao e guardado na base de dados
         public string TipoArtista
         {
             get
             {
+                // determina o tipo de artista com base nos ids
                 if (GrupoId.HasValue && SolistaId.HasValue)
                     return "Membro de Grupo e Solista";
                 if (GrupoId.HasValue)
@@ -99,27 +100,30 @@ namespace K_Shelf.Models
         }
 
         /// <summary>
-        /// Propriedade Calculada que gera o nome de exibição unindo o nome artístico e o nome real.
+        /// propriedade calculada que gera o nome de exibicao unindo o nome artistico e o nome real
         /// </summary>
-        [NotMapped]
+        [NotMapped] // nao e guardado na base de dados
         public string NomeExibicao
         {
             get
             {
+                // se tiver nome artistico, mostra nome artistico (nome real)
                 return string.IsNullOrEmpty(NomeArtistico) ? Nome : $"{NomeArtistico} ({Nome})";
             }
         }
 
         /// <summary>
-        /// Propriedade Calculada que determina a idade atual do artista com base na data de nascimento.
+        /// propriedade calculada que determina a idade atual do artista com base na data de nascimento
         /// </summary>
-        [NotMapped]
+        [NotMapped] // nao e guardado na base de dados
         public int Idade
         {
             get
             {
+                // calcula a idade com base na data de nascimento
                 var today = DateTime.Today;
                 var age = today.Year - DataNascimento.Year;
+                // ajusta se o aniversario ainda nao aconteceu este ano
                 if (DataNascimento.Date > today.AddYears(-age)) age--;
                 return age;
             }

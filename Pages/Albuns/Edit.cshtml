@@ -8,28 +8,33 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">✏️</span>
+                    <span class="fs-1 me-3">✏️</span> <!-- icone de edicao -->
                     <div>
                         <h2 class="fw-bold mb-0">Editar Álbum</h2>
+                        <!-- mostra o titulo do album que esta a ser editado -->
                         <p class="text-secondary mb-0">@Model.Album.Titulo</p>
                     </div>
                 </div>
 
+                <!-- formulario de edicao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id do album -->
                     <input type="hidden" asp-for="Album.Id" />
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Título (obrigatório) -->
+                    <!-- campo do titulo (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.Titulo" class="form-label fw-bold">
-                            Título <span class="text-danger">*</span>
+                            Título <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Album.Titulo" class="form-control search-input-kpop" placeholder="Ex: Map of the Soul: 7" />
                         <span asp-validation-for="Album.Titulo" class="text-danger small"></span>
                     </div>
 
-                    <!-- Data de Lançamento (obrigatório) -->
+                    <!-- campo da data de lancamento (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.DataLancamento" class="form-label fw-bold">
                             Data de Lançamento <span class="text-danger">*</span>
@@ -38,7 +43,7 @@
                         <span asp-validation-for="Album.DataLancamento" class="text-danger small"></span>
                     </div>
 
-                    <!-- URL da Capa (obrigatório) -->
+                    <!-- campo da url da capa (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.CapaUrl" class="form-label fw-bold">
                             URL da Capa <span class="text-danger">*</span>
@@ -47,21 +52,24 @@
                         <span asp-validation-for="Album.CapaUrl" class="text-danger small"></span>
                     </div>
 
-                    <!-- Tipo de Álbum (obrigatório) -->
+                    <!-- campos do tipo e edicao -->
                     <div class="row">
+                        <!-- campo do tipo de album (obrigatorio) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Album.Tipo" class="form-label fw-bold">
                                 Tipo de Álbum <span class="text-danger">*</span>
                             </label>
+                            <!-- dropdown com os valores do enum tipoalbum -->
                             <select asp-for="Album.Tipo" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.TipoAlbum>()">
                             </select>
                             <span asp-validation-for="Album.Tipo" class="text-danger small"></span>
                         </div>
 
-                        <!-- Edição (opcional) -->
+                        <!-- campo da edicao (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Album.Edicao" class="form-label fw-bold">Edição</label>
+                            <!-- dropdown com os valores do enum edicaoalbum -->
                             <select asp-for="Album.Edicao" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.EdicaoAlbum>()">
                             </select>
@@ -69,10 +77,12 @@
                         </div>
                     </div>
 
+                    <!-- associacao a um artista (grupo ou solista) -->
                     <div class="bg-light rounded-3 p-3 mb-4">
                         <h6 class="fw-bold mb-3">🎤 Artista</h6>
                         <p class="text-secondary small mb-3">Associe o álbum a um <strong>Grupo</strong> ou a um <strong>Solista</strong> (não pode ser ambos).</p>
                         <div class="row">
+                            <!-- dropdown para selecionar um grupo -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.GrupoId" class="form-label fw-bold"></label>
                                 <div class="d-flex gap-2">
@@ -80,6 +90,7 @@
                                             asp-items="Model.GruposSelectList">
                                         <option value="">-- Nenhum Grupo --</option>
                                     </select>
+                                    <!-- botao para abrir o modal de criacao de grupo -->
                                     <button type="button" class="btn btn-outline-primary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalCriarGrupo"
@@ -88,6 +99,7 @@
                                     </button>
                                 </div>
                             </div>
+                            <!-- dropdown para selecionar um solista -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.SolistaId" class="form-label fw-bold"></label>
                                 <div class="d-flex gap-2">
@@ -95,6 +107,7 @@
                                             asp-items="Model.SolistasSelectList">
                                         <option value="">-- Nenhum Solista --</option>
                                     </select>
+                                    <!-- botao para abrir o modal de criacao de solista -->
                                     <button type="button" class="btn btn-outline-primary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalCriarSolista"
@@ -106,12 +119,13 @@
                         </div>
                     </div>
 
+                    <!-- gestao de musicas -->
                     <div class="bg-light rounded-3 p-3 mb-4">
                         <h6 class="fw-bold mb-3">🎵 Músicas</h6>
                         <p class="text-secondary small mb-3">Adicione músicas a este álbum.</p>
 
                         <div class="row align-items-end">
-                            <!-- Dropdown para selecionar música existente -->
+                            <!-- dropdown para selecionar musica existente -->
                             <div class="col-md-5 mb-2">
                                 <label class="form-label fw-bold">Adicionar Música Existente</label>
                                 <select id="selectMusicaExistente" class="form-select search-input-kpop">
@@ -127,12 +141,13 @@
                                     ➕ Adicionar
                                 </button>
                             </div>
+                            <!-- botao para abrir o modal de criacao de musica -->
                             <button type="button" class="btn btn-outline-primary w-100" onclick="carregarModalMusica()">
                                 ✨ Criar Nova Música
                             </button>
                         </div>
 
-                        <!-- Lista de músicas atuais -->
+                        <!-- lista de musicas atuais -->
                         <div class="mt-3">
                             <p class="fw-bold mb-2">Músicas neste álbum:</p>
                             <ul class="list-unstyled mb-0" id="listaMusicasAtuais">
@@ -141,7 +156,7 @@
                                     @foreach (var musica in Model.Album.Musicas)
                                     {
                                         <li class="d-flex justify-content-between align-items-center py-1 border-bottom border-light" data-musica-id="@musica.Id">
-                                            <span>@musica.TrackNumber. @musica.Titulo</span>
+                                            <span>@musica.TrackNumber. @musica.Titulo</span> <!-- numero e titulo da musica -->
                                             <button type="button" class="btn btn-sm btn-outline-danger btn-remover-musica" data-musica-id="@musica.Id">
                                                 ✕
                                             </button>
@@ -156,14 +171,14 @@
                         </div>
                     </div>
 
-
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar Alterações</button>
-                        <a asp-page="./Details" asp-route-id="@Model.Album.Id" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar Alterações</button> <!-- botao de submit -->
+                        <a asp-page="./Details" asp-route-id="@Model.Album.Id" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para os detalhes -->
                     </div>
                 </form>
 
-                <!-- MODAL: CRIAR MÚSICA -->
+                <!-- modal para criar musica -->
                 <div class="modal fade" id="modalCriarMusica" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -172,6 +187,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body" id="conteudoModalMusica">
+                                <!-- spinner de carregamento -->
                                 <div class="text-center py-4">
                                     <div class="spinner-border text-kpop" role="status">
                                         <span class="visually-hidden">A carregar...</span>
@@ -182,7 +198,7 @@
                     </div>
                 </div>
 
-                <!-- MODAL: CRIAR GRUPO -->
+                <!-- modal para criar grupo -->
                 <div class="modal fade" id="modalCriarGrupo" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -191,6 +207,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body" id="conteudoModalGrupo">
+                                <!-- spinner de carregamento -->
                                 <div class="text-center py-4">
                                     <div class="spinner-border text-kpop" role="status">
                                         <span class="visually-hidden">A carregar...</span>
@@ -201,6 +218,7 @@
                     </div>
                 </div>
 
+                <!-- modal para criar solista -->
                 <div class="modal fade" id="modalCriarSolista" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -209,6 +227,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body" id="conteudoModalSolista">
+                                <!-- spinner de carregamento -->
                                 <div class="text-center py-4">
                                     <div class="spinner-border text-kpop" role="status">
                                         <span class="visually-hidden">A carregar...</span>
@@ -222,49 +241,63 @@
         </div>
     </div>
 </div>
+
+<!-- scripts do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-                const grupoSelect = document.getElementById('Album_GrupoId');
+        // impede selecionar grupo e solista ao mesmo tempo
+        const grupoSelect = document.getElementById('Album_GrupoId');
         const solistaSelect = document.getElementById('Album_SolistaId');
 
+        // quando um grupo e selecionado, limpa o solista
         grupoSelect.addEventListener('change', function () {
             if (this.value) solistaSelect.value = '';
         });
 
+        // quando um solista e selecionado, limpa o grupo
         solistaSelect.addEventListener('change', function () {
             if (this.value) grupoSelect.value = '';
         });
 
+        // carrega o formulario de criacao de musica dentro do modal
         function carregarModalMusica() {
             const albumId = @Model.Album.Id;
             const modalEl = document.getElementById('modalCriarMusica');
             let modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            // mostra o spinner enquanto carrega
             document.getElementById('conteudoModalMusica').innerHTML = '<div class="text-center py-4"><div class="spinner-border" role="status"></div></div>';
-            modal.show();
+            modal.show(); // abre o modal
             fetch('/Musicas/Create?albumId=' + albumId, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(r => r.text())
             .then(html => {
                 document.getElementById('conteudoModalMusica').innerHTML = html;
                 const form = document.querySelector('#conteudoModalMusica form');
                 if (form) {
+                    // intercepta o submit do formulario para fazer ajax
                     form.addEventListener('submit', function(e) {
-                        e.preventDefault();
+                        e.preventDefault(); // evita o reload da pagina
                         fetch('/Musicas/Create', { method: 'POST', body: new FormData(this) })
                         .then(r => r.text())
                         .then(result => {
                             if (result.includes('alert-danger')) {
+                                // se houver erro, mostra o erro no modal
                                 document.getElementById('conteudoModalMusica').innerHTML = result;
-                            } else { modal.hide(); location.reload(); }
+                            } else {
+                                // se for bem sucedido, fecha o modal e recarrega a pagina
+                                modal.hide();
+                                location.reload();
+                            }
                         });
                     });
                 }
             });
         }
 
+        // carrega o formulario de criacao de grupo dentro do modal
         function carregarModalGrupo() {
             fetch('/Grupos/Create', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(r => r.text())
@@ -272,20 +305,27 @@
                 document.getElementById('conteudoModalGrupo').innerHTML = html;
                 const form = document.querySelector('#conteudoModalGrupo form');
                 if (form) {
+                    // intercepta o submit do formulario para fazer ajax
                     form.addEventListener('submit', function(e) {
-                        e.preventDefault();
+                        e.preventDefault(); // evita o reload da pagina
                         fetch('/Grupos/Create', { method: 'POST', body: new FormData(this) })
                         .then(r => r.text())
                         .then(result => {
                             if (result.includes('alert-danger')) {
+                                // se houver erro, mostra o erro no modal
                                 document.getElementById('conteudoModalGrupo').innerHTML = result;
-                            } else { bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide(); location.reload(); }
+                            } else {
+                                // se for bem sucedido, fecha o modal e recarrega a pagina
+                                bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
+                                location.reload();
+                            }
                         });
                     });
                 }
             });
         }
 
+        // carrega o formulario de criacao de solista dentro do modal
         function carregarModalSolista() {
             fetch('/Solistas/Create', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
             .then(r => r.text())
@@ -293,33 +333,44 @@
                 document.getElementById('conteudoModalSolista').innerHTML = html;
                 const form = document.querySelector('#conteudoModalSolista form');
                 if (form) {
+                    // intercepta o submit do formulario para fazer ajax
                     form.addEventListener('submit', function(e) {
-                        e.preventDefault();
+                        e.preventDefault(); // evita o reload da pagina
                         fetch('/Solistas/Create', { method: 'POST', body: new FormData(this) })
                         .then(r => r.text())
                         .then(result => {
                             if (result.includes('alert-danger')) {
+                                // se houver erro, mostra o erro no modal
                                 document.getElementById('conteudoModalSolista').innerHTML = result;
-                            } else { bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide(); location.reload(); }
+                            } else {
+                                // se for bem sucedido, fecha o modal e recarrega a pagina
+                                bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide();
+                                location.reload();
+                            }
                         });
                     });
                 }
             });
         }
 
+        // repoe o conteudo dos modais quando sao fechados
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.modal').forEach(function(modal) {
                 modal.addEventListener('hidden.bs.modal', function() {
                     if (this.id === 'modalCriarGrupo') {
+                        // repoe o spinner no modal de grupo
                         document.getElementById('conteudoModalGrupo').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-kpop" role="status"></div></div>';
                     } else if (this.id === 'modalCriarSolista') {
+                        // repoe o spinner no modal de solista
                         document.getElementById('conteudoModalSolista').innerHTML = '<div class="text-center py-4"><div class="spinner-border text-kpop" role="status"></div></div>';
                     }
                 });
             });
         });
 
+        // adiciona e remove musicas do album usando ajax
         $(document).ready(function () {
+            // adicionar musica existente ao album
             $('#btnAdicionarMusica').click(function () {
                 var musicaId = $('#selectMusicaExistente').val();
                 var albumId = @Model.Album.Id;
@@ -330,6 +381,7 @@
                 });
             });
 
+            // remover musica do album
             $('.btn-remover-musica').click(function () {
                 var musicaId = $(this).data('musica-id');
                 var albumId = @Model.Album.Id;

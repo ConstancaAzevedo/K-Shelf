@@ -2,60 +2,73 @@
 @model K_Shelf.Pages.Solistas.CreateModel
 @{
     ViewData["Title"] = "Adicionar Solista";
+    // se a requisicao for ajax (modal), nao usa o layout completo
     Layout = Request.Headers.ContainsKey("X-Requested-With") ? null : "_Layout";
 }
 
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🎤</span>
+                    <span class="fs-1 me-3">🎤</span> <!-- icone de solista -->
                     <div>
                         <h2 class="fw-bold mb-0">Adicionar Solista</h2>
                         <p class="text-secondary mb-0">Crie um novo artista solista</p>
                     </div>
                 </div>
 
+                <!-- formulario de criacao -->
                 <form method="post">
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
+                    <!-- campo do nome (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Solista.Nome" class="form-label fw-bold">
-                            Nome <span class="text-danger">*</span>
+                            Nome <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Solista.Nome" class="form-control search-input-kpop" />
+                        <!-- mensagem de erro especifica para o campo nome -->
                         <span asp-validation-for="Solista.Nome" class="text-danger small"></span>
                     </div>
 
+                    <!-- campo da data de estreia (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Solista.DataEstreia" class="form-label fw-bold">
                             Data de Estreia <span class="text-danger">*</span>
                         </label>
+                        <!-- input do tipo date para selecionar uma data -->
                         <input asp-for="Solista.DataEstreia" type="date" class="form-control search-input-kpop" />
                         <span asp-validation-for="Solista.DataEstreia" class="text-danger small"></span>
                     </div>
 
+                    <!-- campo da companhia (opcional) -->
                     <div class="mb-3">
                         <label asp-for="Solista.Companhia" class="form-label fw-bold">Companhia</label>
                         <input asp-for="Solista.Companhia" class="form-control search-input-kpop" />
                         <span asp-validation-for="Solista.Companhia" class="text-danger small"></span>
                     </div>
 
+                    <!-- campo da url da imagem (opcional) -->
                     <div class="mb-3">
                         <label asp-for="Solista.ImagemUrl" class="form-label fw-bold">URL da Imagem</label>
                         <input asp-for="Solista.ImagemUrl" class="form-control search-input-kpop" placeholder="https://..." />
                         <span asp-validation-for="Solista.ImagemUrl" class="text-danger small"></span>
                     </div>
 
+                    <!-- checkbox para indicar se o solista esta ativo -->
                     <div class="mb-3 form-check">
                         <input asp-for="Solista.IsAtivo" class="form-check-input" />
                         <label asp-for="Solista.IsAtivo" class="form-check-label fw-bold">Ativo</label>
                     </div>
 
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button> <!-- botao de submit -->
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
             </div>
@@ -63,6 +76,7 @@
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

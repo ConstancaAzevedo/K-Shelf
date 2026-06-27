@@ -7,29 +7,38 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm text-center">
+                <!-- icone de alerta -->
                 <span class="fs-1 text-danger">⚠️</span>
                 <h3 class="fw-bold mt-2">Eliminar Photocard?</h3>
                 <p class="text-secondary">Esta ação é permanente e irá remover o photocard de todos os binders dos colecionadores.</p>
 
-                <!-- Detalhes do Cartão a Eliminar -->
+                <!-- detalhes do cartao a eliminar -->
                 <div class="my-4 d-flex flex-column align-items-center">
+                    <!-- imagem do photocard -->
                     <div class="rounded-4 overflow-hidden shadow-md mb-3" style="width: 140px; height: 200px;">
                         <img src="@Model.Photocard.ImagemUrl" alt="Photocard" style="width: 100%; height: 100%; object-fit: cover;" />
                     </div>
+                    <!-- versao do photocard -->
                     <h5 class="fw-bold mb-1">@Model.Photocard.Versao</h5>
-                    <p class="text-secondary mb-0">🎤 Artista: @(Model.Photocard.Artista?.NomeArtistico ?? "Sem Artista")</p>
+                    <!-- nome do artista associado -->
+                    <p class="text-secondary mb-0">Artista: @(Model.Photocard.Artista?.NomeArtistico ?? "Sem Artista")</p>
+                    <!-- nome do album associado (se existir) -->
                     @if (Model.Photocard.Album != null)
                     {
-                        <small class="text-muted">💿 Álbum: @Model.Photocard.Album.Titulo</small>
+                        <small class="text-muted">Álbum: @Model.Photocard.Album.Titulo</small>
                     }
                 </div>
 
+                <!-- formulario de confirmacao de eliminacao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id do photocard -->
                     <input type="hidden" asp-for="Photocard.Id" />
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2 justify-content-center mt-4">
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">Eliminar Definitivamente</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Eliminar Definitivamente</button> <!-- botao de confirmacao -->
                     </div>
                 </form>
             </div>

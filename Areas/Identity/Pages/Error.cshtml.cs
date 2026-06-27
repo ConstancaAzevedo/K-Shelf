@@ -1,6 +1,5 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
+// gerado automaticamente pelo identity
+// pagina de erro personalizada para a aplicacao
 
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
@@ -9,32 +8,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace K_Shelf.Areas.Identity.Pages
 {
-    /// <summary>
-    ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-    ///     directly from your code. This API may change or be removed in future releases.
-    /// </summary>
-    [AllowAnonymous]
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [AllowAnonymous] // qualquer utilizador pode aceder a esta pagina
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)] // nao guarda em cache
     public class ErrorModel : PageModel
     {
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public string RequestId { get; set; }
+        public string RequestId { get; set; } // id do pedido que originou o erro
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // mostra o request id se existir
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        // metodo executado quando a pagina e carregada
         public void OnGet()
         {
+            // obtem o id do pedido atual
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }

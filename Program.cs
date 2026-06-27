@@ -4,39 +4,53 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
+// Ponto de entrada da aplicação
+// Configura todos os serviços, middlewares e inicializa a base de dados
+
+
+// contrução da aplicação
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CONFIGURAÇÃO DE SERVIÇOS (Dependency Injection)
+// configuraçáo se serviços
 
-// Configuração do contexto de Base de Dados (ApplicationDbContext) a usar SQL Server
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+// contexto de Base de Dados (ApplicationDbContext)
+// regista o ApplicationDbContext para ser usado com SQL Server
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configuração do ASP.NET Core Identity com definições personalizadas de segurança
+// autenticação e autorização 
+// configura o Identity com o modelo Utilizador e as opções de segurança
 builder.Services.AddDefaultIdentity<Utilizador>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false; // Não exige confirmação de email
-    options.User.RequireUniqueEmail = true;         // Exige email único por utilizador
-    options.Password.RequireDigit = false;          // Não exige números na senha
-    options.Password.RequiredLength = 6;            // Comprimento mínimo de 6 caracteres
-    options.Password.RequireNonAlphanumeric = false;// Não exige caracteres especiais
-    options.Password.RequireUppercase = false;       // Não exige letras maiúsculas
-    options.Password.RequireLowercase = false;       // Não exige letras minúsculas
-})
-.AddRoles<IdentityRole>() // Ativa suporte a Roles (Cargos como Admin/User)
-.AddEntityFrameworkStores<ApplicationDbContext>();
+    // Não exige confirmação de email para login (simplifica o registo)
+    options.SignIn.RequireConfirmedAccount = false;
+    // Garante que cada email é único na base de dados
+    options.User.RequireUniqueEmail = true;
 
-// Ativar suporte para API Controllers (MVC) e Razor Pages
+    // configuração de passwords
+    options.Password.RequireDigit = false;          // Não exige números (ex: 123)
+    options.Password.RequiredLength = 6;            // Comprimento mínimo: 6 caracteres
+    options.Password.RequireNonAlphanumeric = false;// Não exige caracteres especiais (ex: @, #)
+    options.Password.RequireUppercase = false;      // Não exige letras maiúsculas
+    options.Password.RequireLowercase = false;      // Não exige letras minúsculas
+})
+.AddRoles<IdentityRole>() // Ativa suporte a Roles (Admin, User)
+.AddEntityFrameworkStores<ApplicationDbContext>(); // Guarda os dados no mesmo contexto
+
+// controllers e views
+// Ativa suporte para API Controllers (MVC) e Razor Pages
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Ativar suporte para comunicação em tempo real com SignalR
+// SINGALR comunicação em tempo real
+// Ativa o suporte para WebSockets e notificações em tempo real
 builder.Services.AddSignalR();
 
 // Configuração do Swagger para documentação automática da API REST
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    // Informações gerais da API
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "K-Shelf API",
@@ -56,46 +70,57 @@ builder.Services.AddSwaggerGen(c =>
         c.IncludeXmlComments(xmlPath);
 });
 
+// construçáo da aplicação (após configuração)
 var app = builder.Build();
 
-// 2. CONFIGURAÇÃO DO PIPELINE DE PEDIDOS HTTP (Middlewares)
+// congiuração do pipeline de pedidos HTTP (Middlewares) 
 
+// ambiente de desenvolvimneto
 if (app.Environment.IsDevelopment())
 {
-    // Em desenvolvimento, ativa tratamento detalhado de erros e base de dados
+    // ativa a página de erros detalhados do Entity framework e a página de migrações
     app.UseMigrationsEndPoint();
 }
 else
 {
-    // Em produção, usa tratamento genérico de erros e HSTS para conexões seguras
+    // Em produção a página de erro gen´´erica e hsts
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-// Ativar a interface visual do Swagger no endpoint /swagger (sempre ativo)
+// SWAGGER (sempre ativo) disponível em .../swagger
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "K-Shelf API v1");
-    c.RoutePrefix = "swagger";
+    c.RoutePrefix = "swagger"; // Acede em /swagger
 });
 
-// Intercetar códigos de erro como 404 e 403 e reencaminhar para a nossa página de erro customizada
+// tratamento de erros hhtp
+// Redireciona códigos 404, 403, etc. para a página de erro personalizada
 app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
 
+// segurança
+// Redireciona HTTP para HTTPS
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Suporte para servir ficheiros estáticos (HTML, CSS, Imagens, JS) em wwwroot
+
+// ficheiros estáticos
+// Serve ficheiros da pasta wwwroot (CSS, JS, imagens, etc.)
+app.UseStaticFiles();
+
+// roteamento
 app.UseRouting();
 
-// Ativar middlewares de segurança: autenticação de identidade e autorização de permissões
-app.UseAuthentication();
-app.UseAuthorization();
+// autenticação e autorização
+app.UseAuthentication(); // Middleware de autenticação (verifica se o utilizador está logado)
+app.UseAuthorization(); // Middleware de autorização (verifica permissões/roles)
 
-// Configuração das rotas padrão para os Controllers de API e Razor Pages
+// rotas
+// Rotas para Controllers MVC (API)
 app.MapControllerRoute(
-    name: "default",
+name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+app.MapRazorPages(); // Rotas para Razor Pages
 
 
 // Mapear o endpoint do Hub do SignalR para o Chat e Contador de utilizadores
@@ -104,7 +129,7 @@ app.MapHub<K_Shelf.Hubs.KpopChatHub>("/kpopChatHub");
 // Mapear o endpoint do Hub de Notificações
 app.MapHub<K_Shelf.Hubs.NotificacaoHub>("/notificacaoHub");
 
-// 3. INICIALIZAÇÃO E ALIMENTAÇÃO DA BASE DE DADOS (Seeding)
+// inicializaçáo e alimentação da base de dados (seeding)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -112,10 +137,10 @@ using (var scope = app.Services.CreateScope())
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
 
-        // --- AUTOCREATE PHOTOCARD TABLES ---
+        // garante que as tabelas existem mesmo sem migrações manuais
         try
         {
-            // 1. Criar a tabela de histórico de migrações se não existir
+            // Criar a tabela de histórico de migrações se não existir
             await context.Database.ExecuteSqlRawAsync(@"
                 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
                 BEGIN
@@ -125,7 +150,7 @@ using (var scope = app.Services.CreateScope())
                     );
                 END");
 
-            // 2. Registar todas as migrações padrão e a nova de photocards como 'aplicadas'
+            // registar todas as migrações como já aplicadas para evitar conflitos com migrações futuras
             await context.Database.ExecuteSqlRawAsync(@"
                 IF NOT EXISTS (SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = '00000000000000_CreateIdentitySchema')
                     INSERT INTO [__EFMigrationsHistory] VALUES ('00000000000000_CreateIdentitySchema', '8.0.0');
@@ -143,7 +168,7 @@ using (var scope = app.Services.CreateScope())
                     INSERT INTO [__EFMigrationsHistory] VALUES ('20260625215000_AddPhotocardModels', '8.0.0');
             ");
 
-            // 2.5 Corrigir localmente a coluna Nacionalidade para Pais na tabela Artistas para compatibilidade com o Azure
+            // corrigir localmente a coluna Nacionalidade para Pais na tabela Artistas para compatibilidade com o Azure
             await context.Database.ExecuteSqlRawAsync(@"
                 IF EXISTS(SELECT * FROM sys.columns 
                           WHERE Name = N'Nacionalidade' AND Object_ID = Object_ID(N'Artistas'))
@@ -153,7 +178,7 @@ using (var scope = app.Services.CreateScope())
                     EXEC sp_rename 'Artistas.Nacionalidade', 'Pais', 'COLUMN';
                 END");
 
-            // 3. Criar a tabela Photocards caso não exista
+            // criar a tabela Photocards caso não exista
             await context.Database.ExecuteSqlRawAsync(@"
                 IF OBJECT_ID(N'[Photocards]') IS NULL
                 BEGIN
@@ -166,7 +191,7 @@ using (var scope = app.Services.CreateScope())
                     );
                 END");
 
-            // 4. Criar a tabela UtilizadorPhotocards caso não exista
+            // criar a tabela UtilizadorPhotocards caso não exista (relação muitos-para-muitos)
             await context.Database.ExecuteSqlRawAsync(@"
                 IF OBJECT_ID(N'[UtilizadorPhotocards]') IS NULL
                 BEGIN
@@ -180,7 +205,7 @@ using (var scope = app.Services.CreateScope())
                     );
                 END");
 
-            // 5. Criar índices caso não existam
+            // criar índices para otimizar consultas
             await context.Database.ExecuteSqlRawAsync(@"
                 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Photocards_ArtistaId' AND object_id = OBJECT_ID('[Photocards]'))
                     CREATE INDEX [IX_Photocards_ArtistaId] ON [Photocards] ([ArtistaId]);
@@ -192,7 +217,7 @@ using (var scope = app.Services.CreateScope())
                     CREATE INDEX [IX_UtilizadorPhotocards_PhotocardId] ON [UtilizadorPhotocards] ([PhotocardId]);
             ");
 
-            // 6. Atualizar as URLs dos photocards de sementeira com as novas imagens locais da pasta
+            // atualizar as URLs dos photocards de sementeira com as novas imagens locais da pasta
             await context.Database.ExecuteSqlRawAsync(@"
                 UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jkphoto.png' WHERE [Versao] = 'Selfie Ver. 1';
                 UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jkphoto1.jpg' WHERE [Versao] = 'Concept Photo Black Swan';
@@ -204,7 +229,7 @@ using (var scope = app.Services.CreateScope())
                 UPDATE [Photocards] SET [ImagemUrl] = '/imagens/jakephoto.jpeg' WHERE [Versao] = 'Dark Blood Orange Ver.';
             ");
 
-            // 7. Criar a coluna PreviewAudioUrl na tabela Musicas caso não exista
+            // criar a coluna PreviewAudioUrl na tabela Musicas caso não exista
             await context.Database.ExecuteSqlRawAsync(@"
                 IF NOT EXISTS (
                     SELECT * FROM sys.columns 
@@ -221,12 +246,14 @@ using (var scope = app.Services.CreateScope())
             logger.LogWarning(ex, "Aviso ao criar tabelas de photocards.");
         }
         
+        // dados iniciais (seeding)
         // Corre o preenchimento automático de dados de teste (bts, blackpink, etc.)
         await DbSeeder.SeedAsync(context);
 
         // Pesquisa e atualiza automaticamente os links reais das músicas através da API do iTunes
         await DbSeeder.FetchItunesPreviewsAsync(context);
 
+        // criaçáo de cargos de utilizador (Admin e User)
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         // Cria os roles se não existirem
@@ -250,4 +277,5 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// inicio da aplicação
 app.Run();

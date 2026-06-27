@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace K_Shelf.Pages
 {
     /// <summary>
-    /// Modelo de suporte para a página de Informações/Créditos (Info.cshtml).
-    /// Como a página é maioritariamente estática, serve apenas de ponto de entrada padrão do Razor Pages.
+    /// modelo de suporte para a pagina de informacoes/creditos (info.cshtml)
+    /// como a pagina e maioritariamente estatica, serve apenas de ponto de entrada padrao do razor pages
     /// </summary>
     public class InfoModel : PageModel
     {
         /// <summary>
-        /// Método chamado na requisição GET da página.
-        /// Não executa processamento adicional, uma vez que a página renderiza conteúdo estático (bibliotecas, frameworks e créditos).
+        /// metodo chamado na requisicao get da pagina
+        /// nao executa processamento adicional, uma vez que a pagina renderiza conteudo estatico (bibliotecas, frameworks e creditos)
         /// </summary>
         public void OnGet()
         {
-            // Página estática - não precisa de lógica
+            // pagina estatica - nao precisa de logica
+            // todo o conteudo e apresentado diretamente no ficheiro .cshtml
         }
     }
 }

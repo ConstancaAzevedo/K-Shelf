@@ -5,7 +5,7 @@
 }
 
 <style>
-    /* Estilos Premium para o Efeito de Rotação 3D do Binder */
+    /* estilos premium para o efeito de rotacao 3d do binder */
     .photocard-perspective {
         perspective: 1000px;
         aspect-ratio: 2.55 / 3.55;
@@ -22,7 +22,7 @@
         border-radius: 1.25rem;
     }
 
-    /* Rotação no Hover */
+    /* rotacao no hover */
     .photocard-perspective:hover .photocard-card-inner {
         transform: rotateY(180deg);
         box-shadow: 0 15px 30px rgba(0,0,0,0.15);
@@ -55,7 +55,7 @@
     }
 </style>
 
-<!-- Mensagens de Feedback -->
+<!-- mensagens de feedback -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
@@ -65,7 +65,7 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
-    <!-- Cabeçalho -->
+    <!-- cabecalho da pagina -->
     <div class="row align-items-center mb-5">
         <div class="col-lg-7">
             <h1 class="title-kpop display-4 fw-bold">O Meu Binder</h1>
@@ -76,7 +76,7 @@
         </div>
     </div>
 
-    <!-- Abas de Filtros por Estado -->
+    <!-- abas de filtros por estado -->
     <div class="d-flex justify-content-center gap-3 mb-4 flex-wrap">
         <a asp-page="./Index" class="btn rounded-pill px-4 py-2 @(Model.FilterEstado == null ? "btn-kpop" : "btn-outline-secondary")">
             📂 Todos (@(Model.TotalPossuiCount + Model.TotalDesejaCount + Model.TotalParaTrocaCount))
@@ -92,7 +92,7 @@
         </a>
     </div>
 
-    <!-- Barra de Pesquisa Rápida -->
+    <!-- barra de pesquisa rapida -->
     <div class="glass-panel p-3 mb-5 shadow-sm">
         <form method="get" class="row g-2 justify-content-center align-items-center">
             <div class="col-md-5">
@@ -119,21 +119,21 @@
         </form>
     </div>
 
-    <!-- Grelha de Cartões Flip 3D (Simulação de Dossier) -->
-    @if (Model.BinderCards != null && Model.BinderCards.Any())
+    <!-- grelha de cartoes flip 3d (simulacao de dossier) -->
+    @if (Model.BinderCards != null && Model.BinderCards.Any()) // verifica se existem cartoes no binder
     {
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            @foreach (var item in Model.BinderCards)
+            @foreach (var item in Model.BinderCards) // percorre a lista de cartoes do binder
             {
                 @if (item.Photocard != null)
                 {
                     <div class="col">
                         <div class="photocard-perspective shadow-sm position-relative">
                             <div class="photocard-card-inner">
-                                <!-- Frente do Photocard (Imagem) -->
+                                <!-- frente do photocard (imagem) -->
                                 <div class="photocard-front">
                                     <img src="@item.Photocard.ImagemUrl" alt="Frente do Card" style="width:100%; height:100%; object-fit:cover;" />
-                                    <!-- Selo rápido do Estado -->
+                                    <!-- selo rapido do estado -->
                                     <div class="position-absolute top-0 end-0 m-2">
                                         @if (item.Estado == K_Shelf.Models.EstadoPhotocard.Possui)
                                         {
@@ -150,42 +150,41 @@
                                     </div>
                                 </div>
 
-                                <!-- Verso do Photocard (Dados + Botões) -->
+                                <!-- verso do photocard (dados + botoes) -->
                                 <div class="photocard-back">
                                     <div class="w-100 text-center">
                                         <span class="badge bg-light border text-dark rounded-pill px-2.5 py-1 mb-1" style="font-size: 0.75rem;">
-                                            🎤 @(item.Photocard.Artista?.NomeArtistico ?? "Artista")
+                                            🎤 @(item.Photocard.Artista?.NomeArtistico ?? "Artista") <!-- nome artistico do artista -->
                                         </span>
                                         <h6 class="fw-bold mb-0 text-truncate text-dark" title="@(item.Photocard.Artista?.Grupo?.Nome ?? item.Photocard.Artista?.Solista?.Nome ?? "Solista")">
-                                            @(item.Photocard.Artista?.Grupo?.Nome ?? item.Photocard.Artista?.Solista?.Nome ?? "Solista")
+                                            @(item.Photocard.Artista?.Grupo?.Nome ?? item.Photocard.Artista?.Solista?.Nome ?? "Solista") <!-- nome do grupo/solista -->
                                         </h6>
-                                        <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Versao">🎴 @item.Photocard.Versao</small>
-                                        
+                                        <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Versao">🎴 @item.Photocard.Versao</small> <!-- versao do photocard -->
                                         @if (item.Photocard.Album != null)
                                         {
-                                            <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Album.Titulo">💿 @item.Photocard.Album.Titulo</small>
+                                            <small class="text-secondary d-block text-truncate mb-1" style="font-size: 0.8rem;" title="@item.Photocard.Album.Titulo">💿 @item.Photocard.Album.Titulo</small> <!-- titulo do album -->
                                         }
                                     </div>
 
-                                    <!-- Detalhes do Registo -->
+                                    <!-- detalhes do registo -->
                                     <div class="w-100 my-2 text-start px-1" style="font-size: 0.85rem;">
                                         <div class="d-flex justify-content-between border-bottom pb-1 mb-1">
                                             <span class="text-secondary">Quantidade:</span>
-                                            <span class="fw-bold text-dark">@item.Quantidade</span>
+                                            <span class="fw-bold text-dark">@item.Quantidade</span> <!-- quantidade do photocard -->
                                         </div>
                                         <div>
                                             <span class="text-secondary d-block">Notas:</span>
                                             <span class="text-dark d-block text-truncate-2" style="max-height: 40px; overflow: hidden; line-height: 1.2; font-style: italic;" title="@item.Notas">
-                                                @(string.IsNullOrWhiteSpace(item.Notas) ? "Sem notas adicionais." : item.Notas)
+                                                @(string.IsNullOrWhiteSpace(item.Notas) ? "Sem notas adicionais." : item.Notas) <!-- notas pessoais ou mensagem padrao -->
                                             </span>
                                         </div>
                                     </div>
 
-                                    <!-- Ações do Utilizador -->
+                                    <!-- acoes do utilizador -->
                                     <div class="w-100 mt-2">
                                         <div class="d-flex gap-1.5 w-100">
-                                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1" 
-                                                    data-bs-toggle="modal" 
+                                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill flex-grow-1"
+                                                    data-bs-toggle="modal"
                                                     data-bs-target="#editCardModal"
                                                     data-id="@item.Id"
                                                     data-title="@item.Photocard.Versao"
@@ -212,6 +211,7 @@
     }
     else
     {
+        <!-- mensagem quando o binder esta vazio -->
         <div class="glass-panel p-5 text-center text-secondary">
             <p style="font-size: 3rem;">📖</p>
             <h4 class="fw-bold text-dark">Dossiê Vazio</h4>
@@ -221,29 +221,29 @@
     }
 </div>
 
-<!-- Modal para Editar Photocard no Binder -->
+<!-- modal para editar photocard no binder -->
 <div class="modal fade" id="editCardModal" tabindex="-1" aria-labelledby="editCardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass-panel text-dark" style="border: 1px solid rgba(255,255,255,0.4); background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="editCardModalLabel">✏️ Editar Registo</h5>
+                <h5 class="modal-title fw-bold" id="editCardModalLabel">Editar Registo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" asp-page-handler="Editar">
                 <div class="modal-body">
                     <input type="hidden" id="editEntryId" name="Id" />
-                    
+
                     <div class="text-center mb-3">
-                        <h6 id="editPhotocardTitle" class="fw-bold mb-0 text-dark"></h6>
+                        <h6 id="editPhotocardTitle" class="fw-bold mb-0 text-dark"></h6> <!-- titulo do photocard -->
                     </div>
 
-                    <!-- Quantidade -->
+                    <!-- quantidade -->
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark">Quantidade</label>
                         <input type="number" id="editQuantidade" name="editQuantidade" min="1" max="100" class="form-control search-input-kpop rounded-pill" required />
                     </div>
 
-                    <!-- Notas -->
+                    <!-- notas -->
                     <div class="mb-3">
                         <label class="form-label fw-bold text-dark">Notas Pessoais</label>
                         <input type="text" id="editNotas" name="editNotas" class="form-control search-input-kpop rounded-pill" placeholder="Notas sobre o estado do cartão ou trocas" />
@@ -258,12 +258,12 @@
     </div>
 </div>
 
-<!-- Modal de Confirmação para Remover Photocard -->
+<!-- modal de confirmacao para remover photocard -->
 <div class="modal fade" id="removeCardModal" tabindex="-1" aria-labelledby="removeCardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content glass-panel text-dark" style="border: 1px solid rgba(255,255,255,0.4); background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);">
             <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="removeCardModalLabel">🗑️ Remover do Binder</h5>
+                <h5 class="modal-title fw-bold" id="removeCardModalLabel">Remover do Binder</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" asp-page-handler="Remover">
@@ -280,18 +280,21 @@
     </div>
 </div>
 
+<!-- scripts do lado do cliente -->
 @section Scripts {
     <script>
-        // Configurar dados dinâmicos nos Modais
+        // configura dados dinamicos no modal de edicao
         const editCardModal = document.getElementById('editCardModal');
         if (editCardModal) {
             editCardModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
+                const button = event.relatedTarget; // botao que abriu o modal
+                // obtem os atributos data do botao
                 const id = button.getAttribute('data-id');
                 const title = button.getAttribute('data-title');
                 const qty = button.getAttribute('data-qty');
                 const notes = button.getAttribute('data-notes');
 
+                // preenche os campos do modal
                 document.getElementById('editEntryId').value = id;
                 document.getElementById('editPhotocardTitle').textContent = title;
                 document.getElementById('editQuantidade').value = qty;
@@ -299,13 +302,16 @@
             });
         }
 
+        // configura dados dinamicos no modal de remocao
         const removeCardModal = document.getElementById('removeCardModal');
         if (removeCardModal) {
             removeCardModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
+                const button = event.relatedTarget; // botao que abriu o modal
+                // obtem os atributos data do botao
                 const id = button.getAttribute('data-id');
                 const title = button.getAttribute('data-title');
 
+                // preenche os campos do modal
                 document.getElementById('removeEntryId').value = id;
                 document.getElementById('removePhotocardTitle').textContent = title;
             });

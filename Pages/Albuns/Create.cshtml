@@ -8,27 +8,30 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">📀</span>
+                    <span class="fs-1 me-3">📀</span> <!-- icone de album -->
                     <div>
                         <h2 class="fw-bold mb-0">Adicionar Álbum</h2>
                         <p class="text-secondary mb-0">Preencha os dados do novo álbum</p>
                     </div>
                 </div>
 
+                <!-- formulario de criacao -->
                 <form method="post">
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Título (obrigatório) -->
+                    <!-- campo do titulo (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.Titulo" class="form-label fw-bold">
-                            Título <span class="text-danger">*</span>
+                            Título <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Album.Titulo" class="form-control search-input-kpop" placeholder="Ex: Map of the Soul: 7" />
                         <span asp-validation-for="Album.Titulo" class="text-danger small"></span>
                     </div>
 
-                    <!-- Data de Lançamento (obrigatório) -->
+                    <!-- campo da data de lancamento (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.DataLancamento" class="form-label fw-bold">
                             Data de Lançamento <span class="text-danger">*</span>
@@ -37,7 +40,7 @@
                         <span asp-validation-for="Album.DataLancamento" class="text-danger small"></span>
                     </div>
 
-                    <!-- URL da Capa (obrigatório) -->
+                    <!-- campo da url da capa (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Album.CapaUrl" class="form-label fw-bold">
                             URL da Capa <span class="text-danger">*</span>
@@ -46,21 +49,24 @@
                         <span asp-validation-for="Album.CapaUrl" class="text-danger small"></span>
                     </div>
 
-                    <!-- Tipo de Álbum (obrigatório) -->
+                    <!-- campos do tipo e edicao -->
                     <div class="row">
+                        <!-- campo do tipo de album (obrigatorio) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Album.Tipo" class="form-label fw-bold">
                                 Tipo de Álbum <span class="text-danger">*</span>
                             </label>
+                            <!-- dropdown com os valores do enum tipoalbum -->
                             <select asp-for="Album.Tipo" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.TipoAlbum>()">
                             </select>
                             <span asp-validation-for="Album.Tipo" class="text-danger small"></span>
                         </div>
 
-                        <!-- Edição (opcional) -->
+                        <!-- campo da edicao (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Album.Edicao" class="form-label fw-bold">Edição</label>
+                            <!-- dropdown com os valores do enum edicaoalbum -->
                             <select asp-for="Album.Edicao" class="form-select search-input-kpop"
                                     asp-items="Html.GetEnumSelectList<K_Shelf.Models.Album.EdicaoAlbum>()">
                             </select>
@@ -68,12 +74,13 @@
                         </div>
                     </div>
 
-                    <!-- Artista: Grupo ou Solista -->
+                    <!-- associacao a um artista (grupo ou solista) -->
                     <div class="bg-light rounded-3 p-3 mb-4">
                         <h6 class="fw-bold mb-3">🎤 Artista</h6>
                         <p class="text-secondary small mb-3">Associe o álbum a um <strong>Grupo</strong> ou a um <strong>Solista</strong> (não pode ser ambos).</p>
 
                         <div class="row">
+                            <!-- dropdown para selecionar um grupo -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.GrupoId" class="form-label fw-bold"></label>
                                 <div class="d-flex gap-2">
@@ -81,6 +88,7 @@
                                             asp-items="Model.GruposSelectList">
                                         <option value="">-- Nenhum Grupo --</option>
                                     </select>
+                                    <!-- botao para abrir o modal de criacao de grupo -->
                                     <button type="button" class="btn btn-outline-primary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalCriarGrupo"
@@ -89,6 +97,7 @@
                                     </button>
                                 </div>
                             </div>
+                            <!-- dropdown para selecionar um solista -->
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Album.SolistaId" class="form-label fw-bold"></label>
                                 <div class="d-flex gap-2">
@@ -96,6 +105,7 @@
                                             asp-items="Model.SolistasSelectList">
                                         <option value="">-- Nenhum Solista --</option>
                                     </select>
+                                    <!-- botao para abrir o modal de criacao de solista -->
                                     <button type="button" class="btn btn-outline-primary btn-sm"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalCriarSolista"
@@ -107,15 +117,14 @@
                         </div>
                     </div>
 
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar</button> <!-- botao de submit -->
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
 
-                <!-- ============================================================
-     MODAL: CRIAR GRUPO
-     ============================================================ -->
+                <!-- modal para criar grupo -->
                 <div class="modal fade" id="modalCriarGrupo" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -124,6 +133,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body" id="conteudoModalGrupo">
+                                <!-- spinner de carregamento -->
                                 <div class="text-center py-4">
                                     <div class="spinner-border text-kpop" role="status">
                                         <span class="visually-hidden">A carregar...</span>
@@ -134,6 +144,7 @@
                     </div>
                 </div>
 
+                <!-- modal para criar solista -->
                 <div class="modal fade" id="modalCriarSolista" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content glass-panel border-0">
@@ -142,6 +153,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body" id="conteudoModalSolista">
+                                <!-- spinner de carregamento -->
                                 <div class="text-center py-4">
                                     <div class="spinner-border text-kpop" role="status">
                                         <span class="visually-hidden">A carregar...</span>
@@ -156,113 +168,117 @@
     </div>
 </div>
 
+<!-- scripts do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-        // Impede selecionar Grupo e Solista ao mesmo tempo
+        // impede selecionar grupo e solista ao mesmo tempo
         const grupoSelect = document.getElementById('Album_GrupoId');
         const solistaSelect = document.getElementById('Album_SolistaId');
 
+        // quando um grupo e selecionado, limpa o solista
         grupoSelect.addEventListener('change', function () {
             if (this.value) solistaSelect.value = '';
         });
 
+        // quando um solista e selecionado, limpa o grupo
         solistaSelect.addEventListener('change', function () {
             if (this.value) grupoSelect.value = '';
         });
 
-
-        // ============================================================
-                // CARREGAR MODAL - GRUPO
-                // ============================================================
-                function carregarModalGrupo() {
-                    fetch('/Grupos/Create')
-                        .then(response => response.text())
-                        .then(html => {
-                            document.getElementById('conteudoModalGrupo').innerHTML = html;
-                            const form = document.querySelector('#conteudoModalGrupo form');
-                            if (form) {
-                                form.addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    const formData = new FormData(this);
-                                    fetch('/Grupos/Create', {
-                                        method: 'POST',
-                                        body: formData
-                                    })
-                                    .then(response => response.text())
-                                    .then(result => {
-                                        if (result.includes('alert-danger')) {
-                                            document.getElementById('conteudoModalGrupo').innerHTML = result;
-                                        } else {
-                                            bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
-                                            location.reload();
-                                        }
-                                    });
-                                });
-                            }
+        // carrega o formulario de criacao de grupo dentro do modal
+        function carregarModalGrupo() {
+            fetch('/Grupos/Create')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('conteudoModalGrupo').innerHTML = html;
+                    const form = document.querySelector('#conteudoModalGrupo form');
+                    if (form) {
+                        // intercepta o submit do formulario para fazer ajax
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault(); // evita o reload da pagina
+                            const formData = new FormData(this);
+                            fetch('/Grupos/Create', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                if (result.includes('alert-danger')) {
+                                    // se houver erro, mostra o erro no modal
+                                    document.getElementById('conteudoModalGrupo').innerHTML = result;
+                                } else {
+                                    // se for bem sucedido, fecha o modal e recarrega a pagina
+                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarGrupo')).hide();
+                                    location.reload();
+                                }
+                            });
                         });
-                }
-
-                // ============================================================
-                // CARREGAR MODAL - SOLISTA
-                // ============================================================
-                function carregarModalSolista() {
-                    fetch('/Solistas/Create')
-                        .then(response => response.text())
-                        .then(html => {
-                            document.getElementById('conteudoModalSolista').innerHTML = html;
-                            const form = document.querySelector('#conteudoModalSolista form');
-                            if (form) {
-                                form.addEventListener('submit', function(e) {
-                                    e.preventDefault();
-                                    const formData = new FormData(this);
-                                    fetch('/Solistas/Create', {
-                                        method: 'POST',
-                                        body: formData
-                                    })
-                                    .then(response => response.text())
-                                    .then(result => {
-                                        if (result.includes('alert-danger')) {
-                                            document.getElementById('conteudoModalSolista').innerHTML = result;
-                                        } else {
-                                            bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide();
-                                            location.reload();
-                                        }
-                                    });
-                                });
-                            }
-                        });
-                }
-
-                // ============================================================
-                // FECHAR MODAL AO CLICAR FORA
-                // ============================================================
-                document.addEventListener('DOMContentLoaded', function() {
-                    const modals = document.querySelectorAll('.modal');
-                    modals.forEach(modal => {
-                        modal.addEventListener('hidden.bs.modal', function() {
-                            if (this.id === 'modalCriarGrupo') {
-                                document.getElementById('conteudoModalGrupo').innerHTML = `
-                                    <div class="text-center py-4">
-                                        <div class="spinner-border text-kpop" role="status">
-                                            <span class="visually-hidden">A carregar...</span>
-                                        </div>
-                                    </div>
-                                `;
-                            } else if (this.id === 'modalCriarSolista') {
-                                document.getElementById('conteudoModalSolista').innerHTML = `
-                                    <div class="text-center py-4">
-                                        <div class="spinner-border text-kpop" role="status">
-                                            <span class="visually-hidden">A carregar...</span>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        });
-                    });
+                    }
                 });
+        }
+
+        // carrega o formulario de criacao de solista dentro do modal
+        function carregarModalSolista() {
+            fetch('/Solistas/Create')
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('conteudoModalSolista').innerHTML = html;
+                    const form = document.querySelector('#conteudoModalSolista form');
+                    if (form) {
+                        // intercepta o submit do formulario para fazer ajax
+                        form.addEventListener('submit', function(e) {
+                            e.preventDefault(); // evita o reload da pagina
+                            const formData = new FormData(this);
+                            fetch('/Solistas/Create', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                if (result.includes('alert-danger')) {
+                                    // se houver erro, mostra o erro no modal
+                                    document.getElementById('conteudoModalSolista').innerHTML = result;
+                                } else {
+                                    // se for bem sucedido, fecha o modal e recarrega a pagina
+                                    bootstrap.Modal.getInstance(document.getElementById('modalCriarSolista')).hide();
+                                    location.reload();
+                                }
+                            });
+                        });
+                    }
+                });
+        }
+
+        // repoe o conteudo dos modais quando sao fechados
+        document.addEventListener('DOMContentLoaded', function() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('hidden.bs.modal', function() {
+                    if (this.id === 'modalCriarGrupo') {
+                        // repoe o spinner no modal de grupo
+                        document.getElementById('conteudoModalGrupo').innerHTML = `
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-kpop" role="status">
+                                    <span class="visually-hidden">A carregar...</span>
+                                </div>
+                            </div>
+                        `;
+                    } else if (this.id === 'modalCriarSolista') {
+                        // repoe o spinner no modal de solista
+                        document.getElementById('conteudoModalSolista').innerHTML = `
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-kpop" role="status">
+                                    <span class="visually-hidden">A carregar...</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            });
+        });
     </script>
 }

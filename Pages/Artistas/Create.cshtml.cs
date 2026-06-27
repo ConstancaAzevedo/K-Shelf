@@ -9,68 +9,74 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace K_Shelf.Pages.Artistas
 {
+    // restringe o acesso apenas a utilizadores com o role admin
     [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
+        // contexto da base de dados para aceder as tabelas
         private readonly ApplicationDbContext _context;
+        // hub do signalr para enviar notificacoes em tempo real
         private readonly IHubContext<NotificacaoHub> _hubContext;
 
+        // construtor que recebe os servicos por injecao de dependencias
         public CreateModel(ApplicationDbContext context, IHubContext<NotificacaoHub> hubContext)
         {
             _context = context;
             _hubContext = hubContext;
         }
 
+        // propriedade que recebe os dados do artista por binding
         [BindProperty]
         public Artista Artista { get; set; } = new();
 
+        // metodo executado quando a pagina e carregada via get
         public IActionResult OnGet()
         {
-            return Page();
+            return Page(); // retorna a pagina
         }
 
+        // metodo executado quando o formulario e submetido via post
         public async Task<IActionResult> OnPostAsync()
         {
+            // validacoes manuais
 
-            // Validações
-
-            // Nome obrigatório
+            // nome obrigatorio
             if (string.IsNullOrWhiteSpace(Artista.Nome))
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista é obrigatório.");
             }
 
-            // Nome com mínimo de 2 caracteres
+            // nome com minimo de 2 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Nome) && Artista.Nome.Length < 2)
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista deve ter pelo menos 2 caracteres.");
             }
 
-            // Nome com máximo de 100 caracteres
+            // nome com maximo de 100 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Nome) && Artista.Nome.Length > 100)
             {
                 ModelState.AddModelError("Artista.Nome", "O nome do artista não pode exceder 100 caracteres.");
             }
 
-            // Nome Artístico - máximo 100 caracteres
+            // nome artistico - maximo 100 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.NomeArtistico) && Artista.NomeArtistico.Length > 100)
             {
                 ModelState.AddModelError("Artista.NomeArtistico", "O nome artístico não pode exceder 100 caracteres.");
             }
 
-            // Posição - máximo 50 caracteres
+            // posicao - maximo 50 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Posicao) && Artista.Posicao.Length > 50)
             {
                 ModelState.AddModelError("Artista.Posicao", "A posição não pode exceder 50 caracteres.");
             }
 
-            // Nacionalidade - máximo 50 caracteres
+            // nacionalidade - maximo 50 caracteres
             if (!string.IsNullOrWhiteSpace(Artista.Pais) && Artista.Pais.Length > 50)
             {
                 ModelState.AddModelError("Artista.Pais", "A nacionalidade não pode exceder 50 caracteres.");
             }
 
-            // Verificar se já existe um artista com o mesmo nome
+            // verifica se ja existe um artista com o mesmo nome
             var artistaExistente = await _context.Artistas
                 .AnyAsync(a => a.Nome.ToLower() == Artista.Nome.ToLower());
 
@@ -79,7 +85,7 @@ namespace K_Shelf.Pages.Artistas
                 ModelState.AddModelError("Artista.Nome", $"Já existe um artista com o nome \"{Artista.Nome}\"!");
             }
 
-            // Validação: Data de Saída deve ser posterior à Data de Entrada
+            // validacao: data de saida deve ser posterior a data de entrada
             if (Artista.DataEntrada.HasValue && Artista.DataSaida.HasValue)
             {
                 if (Artista.DataSaida <= Artista.DataEntrada)
@@ -88,29 +94,31 @@ namespace K_Shelf.Pages.Artistas
                 }
             }
 
-            // Validação: Data de Nascimento não pode ser no futuro
+            // validacao: data de nascimento nao pode ser no futuro
             if (Artista.DataNascimento > DateTime.Now)
             {
                 ModelState.AddModelError("Artista.DataNascimento", "A data de nascimento não pode ser no futuro.");
             }
 
-            // 1Validação: Data de Entrada não pode ser no futuro
+            // validacao: data de entrada nao pode ser no futuro
             if (Artista.DataEntrada.HasValue && Artista.DataEntrada > DateTime.Now)
             {
                 ModelState.AddModelError("Artista.DataEntrada", "A data de entrada não pode ser no futuro.");
             }
 
+            // verifica se o modelo e valido
             if (!ModelState.IsValid)
             {
-                return Page();
+                return Page(); // volta para a pagina com os erros
             }
 
             try
             {
+                // adiciona o artista ao contexto
                 _context.Artistas.Add(Artista);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // guarda na base de dados
 
-                // notificação em tempo real
+                // notificacao signalr para todos os clientes
                 await _hubContext.Clients.All.SendAsync("ReceberNotificacao", new
                 {
                     Tipo = "Artista",
@@ -119,13 +127,15 @@ namespace K_Shelf.Pages.Artistas
                     Data = DateTime.Now
                 });
 
+                // guarda mensagem de sucesso nos dados temporarios
                 TempData["SuccessMessage"] = $"Artista \"{Artista.NomeExibicao}\" criado com sucesso!";
-                return RedirectToPage("./Index");
+                return RedirectToPage("./Index"); // redireciona para a lista de artistas
             }
             catch (Exception ex)
             {
+                // guarda mensagem de erro nos dados temporarios
                 TempData["ErrorMessage"] = $"Erro ao criar artista: {ex.Message}";
-                return Page();
+                return Page(); // volta para a pagina com o erro
             }
         }
     }

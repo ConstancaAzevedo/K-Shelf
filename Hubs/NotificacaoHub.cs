@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 namespace K_Shelf.Hubs
 {
     /// <summary>
-    /// Hub do SignalR para notificações em tempo real sobre alterações no sistema.
-    /// Notifica os clientes quando Artistas, Álbuns ou Coleções são criados/editados/deletados.
+    /// hub do signalr para notificacoes em tempo real sobre alteracoes no sistema
+    /// notifica os clientes quando artistas, albuns ou colecoes sao criados/editados/removidos
     /// </summary>
-    [Authorize]
+    [Authorize] // apenas utilizadores autenticados podem receber notificacoes
     public class NotificacaoHub : Hub
     {
-        /// <summary>
-        /// Notifica todos os clientes que um Artista foi criado.
-        /// </summary>
+        // notifica todos os clientes que um artista foi criado
         public async Task NotificarArtistaCriado(string artistaNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -26,9 +24,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que um Artista foi editado.
-        /// </summary>
+        // notifica todos os clientes que um artista foi editado
         public async Task NotificarArtistaEditado(string artistaNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -40,9 +36,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que um Artista foi deletado.
-        /// </summary>
+        // notifica todos os clientes que um artista foi removido
         public async Task NotificarArtistaDeletado(string artistaNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -54,9 +48,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que um Álbum foi criado.
-        /// </summary>
+        // notifica todos os clientes que um album foi criado
         public async Task NotificarAlbumCriado(string albumTitulo)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -68,9 +60,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que um Álbum foi editado.
-        /// </summary>
+        // notifica todos os clientes que um album foi editado
         public async Task NotificarAlbumEditado(string albumTitulo)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -82,9 +72,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que um Álbum foi deletado.
-        /// </summary>
+        // notifica todos os clientes que um album foi removido
         public async Task NotificarAlbumDeletado(string albumTitulo)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -96,9 +84,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que uma Coleção foi criada.
-        /// </summary>
+        // notifica todos os clientes que uma colecao foi criada
         public async Task NotificarColecaoCriada(string colecaoNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -110,9 +96,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que uma Coleção foi editada.
-        /// </summary>
+        // notifica todos os clientes que uma colecao foi editada
         public async Task NotificarColecaoEditada(string colecaoNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new
@@ -124,9 +108,7 @@ namespace K_Shelf.Hubs
             });
         }
 
-        /// <summary>
-        /// Notifica todos os clientes que uma Coleção foi deletada.
-        /// </summary>
+        // notifica todos os clientes que uma colecao foi removida
         public async Task NotificarColecaoDeletada(string colecaoNome)
         {
             await Clients.All.SendAsync("ReceberNotificacao", new

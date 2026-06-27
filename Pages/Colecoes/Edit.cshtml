@@ -7,16 +7,19 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-7">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">✏️</span>
+                    <span class="fs-1 me-3">✏️</span> <!-- icone de edicao -->
                     <div>
                         <h2 class="fw-bold mb-0">Editar Coleção</h2>
+                        <!-- mostra o nome da colecao que esta a ser editada -->
                         <p class="text-secondary mb-0">@Model.Colecao.Nome</p>
                     </div>
                 </div>
 
-                <!-- Mensagens de Erro/Sucesso -->
+                <!-- mensagens de erro/sucesso -->
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
@@ -25,34 +28,38 @@
                     </div>
                 }
 
+                <!-- formulario de edicao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id da colecao -->
                     <input type="hidden" asp-for="Colecao.Id" />
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Editar o Nome -->
+                    <!-- campo do nome (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Colecao.Nome" class="form-label fw-bold">
-                            Nome da Coleção <span class="text-danger">*</span>
+                            Nome da Coleção <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Colecao.Nome" class="form-control search-input-kpop"
-                               maxlength="100" />
+                               maxlength="100" /> <!-- limite de 100 caracteres -->
                         <span asp-validation-for="Colecao.Nome" class="text-danger small"></span>
                         <small class="text-muted d-block">Mínimo 3 caracteres, máximo 100.</small>
                     </div>
 
-                    <!-- Editar a Descrição -->
+                    <!-- campo da descricao (opcional) -->
                     <div class="mb-4">
                         <label asp-for="Colecao.Descricao" class="form-label fw-bold">Descrição</label>
                         <textarea asp-for="Colecao.Descricao" class="form-control search-input-kpop"
-                                  rows="3" maxlength="500"></textarea>
+                                  rows="3" maxlength="500"></textarea> <!-- limite de 500 caracteres -->
                         <span asp-validation-for="Colecao.Descricao" class="text-danger small"></span>
                         <small class="text-muted d-block">Máximo 500 caracteres.</small>
                     </div>
 
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar Alterações</button>
+                        <button type="submit" class="btn btn-kpop px-4">💾 Guardar Alterações</button> <!-- botao de submit -->
                         <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
-                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para os detalhes da colecao -->
                     </div>
                 </form>
             </div>
@@ -60,6 +67,7 @@
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

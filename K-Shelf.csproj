@@ -1,25 +1,57 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<!-- Ficheiro de projeto do .NET (K-Shelf.csproj) -->
+<!-- Define a configuração do projeto e as dependências NuGet -->
 
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<!-- Propriedades globais do projeto -->
 	<PropertyGroup>
+		<!-- Versão do .NET a utilizar (NET 10.0) -->
 		<TargetFramework>net10.0</TargetFramework>
+
+		<!-- Ativa a verificação de tipos nulos (evita NullReferenceException) -->
 		<Nullable>enable</Nullable>
+
+		<!-- Ativa os usings implícitos (ex: System, System.Collections.Generic, etc.) -->
 		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- ID para os User Secrets (dados sensíveis em desenvolvimento) -->
 		<UserSecretsId>aspnet-K_Shelf-58da59e7-0835-4762-84f0-5dedc01169e4</UserSecretsId>
+
+		<!-- Nome da raiz do projeto (namespace principal) -->
 		<RootNamespace>K_Shelf</RootNamespace>
 	</PropertyGroup>
 
+	<!-- Pacotes NuGet (bibliotecas externas) -->
 	<ItemGroup>
+		<!-- Entity Framework Core - Página de erros detalhados em desenvolvimento -->
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="10.0.9" />
+
+		<!-- Entity Framework Core com suporte a Identity (tabelas de utilizadores) -->
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
+
+		<!-- UI do Identity (páginas de login, registo, gestão de conta) -->
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.9" />
+
+		<!-- Provider do SQL Server para Entity Framework Core -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+
+		<!-- Ferramentas do Entity Framework (migrações, etc.) -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
+			<!-- Não incluir como dependência pública -->
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+
+		<!-- Ferramentas de code generation (scaffolding) -->
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
+
+		<!-- NuGet - Gestão de pacotes (empacotamento) -->
 		<PackageReference Include="NuGet.Packaging" Version="7.6.0" />
+
+		<!-- NuGet - Protocolo de comunicação com repositórios -->
 		<PackageReference Include="NuGet.Protocol" Version="7.6.0" />
+
+		<!-- Swagger/OpenAPI - Documentação interativa da API -->
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
 	</ItemGroup>
 

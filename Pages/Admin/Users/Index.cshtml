@@ -6,17 +6,19 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
+    <!-- cabecalho da pagina -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="display-4 fw-bold">Gestão de Utilizadores</h1>
             <p class="text-secondary lead">Gerir utilizadores e permissões do sistema</p>
         </div>
+        <!-- botao para voltar ao dashboard -->
         <a asp-page="/Admin/Dashboard" class="btn btn-outline-secondary rounded-pill">
             ← Voltar ao Dashboard
         </a>
     </div>
 
-    <!-- Mensagens de Feedback -->
+    <!-- mensagens de feedback (sucesso ou erro) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
@@ -33,22 +35,24 @@
         </div>
     }
 
-    <!-- Tabela de Utilizadores -->
+    <!-- tabela de utilizadores -->
     <div class="glass-panel p-4 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle">
+                <!-- cabecalho da tabela -->
                 <thead class="table-light">
                     <tr>
-                        <th>Email</th>
-                        <th>Nome de Utilizador</th>
-                        <th>Cargos</th>
-                        <th class="text-center">Ações</th>
+                        <th>Email</th> <!-- coluna do email -->
+                        <th>Nome de Utilizador</th> <!-- coluna do nome -->
+                        <th>Cargos</th> <!-- coluna dos roles -->
+                        <th class="text-center">Ações</th> <!-- coluna de botoes -->
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in Model.Users)
                     {
                         <tr>
+                            <!-- email do utilizador com badge de verificacao -->
                             <td>
                                 <strong>@user.Email</strong>
                                 @if (user.EmailConfirmed)
@@ -56,57 +60,63 @@
                                     <span class="badge bg-success ms-1">✓</span>
                                 }
                             </td>
+                            <!-- nome de utilizador -->
                             <td>@user.UserName</td>
+                            <!-- lista de roles do utilizador -->
                             <td>
                                 @if (user.Roles.Any())
                                 {
                                     @foreach (var role in user.Roles)
                                     {
+                                        <!-- badges com cores diferentes para admin e user -->
                                         <span class="badge @(role == "Admin" ? "bg-danger" : "bg-info") me-1">@role</span>
                                     }
                                 }
                                 else
                                 {
+                                    <!-- badge para utilizadores sem cargo -->
                                     <span class="badge bg-secondary">Sem Cargo</span>
                                 }
                             </td>
+                            <!-- coluna de acoes -->
                             <td>
                                 <div class="d-flex gap-1 justify-content-center">
-                                    <!-- Ver detalhes -->
+                                    <!-- botao para ver detalhes do utilizador -->
                                     <a asp-page="./Details" asp-route-id="@user.Id"
                                        class="btn btn-sm btn-outline-info" title="Ver detalhes">
-                                        👤
+                                        👤 <!-- icone de detalhes -->
                                     </a>
 
-                                    <!-- Tornar Admin -->
+                                    <!-- botao para tornar admin (se nao for admin) -->
                                     @if (!user.Roles.Contains("Admin"))
                                     {
                                         <form method="post" asp-page-handler="MakeAdmin" asp-route-id="@user.Id"
                                               onsubmit="return confirm('Tornar @user.Email administrador?')">
-                                            @Html.AntiForgeryToken()
+                                            @Html.AntiForgeryToken() <!-- token csrf -->
                                             <button type="submit" class="btn btn-sm btn-warning" title="Tornar Admin">
-                                                🛡️
+                                                🛡️ <!-- icone de admin -->
                                             </button>
                                         </form>
                                     }
                                     else
                                     {
+                                        <!-- botao para remover admin (se for admin) -->
                                         <form method="post" asp-page-handler="RemoveAdmin" asp-route-id="@user.Id"
                                               onsubmit="return confirm('Remover cargo Admin de @user.Email?')">
-                                            @Html.AntiForgeryToken()
+                                            @Html.AntiForgeryToken() <!-- token csrf -->
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Remover Admin">
-                                                ⬇️
+                                                ⬇️ <!-- icone de remover -->
                                             </button>
                                         </form>
                                     }
 
-                                    <!-- Tornar User -->
+                                    <!-- botao para tornar user (se nao for user nem admin) -->
                                     @if (!user.Roles.Contains("User") && !user.Roles.Contains("Admin"))
                                     {
                                         <form method="post" asp-page-handler="MakeUser" asp-route-id="@user.Id">
-                                            @Html.AntiForgeryToken()
+                                            @Html.AntiForgeryToken() <!-- token csrf -->
                                             <button type="submit" class="btn btn-sm btn-outline-info" title="Tornar User">
-                                                👤
+                                                👤 <!-- icone de user -->
                                             </button>
                                         </form>
                                     }
@@ -118,10 +128,11 @@
             </table>
         </div>
 
+        <!-- mensagem quando nao ha utilizadores -->
         @if (!Model.Users.Any())
         {
             <div class="text-center py-4">
-                <span class="display-4">📭</span>
+                <span class="display-4">📭</span> <!-- icone de caixa vazia -->
                 <p class="text-secondary mt-2">Nenhum utilizador encontrado.</p>
             </div>
         }

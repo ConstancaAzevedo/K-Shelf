@@ -7,42 +7,50 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone de alerta e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🗑️</span>
+                    <span class="fs-1 me-3">🗑️</span> <!-- icone de eliminar -->
                     <div>
-                        <h2 class="fw-bold mb-0 text-danger">Eliminar Música</h2>
-                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Música</h2> <!-- titulo em vermelho -->
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p> <!-- aviso de irreversibilidade -->
                     </div>
                 </div>
 
+                <!-- alerta de confirmacao de eliminacao -->
                 <div class="alert alert-warning rounded-3 mb-4">
                     <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar esta música?</h5>
                     <p class="mb-0">A música será removida do álbum permanentemente.</p>
                 </div>
 
+                <!-- informacoes da musica a eliminar -->
                 <div class="p-3 bg-light rounded-3 mb-4">
-                    <h4 class="fw-bold mb-1">@Model.Musica.Titulo</h4>
+                    <h4 class="fw-bold mb-1">@Model.Musica.Titulo</h4> <!-- titulo da musica -->
                     <p class="text-secondary mb-1">
-                        <strong>Álbum:</strong> @(Model.Musica.Album?.Titulo ?? "N/A")
+                        <strong>Álbum:</strong> @(Model.Musica.Album?.Titulo ?? "N/A") <!-- nome do album ou N/A -->
                     </p>
                     <p class="text-secondary mb-1">
-                        <strong>Faixa:</strong> @Model.Musica.TrackNumber
+                        <strong>Faixa:</strong> @Model.Musica.TrackNumber <!-- numero da faixa -->
                     </p>
                     <p class="text-secondary mb-1">
-                        <strong>Duração:</strong> @Model.Musica.DuracaoFormatada
+                        <strong>Duração:</strong> @Model.Musica.DuracaoFormatada <!-- duracao formatada -->
                     </p>
                     @if (Model.Musica.IsTitleTrack)
                     {
+                        <!-- badge para indicar se e title track -->
                         <span class="badge-neon-pink">★ Title Track</span>
                     }
                 </div>
 
+                <!-- formulario de confirmacao de eliminacao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id da musica -->
                     <input type="hidden" asp-for="Musica.Id" />
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button> <!-- botao de confirmacao -->
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
             </div>

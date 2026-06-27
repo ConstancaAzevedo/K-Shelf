@@ -7,15 +7,17 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-7">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com titulo de alerta -->
                 <div class="d-flex align-items-center mb-4">
                     <div>
-                        <h2 class="fw-bold mb-0 text-danger">Eliminar Coleção</h2>
-                        <p class="text-secondary mb-0">Esta ação é irreversível</p>
+                        <h2 class="fw-bold mb-0 text-danger">Eliminar Coleção</h2> <!-- titulo em vermelho -->
+                        <p class="text-secondary mb-0">Esta ação é irreversível</p> <!-- aviso de irreversibilidade -->
                     </div>
                 </div>
 
-                <!-- Mensagens de Erro/Aviso -->
+                <!-- mensagens de erro/aviso -->
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
@@ -32,28 +34,30 @@
                     </div>
                 }
 
+                <!-- alerta de confirmacao de eliminacao -->
                 <div class="alert alert-warning rounded-3 mb-4">
                     <h5 class="fw-bold mb-1">Tem a certeza que pretende eliminar esta coleção?</h5>
                     <p class="mb-0">Todos os álbuns serão removidos da coleção (os álbuns em si não são eliminados).</p>
                 </div>
 
-                <!-- Pré-visualização da coleção -->
+                <!-- pre-visualizacao da colecao a eliminar -->
                 <div class="p-3 bg-light rounded-3 mb-4">
-                    <h4 class="fw-bold mb-1">@Model.Colecao.Nome</h4>
-                    <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p>
+                    <h4 class="fw-bold mb-1">@Model.Colecao.Nome</h4> <!-- nome da colecao -->
+                    <p class="text-secondary mb-2">@(Model.Colecao.Descricao ?? "Sem descrição.")</p> <!-- descricao ou mensagem padrao -->
                     <small class="text-secondary">
-                        Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") •
-                        @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns
+                        Criada em @Model.Colecao.DataCriacao.ToString("dd/MM/yyyy") • <!-- data de criacao formatada -->
+                        @(Model.Colecao.AlbumColecoes?.Count ?? 0) álbuns <!-- numero de albuns na colecao -->
                     </small>
 
+                    <!-- lista dos albuns na colecao (maximo 5) -->
                     @if (Model.Colecao.AlbumColecoes != null && Model.Colecao.AlbumColecoes.Any())
                     {
                         <div class="d-flex gap-2 flex-wrap mt-2">
-                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5))
+                            @foreach (var ac in Model.Colecao.AlbumColecoes.Take(5)) <!-- mostra os primeiros 5 albuns -->
                             {
-                                <span class="badge bg-secondary">@ac.Album?.Titulo</span>
+                                <span class="badge bg-secondary">@ac.Album?.Titulo</span> <!-- badge com o titulo do album -->
                             }
-                            @if (Model.Colecao.AlbumColecoes.Count > 5)
+                            @if (Model.Colecao.AlbumColecoes.Count > 5) <!-- se houver mais de 5, mostra um badge com o resto -->
                             {
                                 <span class="badge bg-secondary">+@(Model.Colecao.AlbumColecoes.Count - 5) mais</span>
                             }
@@ -61,12 +65,15 @@
                     }
                 </div>
 
+                <!-- formulario de confirmacao de eliminacao -->
                 <form method="post">
+                    <!-- campo escondido para enviar o id da colecao -->
                     <input type="hidden" asp-for="Colecao.Id" />
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4">Confirmar Eliminação</button> <!-- botao de confirmacao -->
                         <a asp-page="./Details" asp-route-id="@Model.Colecao.Id"
-                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                           class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para os detalhes da colecao -->
                     </div>
                 </form>
             </div>

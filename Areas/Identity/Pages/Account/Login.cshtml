@@ -7,39 +7,47 @@
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
+<!-- folha de estilos especifica para a pagina de login -->
 <link rel="stylesheet" href="~/css/login.css" />
 
-
+<!-- container principal da pagina de login -->
 <div class="login-container">
+    <!-- cabecalho com logo e titulo -->
     <div class="header">
         <img src="~/imagens/logosemfundo.png" alt="K-Shelf Logo" style="max-height: 80px;" />
         <h2 class="fw-bold mt-3">@ViewData["Title"]</h2>
         <p class="text-white">@ViewData["Subtitle"]</p>
     </div>
 
+    <!-- conteudo do formulario de login -->
     <div class="content">
+        <!-- caixa informativa -->
         <div class="info-box">
             Use uma conta local para fazer login
         </div>
 
-
+        <!-- formulario de login -->
         <form id="account" method="post">
+            <!-- resumo de erros de validacao -->
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert">
-                <strong>?? Erro no Login:</strong>
+                <strong>Erro no Login:</strong>
             </div>
-            
+
+            <!-- campo do email -->
             <div class="form-group">
                 <label asp-for="Input.Email">Email</label>
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="nome@exemplo.com" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
 
+            <!-- campo da password -->
             <div class="form-group">
                 <label asp-for="Input.Password">Password</label>
                 <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="••••••••" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
             </div>
 
+            <!-- checkbox lembrar-me e link para recuperar password -->
             <div class="checkbox-group d-flex justify-content-between align-items-center mb-3">
                 <label class="checkbox-label d-flex align-items-center" style="cursor: pointer;">
                     <input class="form-check-input" asp-for="Input.RememberMe"
@@ -51,20 +59,24 @@
                 </a>
             </div>
 
+            <!-- botao de submit para fazer login -->
             <button id="login-submit" type="submit" class="login-btn">Entrar</button>
 
+            <!-- links adicionais: registar e reenviar confirmacao de email -->
             <div class="links">
-                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registar um novo utilizador</a>
-                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar confirmação de email</a>
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registar um novo utilizador</a> <!-- link para pagina de registo -->
+                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Reenviar confirmação de email</a> <!-- link para reenviar confirmacao -->
             </div>
         </form>
+    </div>
 
-
+    <!-- rodape da pagina -->
     <div class="footer-login">
-        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a>
+        © 2026 - <a href="#">K-Shelf</a> - <a asp-page="/Info">Informações</a> <!-- link para a pagina de informacoes -->
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

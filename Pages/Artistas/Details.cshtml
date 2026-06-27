@@ -5,6 +5,7 @@
 }
 
 <div class="container py-4">
+    <!-- mensagem de sucesso -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -14,14 +15,17 @@
     }
 
     <div class="row">
+        <!-- coluna da imagem do artista -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 @if (!string.IsNullOrEmpty(Model.Artista?.ImagemUrl))
                 {
+                    <!-- mostra a imagem do artista -->
                     <img src="@Model.Artista.ImagemUrl" class="card-img-top" alt="@Model.Artista.NomeExibicao" style="object-fit: cover; height: 400px;">
                 }
                 else
                 {
+                    <!-- placeholder quando nao ha imagem -->
                     <div class="d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple)); height: 400px;">
                         <span class="display-1">🎤</span>
                     </div>
@@ -29,11 +33,14 @@
             </div>
         </div>
 
+        <!-- coluna dos detalhes do artista -->
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body p-4">
+                    <!-- nome do artista -->
                     <h1 class="display-5 fw-bold">@Model.Artista?.NomeExibicao</h1>
 
+                    <!-- botoes de acao (apenas para admin) -->
                     @if (User.IsInRole("Admin"))
                     {
                         <div class="mb-3">
@@ -45,41 +52,43 @@
                     <hr />
 
                     <div class="row">
+                        <!-- informacao pessoal -->
                         <div class="col-md-6">
                             <h5>📋 Informação Pessoal</h5>
                             <dl class="row">
-                                <dt class="col-sm-4">Nome</dt>
+                                <dt class="col-sm-4">Nome</dt> <!-- nome real -->
                                 <dd class="col-sm-8">@Model.Artista?.Nome</dd>
 
-                                <dt class="col-sm-4">Nome Artístico</dt>
+                                <dt class="col-sm-4">Nome Artístico</dt> <!-- nome artistico -->
                                 <dd class="col-sm-8">@(Model.Artista?.NomeArtistico ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Data Nascimento</dt>
+                                <dt class="col-sm-4">Data Nascimento</dt> <!-- data de nascimento -->
                                 <dd class="col-sm-8">@(Model.Artista?.DataNascimento.ToString("dd/MM/yyyy") ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Idade</dt>
+                                <dt class="col-sm-4">Idade</dt> <!-- idade calculada -->
                                 <dd class="col-sm-8">@(Model.Artista?.Idade) anos</dd>
 
-                                <dt class="col-sm-4">Pais</dt>
+                                <dt class="col-sm-4">Pais</dt> <!-- nacionalidade -->
                                 <dd class="col-sm-8">@(Model.Artista?.Pais ?? "N/A")</dd>
                             </dl>
                         </div>
+                        <!-- informacao da carreira -->
                         <div class="col-md-6">
                             <h5>🎤 Carreira</h5>
                             <dl class="row">
-                                <dt class="col-sm-4">Posição</dt>
+                                <dt class="col-sm-4">Posição</dt> <!-- posicao no grupo -->
                                 <dd class="col-sm-8">@(Model.Artista?.Posicao ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Grupo</dt>
+                                <dt class="col-sm-4">Grupo</dt> <!-- grupo associado -->
                                 <dd class="col-sm-8">@(Model.Artista?.Grupo?.Nome ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Data Entrada</dt>
+                                <dt class="col-sm-4">Data Entrada</dt> <!-- data de entrada -->
                                 <dd class="col-sm-8">@(Model.Artista?.DataEntrada?.ToString("dd/MM/yyyy") ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Data Saída</dt>
+                                <dt class="col-sm-4">Data Saída</dt> <!-- data de saida -->
                                 <dd class="col-sm-8">@(Model.Artista?.DataSaida?.ToString("dd/MM/yyyy") ?? "N/A")</dd>
 
-                                <dt class="col-sm-4">Status</dt>
+                                <dt class="col-sm-4">Status</dt> <!-- indica se esta ativo -->
                                 <dd class="col-sm-8">
                                     @if (Model.Artista?.IsAtivo == true)
                                     {
@@ -94,6 +103,7 @@
                         </div>
                     </div>
 
+                    <!-- botao para voltar a lista -->
                     <div class="mt-3">
                         <a asp-page="./Index" class="btn btn-secondary">← Voltar para Lista</a>
                     </div>

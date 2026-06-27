@@ -1,4 +1,7 @@
-﻿.login-container {
+﻿/* estilos da pagina de login */
+
+/* container principal - cartao branco com sombra e bordas arredondadas */
+.login-container {
     background: white;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -9,6 +12,7 @@
     animation: fadeIn 0.5s ease-in;
 }
 
+/* animacao de entrada - fade in com movimento suave para cima */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -21,6 +25,7 @@
     }
 }
 
+/* cabecalho com gradiente roxo/azul */
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 30px;
@@ -38,10 +43,12 @@
         font-size: 14px;
     }
 
+/* area de conteudo com espacamento interno */
 .content {
     padding: 40px;
 }
 
+/* caixa informativa com borda lateral esquerda */
 .info-box {
     background: #f8f9fa;
     border-left: 4px solid #667eea;
@@ -52,6 +59,7 @@
     border-radius: 5px;
 }
 
+/* grupos de formulario com espacamento inferior */
 .form-group {
     margin-bottom: 20px;
 }
@@ -64,6 +72,7 @@
         font-size: 14px;
     }
 
+/* campos de entrada com borda arredondada e transicao suave */
 .form-control {
     width: 100%;
     padding: 12px 15px;
@@ -79,6 +88,7 @@
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
+/* grupo checkbox com alinhamento entre os elementos */
 .checkbox-group {
     display: flex;
     align-items: center;
@@ -103,6 +113,7 @@
         color: #666;
     }
 
+/* link para recuperar password */
 .forgot-link {
     font-size: 14px;
     color: #667eea;
@@ -113,6 +124,7 @@
         text-decoration: underline;
     }
 
+/* botao de login com gradiente e efeito hover */
 .login-btn {
     width: 100%;
     padding: 14px;
@@ -135,6 +147,7 @@
         transform: translateY(0);
     }
 
+/* links adicionais (registar, reenviar email) */
 .links {
     margin-top: 25px;
     text-align: center;
@@ -156,6 +169,7 @@
             text-decoration: underline;
         }
 
+/* rodape da pagina */
 .footer-login {
     background: #f8f9fa;
     padding: 20px;
@@ -174,6 +188,7 @@
             text-decoration: underline;
         }
 
+/* mensagens de erro */
 .text-danger {
     color: #dc3545;
     font-size: 12px;
@@ -181,6 +196,7 @@
     display: block;
 }
 
+/* resumo de validacao com fundo vermelho claro */
 .validation-summary {
     background: #fee;
     color: #c33;
@@ -190,6 +206,7 @@
     margin-bottom: 20px;
 }
 
+/* area para login com servicos externos (google, facebook, etc) */
 .external-login {
     margin-top: 30px;
     padding-top: 20px;
@@ -219,6 +236,7 @@
             color: white;
         }
 
+/* responsividade para ecras muito pequenos (telemoveis) */
 @media (max-width: 480px) {
     .content {
         padding: 25px;
@@ -233,7 +251,7 @@
         }
 }
 
-/* Checkbox personalizada */
+/* checkbox personalizada com as cores do tema */
 .form-check-input[type="checkbox"] {
     width: 20px;
     height: 20px;
@@ -252,7 +270,7 @@
         border-color: var(--kpop-purple);
     }
 
-/* Link "Esqueceu a password?" */
+/* link "esqueceu a password?" com as cores do tema */
 .forgot-link {
     color: var(--kpop-pink);
     text-decoration: none;

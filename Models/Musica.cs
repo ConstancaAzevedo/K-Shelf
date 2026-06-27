@@ -4,126 +4,129 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace K_Shelf.Models
 {
     /// <summary>
-    /// Representa uma faixa ou música pertencente a um álbum.
-    /// Contém detalhes técnicos como duração, ordem das faixas, créditos de autoria e links externos.
+    /// representa uma faixa ou musica pertencente a um album
+    /// contem detalhes tecnicos como duracao, ordem das faixas, creditos de autoria e links externos
     /// </summary>
     public class Musica
     {
         /// <summary>
-        /// Identificador único da música.
+        /// identificador unico da musica
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Título da música (ex: Dynamite, Lovesick Girls).
+        /// titulo da musica (ex: dynamite, lovesick girls)
         /// </summary>
-        [Required(ErrorMessage = "O título da música é obrigatório")]
-        [StringLength(200, MinimumLength = 1, ErrorMessage = "O título deve ter entre 1 e 200 caracteres")]
+        [Required(ErrorMessage = "O título da música é obrigatório")] // campo obrigatorio
+        [StringLength(200, MinimumLength = 1, ErrorMessage = "O título deve ter entre 1 e 200 caracteres")] // tamanho entre 1 e 200
         [Display(Name = "Título da Música")]
         public string Titulo { get; set; } = string.Empty;
 
         /// <summary>
-        /// Duração da música no formato "mm:ss" (ex: 3:45).
+        /// duracao da musica no formato "mm:ss" (ex: 3:45)
         /// </summary>
         [Display(Name = "Duração")]
-        [RegularExpression(@"^([0-9]{1,2}):([0-9]{2})$", ErrorMessage = "Formato inválido. Use mm:ss (ex: 3:45)")]
-        public TimeSpan? Duracao { get; set; } // Formato: 00:03:45
+        [RegularExpression(@"^([0-9]{1,2}):([0-9]{2})$", ErrorMessage = "Formato inválido. Use mm:ss (ex: 3:45)")] // valida o formato mm:ss
+        public TimeSpan? Duracao { get; set; } // guardado como timespan
 
         /// <summary>
-        /// Posição da faixa na ordem do álbum (Track Number).
+        /// posicao da faixa na ordem do album (track number)
         /// </summary>
         [Display(Name = "Número da Faixa")]
-        [Range(1, 100, ErrorMessage = "O número da faixa deve ser entre 1 e 100")]
+        [Range(1, 100, ErrorMessage = "O número da faixa deve ser entre 1 e 100")] // valor entre 1 e 100
         public int TrackNumber { get; set; }
 
         /// <summary>
-        /// Letra da música.
+        /// letra da musica
         /// </summary>
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.MultilineText)] // texto com multiplas linhas
         [Display(Name = "Letra")]
         public string? Letra { get; set; }
 
         /// <summary>
-        /// Nomes dos compositores da música.
+        /// nomes dos compositores da musica
         /// </summary>
         [Display(Name = "Compositores")]
-        [StringLength(500)]
+        [StringLength(500)] // tamanho maximo de 500 caracteres
         public string? Compositores { get; set; }
 
         /// <summary>
-        /// Nomes dos produtores que trabalharam na faixa.
+        /// nomes dos produtores que trabalharam na faixa
         /// </summary>
         [Display(Name = "Produtores")]
-        [StringLength(500)]
+        [StringLength(500)] // tamanho maximo de 500 caracteres
         public string? Produtores { get; set; }
 
         /// <summary>
-        /// Indica se a faixa foi lançada como single independente.
+        /// indica se a faixa foi lancada como single independente
         /// </summary>
         [Display(Name = "É Single")]
-        public bool IsSingle { get; set; } = false;
+        public bool IsSingle { get; set; } = false; // false por padrao
 
         /// <summary>
-        /// Indica se a faixa é a principal (Title Track) promotora do álbum.
+        /// indica se a faixa e a principal (title track) promotora do album
         /// </summary>
         [Display(Name = "É Título (Title Track)")]
-        public bool IsTitleTrack { get; set; } = false;
+        public bool IsTitleTrack { get; set; } = false; // false por padrao
 
         /// <summary>
-        /// Identificador exclusivo da faixa no Spotify para integrações.
+        /// identificador exclusivo da faixa no spotify para integracoes
         /// </summary>
         [Display(Name = "Spotify ID")]
         public string? SpotifyId { get; set; }
 
         /// <summary>
-        /// URL do vídeo oficial da música no YouTube.
+        /// url do video oficial da musica no youtube
         /// </summary>
         [Display(Name = "YouTube URL")]
-        [Url]
+        [Url] // valida se e uma url valida
         public string? YoutubeUrl { get; set; }
 
         /// <summary>
-        /// URL de pré-visualização de áudio (geralmente um clip de 30 segundos).
+        /// url de pre-visualizacao de audio (geralmente um clip de 30 segundos)
         /// </summary>
         [Display(Name = "URL de Preview de Áudio")]
-        [Url(ErrorMessage = "O URL de preview de áudio deve ser um URL válido.")]
+        [Url(ErrorMessage = "O URL de preview de áudio deve ser um URL válido.")] // valida se e uma url valida
         public string? PreviewAudioUrl { get; set; }
 
         /// <summary>
-        /// Chave estrangeira para o Álbum ao qual a música pertence.
+        /// chave estrangeira para o album ao qual a musica pertence
         /// </summary>
-        [Required(ErrorMessage = "O álbum é obrigatório")]
+        [Required(ErrorMessage = "O álbum é obrigatório")] // campo obrigatorio
         [Display(Name = "Álbum")]
         public int AlbumId { get; set; }
 
         /// <summary>
-        /// Relacionamento: Referência de navegação para o Álbum associado.
+        /// relacionamento: referencia de navegacao para o album associado
         /// </summary>
-        [ForeignKey("AlbumId")]
+        [ForeignKey("AlbumId")] // chave estrangeira para a tabela albuns
         public virtual Album? Album { get; set; }
 
         /// <summary>
-        /// Propriedade calculada que garante exibição legível de duração mesmo quando nula.
+        /// propriedade calculada que garante exibicao legivel de duracao mesmo quando nula
         /// </summary>
-        [NotMapped]
+        [NotMapped] // nao e guardado na base de dados
         public string DuracaoFormatada
         {
             get
             {
+                // se nao tiver duracao, mostra "--:--"
                 if (!Duracao.HasValue)
                     return "--:--";
+                // formata a duracao como mm:ss
                 return Duracao.Value.ToString(@"mm\:ss");
             }
         }
 
         /// <summary>
-        /// Propriedade calculada para apresentar o título formatado com o número da faixa e rótulo de Title Track se aplicável.
+        /// propriedade calculada para apresentar o titulo formatado com o numero da faixa e rotulo de title track se aplicavel
         /// </summary>
-        [NotMapped]
+        [NotMapped] // nao e guardado na base de dados
         public string TituloCompleto
         {
             get
             {
+                // se for title track, adiciona o rotulo
                 if (IsTitleTrack)
                     return $"{TrackNumber}. {Titulo} (Title Track)";
                 return $"{TrackNumber}. {Titulo}";

@@ -31,9 +31,11 @@
         </div>
     }
 
+    <!-- cabecalho da pagina -->
     <div class="row align-items-center mb-5">
         <div class="col-lg-6">
             <h1 class="display-4 fw-bold">Artistas</h1>
+            <!-- botao para adicionar artista (apenas admin) -->
             @if (User.IsInRole("Admin"))
             {
                 <a asp-page="./Create" class="btn btn-primary mt-2">➕ Adicionar Artista</a>
@@ -42,19 +44,14 @@
         <div class="col-lg-6">
             <div class="p-4 d-flex justify-content-around text-center shadow-sm rounded">
                 <div>
-                    <h3 class="fw-bold mb-0">@Model.TotalArtists</h3>
+                    <h3 class="fw-bold mb-0">@Model.TotalArtists</h3> <!-- total de artistas -->
                     <small>Total Artistas</small>
                 </div>
             </div>
         </div>
     </div>
 
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
-
-    <!-- Barra de Pesquisa -->
+    <!-- barra de pesquisa -->
     <div class="p-4 mb-5 shadow-sm rounded bg-light">
         <form method="get" class="row g-3">
             <div class="col-md-6">
@@ -62,21 +59,22 @@
             </div>
             <div class="col-md-3">
                 <select name="TypeFilter" class="form-select">
-                    <option value="all" selected="@(Model.TypeFilter == "all")">Todos</option>
-                    <option value="groups" selected="@(Model.TypeFilter == "groups")">Membros de Grupos</option>
-                    <option value="solos" selected="@(Model.TypeFilter == "solos")">Solistas</option>
+                    <option value="all" selected="@(Model.TypeFilter == "all")">Todos</option> <!-- todos os artistas -->
+                    <option value="groups" selected="@(Model.TypeFilter == "groups")">Membros de Grupos</option> <!-- apenas membros de grupos -->
+                    <option value="solos" selected="@(Model.TypeFilter == "solos")">Solistas</option> <!-- apenas solistas -->
                 </select>
             </div>
             <div class="col-md-3">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a asp-page="./Index" class="btn btn-secondary">Limpar</a>
+                <button type="submit" class="btn btn-primary">Filtrar</button> <!-- aplica os filtros -->
+                <a asp-page="./Index" class="btn btn-secondary">Limpar</a> <!-- limpa os filtros -->
             </div>
         </form>
     </div>
 
-    <!-- Lista de Artistas -->
+    <!-- lista de artistas -->
     @if (!Model.Artistas.Any())
     {
+        <!-- mensagem quando nao ha artistas -->
         <div class="text-center py-5">
             <h3>Nenhum artista encontrado</h3>
             <a asp-page="./Create" class="btn btn-primary">Adicionar Artista</a>
@@ -84,34 +82,38 @@
     }
     else
     {
+        <!-- grelha de artistas -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            @foreach (var artista in Model.Artistas)
+            @foreach (var artista in Model.Artistas) // percorre a lista de artistas
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm">
+                        <!-- imagem do artista -->
                         @if (!string.IsNullOrEmpty(artista.ImagemUrl))
                         {
                             <img src="@artista.ImagemUrl" class="card-img-top" alt="@artista.NomeExibicao" style="height: 250px; object-fit: cover;">
                         }
                         else
                         {
+                            <!-- placeholder quando nao ha imagem -->
                             <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
                                 <span class="display-1">🎤</span>
                             </div>
                         }
                         <div class="card-body">
-                            <h5 class="card-title">@artista.NomeExibicao</h5>
+                            <h5 class="card-title">@artista.NomeExibicao</h5> <!-- nome de exibicao do artista -->
                             <p class="card-text">
-                                <strong>Posição:</strong> @(artista.Posicao ?? "N/A")<br />
-                                <strong>Pais:</strong> @(artista.Pais ?? "N/A")
+                                <strong>Posição:</strong> @(artista.Posicao ?? "N/A")<br /> <!-- posicao ou N/A -->
+                                <strong>Pais:</strong> @(artista.Pais ?? "N/A") <!-- nacionalidade ou N/A -->
                             </p>
                         </div>
                         <div class="card-footer d-flex gap-2">
-                            <a asp-page="./Details" asp-route-id="@artista.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">Detalhes</a>
+                            <a asp-page="./Details" asp-route-id="@artista.Id" class="btn btn-sm btn-kpop rounded-pill px-3 py-1">Detalhes</a> <!-- ver detalhes -->
+                            <!-- botoes de edicao e eliminacao (apenas admin) -->
                             @if (User.IsInRole("Admin"))
                             {
-                                <a asp-page="./Edit" asp-route-id="@artista.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a>
-                                <a asp-page="./Delete" asp-route-id="@artista.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a>
+                                <a asp-page="./Edit" asp-route-id="@artista.Id" class="btn btn-sm btn-warning rounded-pill px-2 py-1">✏️</a> <!-- editar -->
+                                <a asp-page="./Delete" asp-route-id="@artista.Id" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1">🗑️</a> <!-- eliminar -->
                             }
                         </div>
                     </div>

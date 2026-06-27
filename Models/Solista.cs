@@ -3,56 +3,56 @@ using System.ComponentModel.DataAnnotations;
 namespace K_Shelf.Models
 {
     /// <summary>
-    /// Representa um artista solista de K-Pop.
-    /// Contém informações sobre a sua carreira individual, álbuns associados e o perfil de Artista correspondente.
+    /// representa um artista solista de k-pop
+    /// contem informacoes sobre a sua carreira individual, albuns associados e o perfil de artista correspondente
     /// </summary>
     public class Solista
     {
         /// <summary>
-        /// Identificador único do solista.
+        /// identificador unico do solista
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Nome artístico do solista (ex: IU, Agust D).
+        /// nome artistico do solista (ex: iu, agust d)
         /// </summary>
-        [Required(ErrorMessage = "O nome do solista é obrigatório")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")]
+        [Required(ErrorMessage = "O nome do solista é obrigatório")] // campo obrigatorio
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "O nome deve ter entre 2 e 100 caracteres")] // tamanho entre 2 e 100
         public string Nome { get; set; } = string.Empty;
 
         /// <summary>
-        /// Data de estreia oficial a solo.
+        /// data de estreia oficial a solo
         /// </summary>
-        [DataType(DataType.Date)]
+        [DataType(DataType.Date)] // tipo de dados date
         [Display(Name = "Data de Estreia")]
         public DateTime DataEstreia { get; set; }
 
         /// <summary>
-        /// Agência/Companhia discográfica responsável pela carreira do solista.
+        /// agencia/companhia discografica responsavel pela carreira do solista
         /// </summary>
-        [StringLength(100)]
+        [StringLength(100)] // tamanho maximo de 100 caracteres
         [Display(Name = "Companhia")]
         public string? Companhia { get; set; }
 
         /// <summary>
-        /// URL da imagem de perfil do solista.
+        /// url da imagem de perfil do solista
         /// </summary>
         [Display(Name = "URL da Imagem")]
         public string? ImagemUrl { get; set; }
 
         /// <summary>
-        /// Indica se o solista continua ativo na indústria musical.
+        /// indica se o solista continua ativo na industria musical
         /// </summary>
         [Display(Name = "Ativo")]
-        public bool IsAtivo { get; set; } = true;
+        public bool IsAtivo { get; set; } = true; // ativo por padrao
 
         /// <summary>
-        /// Relacionamento: Vinculação com a entidade de perfil Artista (um solista é também um artista).
+        /// relacionamento: vinculacao com a entidade de perfil artista (um solista e tambem um artista)
         /// </summary>
         public virtual Artista? Artista { get; set; }
 
         /// <summary>
-        /// Relacionamento: Coleção de álbuns lançados por este solista na sua carreira a solo.
+        /// relacionamento: colecao de albuns lancados por este solista na sua carreira a solo
         /// </summary>
         public virtual ICollection<Album>? Albuns { get; set; }
     }

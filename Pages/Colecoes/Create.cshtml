@@ -7,16 +7,18 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-7">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">📚</span>
+                    <span class="fs-1 me-3">📚</span> <!-- icone de colecao -->
                     <div>
                         <h2 class="fw-bold mb-0">Nova Coleção</h2>
                         <p class="text-secondary mb-0">Crie uma nova estante para organizar os seus álbuns</p>
                     </div>
                 </div>
 
-                <!-- Mensagens de Erro/Sucesso -->
+                <!-- mensagens de erro/sucesso -->
                 @if (TempData["ErrorMessage"] != null)
                 {
                     <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
@@ -25,7 +27,9 @@
                     </div>
                 }
 
+                <!-- formulario de criacao -->
                 <form method="post">
+                    <!-- mostra os erros de validacao do modelo -->
                     @if (!ViewData.ModelState.IsValid)
                     {
                         <div class="alert alert-danger">
@@ -36,35 +40,37 @@
                         </div>
                     }
 
-                    @Html.AntiForgeryToken()
-
+                    @Html.AntiForgeryToken() <!-- token de seguranca contra csrf -->
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Nome -->
+                    <!-- campo do nome (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Colecao.Nome" class="form-label fw-bold">
-                            Nome da Coleção <span class="text-danger">*</span>
+                            Nome da Coleção <span class="text-danger">*</span> <!-- asterisco indica campo obrigatorio -->
                         </label>
                         <input asp-for="Colecao.Nome" class="form-control search-input-kpop"
                                placeholder="Ex: Favoritos de Todos os Tempos"
-                               maxlength="100" />
+                               maxlength="100" /> <!-- limite de 100 caracteres -->
                         <span asp-validation-for="Colecao.Nome" class="text-danger small"></span>
                         <small class="text-muted d-block">Mínimo 3 caracteres, máximo 100.</small>
                     </div>
 
-                    <!-- Descrição -->
+                    <!-- campo da descricao (opcional) -->
                     <div class="mb-4">
                         <label asp-for="Colecao.Descricao" class="form-label fw-bold">Descrição</label>
                         <textarea asp-for="Colecao.Descricao" class="form-control search-input-kpop"
                                   rows="3" placeholder="Descreva a sua coleção..."
-                                  maxlength="500"></textarea>
+                                  maxlength="500"></textarea> <!-- limite de 500 caracteres -->
                         <span asp-validation-for="Colecao.Descricao" class="text-danger small"></span>
                         <small class="text-muted d-block">Máximo 500 caracteres.</small>
                     </div>
 
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2">
+                        <!-- botao de submit que procura o formulario dentro do glass-panel -->
                         <button type="button" class="btn btn-kpop px-4" onclick="document.querySelector('.glass-panel form').submit()">💾 Criar Coleção</button>
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
                     </div>
                 </form>
             </div>
@@ -72,5 +78,7 @@
     </div>
 </div>
 
+<!-- scripts de validacao -->
 @section Scripts {
+    <!-- removido para evitar conflitos com o botao personalizado -->
 }

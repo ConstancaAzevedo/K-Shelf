@@ -4,47 +4,45 @@
 @inject UserManager<Utilizador> UserManager
 @inject RoleManager<IdentityRole> RoleManager
 @{
-    // Define o título da página
+    // define o titulo da pagina
     ViewData["Title"] = "Tornar-me Admin";
 }
 
 @functions {
     /// <summary>
-    /// Manipulador de requisições POST para atribuir a role 'Admin' ao utilizador atual
-    /// Cria a role 'Admin' se esta ainda não existir na base de dados
+    /// manipulador de requisicoes post para atribuir a role 'admin' ao utilizador atual
+    /// cria a role 'admin' se esta ainda nao existir na base de dados
     /// </summary>
     public async Task<IActionResult> OnPostAsync()
     {
-        // Obtém o utilizador autenticado atual
+        // obtem o utilizador autenticado atual
         var user = await UserManager.GetUserAsync(User);
         if (user != null)
         {
-            // Verifica se a role 'Admin' existe, caso contrário, cria-a
+            // verifica se a role 'admin' existe, caso contrario, cria-a
             if (!await RoleManager.RoleExistsAsync("Admin"))
                 await RoleManager.CreateAsync(new IdentityRole("Admin"));
 
-            // Se o utilizador ainda não tiver a role 'Admin', adiciona-a
+            // se o utilizador ainda nao tiver a role 'admin', adiciona-a
             if (!await UserManager.IsInRoleAsync(user, "Admin"))
             {
-                // remove o role de 'User'
+                // remove o role de 'user' (admin nao precisa de ser user)
                 if (await UserManager.IsInRoleAsync(user, "User"))
                 {
                     await UserManager.RemoveFromRoleAsync(user, "User");
                 }
 
-                // adiciona o role "Admin"
+                // adiciona o role "admin"
                 await UserManager.AddToRoleAsync(user, "Admin");
                 TempData["Message"] = "Admin role adicionada com sucesso! Faça logout e login novamente.";
             }
-               
             else
             {
                 TempData["Message"] = "Já és administrador!";
             }
         }
-        // Redireciona de volta para a mesma página para atualizar o estado da UI
+        // redireciona de volta para a mesma pagina para atualizar o estado da ui
         return RedirectToPage();
-    }
     }
 }
 
@@ -54,15 +52,18 @@
             <div class="glass-panel p-4 text-center">
                 <h2 class="title-k-shelf mb-4">Tornar-se Administrador</h2>
 
+                <!-- mensagem de feedback -->
                 @if (TempData["Message"] != null)
                 {
                     <div class="alert" style="background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; border-radius: 12px;">
                         @TempData["Message"]
                     </div>
+                    <!-- botao para fazer logout apos tornar-se admin -->
                     <a asp-area="Identity" asp-page="/Account/Logout" class="btn btn-kpop mt-2">Fazer Logout</a>
                 }
                 else if (User.Identity?.IsAuthenticated == false)
                 {
+                    <!-- utilizador nao autenticado -->
                     <div class="alert" style="background: rgba(255,193,7,0.15); border: 1px solid rgba(255,193,7,0.3); color: #d4a017; border-radius: 12px;">
                         Precisa de ter login feito
                     </div>
@@ -70,6 +71,7 @@
                 }
                 else if (User.IsInRole("Admin"))
                 {
+                    <!-- utilizador ja e admin -->
                     <div class="alert" style="background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; border-radius: 12px;">
                         Já és Administrador!
                     </div>
@@ -77,9 +79,10 @@
                 }
                 else
                 {
+                    <!-- utilizador autenticado mas nao admin -->
                     <p class="text-muted mb-4">Clica no botão abaixo para obteres permissões de administrador</p>
                     <form method="post">
-                        @Html.AntiForgeryToken()
+                        @Html.AntiForgeryToken() <!-- token de seguranca contra csrf -->
                         <button type="submit" class="btn btn-kpop btn-lg">Tornar-me Admin</button>
                     </form>
                 }

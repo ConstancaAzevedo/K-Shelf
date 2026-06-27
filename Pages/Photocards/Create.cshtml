@@ -7,27 +7,30 @@
 <div class="container py-4 animate-fade-in-up">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <!-- painel principal com efeito glassmorphism -->
             <div class="glass-panel p-4 shadow-sm">
-                <!-- Cabeçalho -->
+                <!-- cabecalho com icone e titulo -->
                 <div class="d-flex align-items-center mb-4">
-                    <span class="fs-1 me-3">🎴</span>
+                    <span class="fs-1 me-3">🎴</span> <!-- icone de photocard -->
                     <div>
                         <h2 class="fw-bold mb-0">Adicionar Photocard</h2>
                         <p class="text-secondary mb-0">Registe um novo photocard colecionável no catálogo do K-Shelf.</p>
                     </div>
                 </div>
 
+                <!-- formulario de criacao -->
                 <form method="post">
+                    <!-- resumo de erros de validacao -->
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3"></div>
 
-                    <!-- Versão/Legenda -->
+                    <!-- campo da versao / legenda (obrigatorio) -->
                     <div class="mb-3">
                         <label asp-for="Photocard.Versao" class="form-label fw-bold">Versão / Legenda</label>
                         <input asp-for="Photocard.Versao" class="form-control search-input-kpop" placeholder="Ex: Selfie Ver. A, Concept Photo, POB Soundwave" />
                         <span asp-validation-for="Photocard.Versao" class="text-danger small"></span>
                     </div>
 
-                    <!-- Imagem URL -->
+                    <!-- campo da url da imagem (opcional) -->
                     <div class="mb-3">
                         <label asp-for="Photocard.ImagemUrl" class="form-label fw-bold">URL da Imagem</label>
                         <input asp-for="Photocard.ImagemUrl" class="form-control search-input-kpop" placeholder="https://exemplo.com/imagem.png ou /imagens/photocards/..." />
@@ -36,18 +39,20 @@
                     </div>
 
                     <div class="row">
-                        <!-- Artista -->
+                        <!-- campo do artista (obrigatorio) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Photocard.ArtistaId" class="form-label fw-bold">Artista Retratado</label>
+                            <!-- dropdown com a lista de artistas -->
                             <select asp-for="Photocard.ArtistaId" class="form-select search-input-kpop" asp-items="Model.ArtistasSelectList">
                                 <option value="">-- Selecione o Artista --</option>
                             </select>
                             <span asp-validation-for="Photocard.ArtistaId" class="text-danger small"></span>
                         </div>
 
-                        <!-- Álbum Associado (Opcional) -->
+                        <!-- campo do album associado (opcional) -->
                         <div class="col-md-6 mb-3">
                             <label asp-for="Photocard.AlbumId" class="form-label fw-bold">Álbum Associado (Opcional)</label>
+                            <!-- dropdown com a lista de albuns -->
                             <select asp-for="Photocard.AlbumId" class="form-select search-input-kpop" asp-items="Model.AlbunsSelectList">
                                 <option value="">-- Sem Álbum Associado --</option>
                             </select>
@@ -55,10 +60,10 @@
                         </div>
                     </div>
 
-                    <!-- Botões de Ação -->
+                    <!-- botoes de acao -->
                     <div class="d-flex gap-2 justify-content-end mt-4">
-                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a>
-                        <button type="submit" class="btn btn-kpop rounded-pill px-4">Adicionar</button>
+                        <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill px-4">Cancelar</a> <!-- volta para a lista -->
+                        <button type="submit" class="btn btn-kpop rounded-pill px-4">Adicionar</button> <!-- botao de submit -->
                     </div>
                 </form>
             </div>
@@ -66,6 +71,7 @@
     </div>
 </div>
 
+<!-- scripts de validacao do lado do cliente -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

@@ -6,12 +6,14 @@
 }
 
 <div class="container py-4 animate-fade-in-up">
+    <!-- cabecalho com titulo e botoes de navegacao -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="display-4 fw-bold">Detalhes do Utilizador</h1>
             <p class="text-secondary lead">Informações detalhadas do utilizador</p>
         </div>
         <div class="d-flex gap-2">
+            <!-- botoes para voltar a lista de utilizadores ou ao dashboard -->
             <a asp-page="./Index" class="btn btn-outline-secondary rounded-pill">
                 ← Voltar à Lista
             </a>
@@ -21,7 +23,7 @@
         </div>
     </div>
 
-    <!-- Mensagens de Feedback -->
+    <!-- mensagens de feedback (sucesso ou erro) -->
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show rounded-3 animate-fade-in-up" role="alert">
@@ -39,52 +41,61 @@
     }
 
     <div class="row g-4">
-        <!-- Informações do Utilizador -->
+        <!-- informacoes pessoais do utilizador -->
         <div class="col-md-6">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Informações Pessoais</h5>
                 <dl class="row">
+                    <!-- email do utilizador com indicador de verificacao -->
                     <dt class="col-sm-4">Email</dt>
                     <dd class="col-sm-8">
                         <strong>@Model.User.Email</strong>
                         @if (Model.User.EmailConfirmed)
                         {
+                            <!-- badge verde para email confirmado -->
                             <span class="badge bg-success ms-2">Verificado</span>
                         }
                         else
                         {
+                            <!-- badge amarelo para email nao confirmado -->
                             <span class="badge bg-warning ms-2">Não verificado</span>
                         }
                     </dd>
 
+                    <!-- nome de utilizador -->
                     <dt class="col-sm-4">Nome de Utilizador</dt>
                     <dd class="col-sm-8">@Model.User.UserName</dd>
 
+                    <!-- identificador unico do utilizador -->
                     <dt class="col-sm-4">ID</dt>
                     <dd class="col-sm-8"><code>@Model.User.Id</code></dd>
 
+                    <!-- numero de telefone (se existir) -->
                     <dt class="col-sm-4">Telefone</dt>
                     <dd class="col-sm-8">@(Model.User.PhoneNumber ?? "N/A")</dd>
                 </dl>
             </div>
         </div>
 
-        <!-- Cargos do Utilizador -->
+        <!-- cargos do utilizador -->
         <div class="col-md-6">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Cargos</h5>
                 @if (Model.UserRoles.Any())
                 {
+                    <!-- lista de badges com os cargos do utilizador -->
                     <div class="d-flex flex-wrap gap-2">
                         @foreach (var role in Model.UserRoles)
                         {
                             <span class="badge @(role == "Admin" ? "bg-danger" : "bg-info") rounded-pill px-3 py-2 fs-6">
                                 @if (role == "Admin")
                                 {
+                                    <!-- icone para admin -->
                                     <span>🛡️</span>
                                 }
                                 else
                                 {
+                                    <!-- icone para user normal -->
                                     <span>👤</span>
                                 }
                                 @role
@@ -94,17 +105,18 @@
                 }
                 else
                 {
+                    <!-- mensagem quando o utilizador nao tem cargos -->
                     <p class="text-secondary">Este utilizador não tem cargos atribuídos.</p>
                 }
             </div>
         </div>
 
-        <!-- Ações -->
+        <!-- acoes disponiveis para o administrador -->
         <div class="col-12">
             <div class="glass-panel p-4 shadow-sm">
                 <h5 class="fw-bold mb-3">Ações</h5>
                 <div class="d-flex flex-wrap gap-3">
-                    <!-- Tornar Admin -->
+                    <!-- botao para tornar admin (se nao for admin) -->
                     @if (!Model.UserRoles.Contains("Admin"))
                     {
                         <form method="post" asp-page-handler="MakeAdmin" asp-route-id="@Model.User.Id">
@@ -116,6 +128,7 @@
                     }
                     else
                     {
+                        <!-- botao para remover admin (se for admin) -->
                         <form method="post" asp-page-handler="RemoveAdmin" asp-route-id="@Model.User.Id">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
@@ -124,7 +137,7 @@
                         </form>
                     }
 
-                    <!-- Tornar User -->
+                    <!-- botao para tornar user (se nao for user nem admin) -->
                     @if (!Model.UserRoles.Contains("User") && !Model.UserRoles.Contains("Admin"))
                     {
                         <form method="post" asp-page-handler="MakeUser" asp-route-id="@Model.User.Id">
@@ -135,6 +148,7 @@
                         </form>
                     }
 
+                    <!-- botao para voltar a lista -->
                     <a asp-page="./Index" class="btn btn-secondary rounded-pill px-4">
                         ← Voltar
                     </a>
@@ -142,7 +156,7 @@
             </div>
         </div>
 
-        <!-- Coleções do Utilizador -->
+        <!-- lista de colecoes do utilizador (se existirem) -->
         @if (Model.UserColecoes.Any())
         {
             <div class="col-12">
@@ -152,6 +166,7 @@
                         @foreach (var colecao in Model.UserColecoes)
                         {
                             <div class="col">
+                                <!-- cartao de cada colecao -->
                                 <div class="card shadow-sm h-100">
                                     <div class="card-body">
                                         <h6 class="card-title fw-bold">@colecao.Nome</h6>
@@ -161,6 +176,7 @@
                                         </small>
                                     </div>
                                     <div class="card-footer bg-transparent">
+                                        <!-- link para ver os detalhes da colecao -->
                                         <a asp-page="/Colecoes/Details" asp-route-id="@colecao.Id"
                                            class="btn btn-sm btn-outline-primary rounded-pill">
                                             Ver Coleção

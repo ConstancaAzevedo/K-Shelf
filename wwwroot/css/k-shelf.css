@@ -1,7 +1,7 @@
-/* Import font */
+/* importa a fonte outfit do google fonts */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-/* K-Shelf theme variables */
+/* variaveis de tema com as cores principais da k-shelf */
 :root {
     --kpop-pink: #ff6b9d;
     --kpop-purple: #9b59b6;
@@ -9,12 +9,13 @@
     --kpop-light: #f8f9fa;
 }
 
+/* estilos base do corpo da pagina */
 body {
     font-family: 'Outfit', sans-serif;
     background-color: #fafafd;
 }
 
-/* Logo */
+/* logo da aplicacao com efeito hover */
 .logo-k-shelf {
     max-height: 60px;
     transition: transform 0.3s ease;
@@ -24,7 +25,7 @@ body {
         transform: scale(1.05);
     }
 
-/* Navbar */
+/* barra de navegacao com gradiente e sombra */
 .navbar-k-shelf {
     background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -41,7 +42,7 @@ body {
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-/* Hero banner */
+/* banner hero com fundo claro e bordas arredondadas */
 .hero-banner {
     background: linear-gradient(135deg, var(--kpop-light), #e8e8e8);
     border-radius: 20px;
@@ -49,7 +50,7 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Cards */
+/* cartoes com efeito de elevacao ao passar o rato */
 .card-k-shelf {
     border-radius: 15px;
     transition: transform 0.3s;
@@ -62,7 +63,7 @@ body {
         box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     }
 
-/* Buttons */
+/* botoes com gradiente e efeito hover */
 .btn-kpop {
     background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
     color: white;
@@ -78,14 +79,14 @@ body {
         color: white;
     }
 
-/* Footer */
+/* rodape com fundo escuro */
 .footer-k-shelf {
     background-color: var(--kpop-dark);
     color: white;
     padding: 2rem 0;
 }
 
-/* Title gradient text */
+/* titulo com gradiente de texto */
 .title-k-shelf {
     font-weight: 800;
     background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
@@ -94,7 +95,7 @@ body {
     color: transparent;
 }
 
-/* Glass and effects */
+/* painel com efeito glassmorphism */
 .glass-panel {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
@@ -104,6 +105,7 @@ body {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
 }
 
+/* versao escura do glass panel */
 .glass-panel-dark {
     background: rgba(44, 62, 80, 0.85);
     backdrop-filter: blur(12px);
@@ -113,6 +115,7 @@ body {
     color: white;
 }
 
+/* animacao de entrada com deslocamento para cima */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -129,7 +132,7 @@ body {
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Search / filters */
+/* campo de pesquisa com bordas arredondadas */
 .search-input-kpop {
     border: 2px solid #e0e0e0;
     border-radius: 30px;
@@ -142,6 +145,7 @@ body {
         outline: none;
     }
 
+/* botoes de filtro com estilo toggle */
 .filter-btn-kpop {
     border: 2px solid var(--kpop-pink);
     color: var(--kpop-pink);
@@ -159,7 +163,7 @@ body {
         box-shadow: 0 4px 15px rgba(255,107,157,0.3);
     }
 
-/* Badges */
+/* badges com cores neon */
 .badge-neon-pink {
     background: rgba(255,107,157,0.15);
     color: var(--kpop-pink);
@@ -187,7 +191,7 @@ body {
     padding: 6px 12px;
 }
 
-/* Artist card */
+/* cartao de artista com efeito de elevacao */
 .artist-card {
     border: none;
     border-radius: 20px;
@@ -202,6 +206,7 @@ body {
         box-shadow: 0 20px 40px rgba(255,107,157,0.15);
     }
 
+/* container da imagem do artista */
 .artist-image-wrapper {
     position: relative;
     overflow: visible;
@@ -219,6 +224,7 @@ body {
     transform: scale(1.08);
 }
 
+/* overlay com gradiente no fundo da imagem */
 .artist-overlay {
     position: absolute;
     bottom: 0;
@@ -229,17 +235,14 @@ body {
     color: white;
 }
 
-/* ========================================= */
-/* VINIL EFFECT 
-/* ========================================= */
-
+/* efeito de vinil para os albuns */
 .vinyl-container-wrapper {
     position: relative;
     width: 200px;
     height: 200px;
     cursor: pointer;
     margin: 0 auto;
-    transform: translateZ(0); /* força novo stacking context independente */
+    transform: translateZ(0); /* forca novo stacking context independente */
 }
 
 .vinyl-album {
@@ -284,7 +287,7 @@ body {
     transform: scale(0.97);
 }
 
-/* Shelf */
+/* estante para organizar os albuns */
 .shelf-container {
     background: linear-gradient(to bottom, #d5c3db 0%, #ebe3ed 100%);
     border-radius: 30px;
@@ -310,7 +313,7 @@ body {
         background: rgba(0,0,0,0.08);
     }
 
-/* Footer fix */
+/* garante que o footer fica sempre no final da pagina */
 html,
 body {
     height: 100%;
@@ -331,9 +334,7 @@ footer.footer-k-shelf {
     margin-top: auto;
 }
 
-/* =========================================================================
-   ESTILOS PARA O CHAT GLOBAL (SIGNALR)
-   ========================================================================= */
+/* estilos para o chat global (signalr) */
 .chat-messages-panel {
     background: rgba(255, 255, 255, 0.4);
     border-radius: 16px;
@@ -345,15 +346,17 @@ footer.footer-k-shelf {
     flex-direction: column;
 }
 
-.chat-messages-panel::-webkit-scrollbar {
-    width: 6px;
-}
+    /* personaliza a barra de scroll do chat */
+    .chat-messages-panel::-webkit-scrollbar {
+        width: 6px;
+    }
 
-.chat-messages-panel::-webkit-scrollbar-thumb {
-    background-color: var(--kpop-pink);
-    border-radius: 6px;
-}
+    .chat-messages-panel::-webkit-scrollbar-thumb {
+        background-color: var(--kpop-pink);
+        border-radius: 6px;
+    }
 
+/* wrapper de cada mensagem do chat */
 .chat-message-wrapper {
     display: flex;
     flex-direction: column;
@@ -362,50 +365,53 @@ footer.footer-k-shelf {
     clear: both;
 }
 
-.chat-message-wrapper.my-message {
-    align-self: flex-end;
-    align-items: flex-end;
-}
+    .chat-message-wrapper.my-message {
+        align-self: flex-end;
+        align-items: flex-end;
+    }
 
-.chat-message-wrapper.other-message {
-    align-self: flex-start;
-    align-items: flex-start;
-}
+    .chat-message-wrapper.other-message {
+        align-self: flex-start;
+        align-items: flex-start;
+    }
 
-.chat-message-wrapper .message-info {
-    font-size: 0.75rem;
-    color: #6c757d;
-    margin-bottom: 0.2rem;
-}
+    .chat-message-wrapper .message-info {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 0.2rem;
+    }
 
-.chat-message-wrapper .message-content {
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    word-break: break-word;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
+    .chat-message-wrapper .message-content {
+        padding: 10px 16px;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        word-break: break-word;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
 
-.chat-message-wrapper.my-message .message-content {
-    background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
-    color: white;
-    border-top-right-radius: 4px;
-}
+    /* estilo das mensagens do proprio utilizador */
+    .chat-message-wrapper.my-message .message-content {
+        background: linear-gradient(135deg, var(--kpop-pink), var(--kpop-purple));
+        color: white;
+        border-top-right-radius: 4px;
+    }
 
-.chat-message-wrapper.other-message .message-content {
-    background-color: white;
-    color: var(--kpop-dark);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-top-left-radius: 4px;
-}
+    /* estilo das mensagens dos outros utilizadores */
+    .chat-message-wrapper.other-message .message-content {
+        background-color: white;
+        color: var(--kpop-dark);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-top-left-radius: 4px;
+    }
 
-/* Animações de entrada para mensagens novas */
+/* animacoes de entrada para mensagens novas */
 @keyframes fadeInUpChat {
     from {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -416,11 +422,12 @@ footer.footer-k-shelf {
     animation: fadeInUpChat 0.3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
+/* mensagens do sistema (entrada/saida de utilizadores) */
 .system-message {
     align-self: center;
 }
 
-.system-message span {
-    font-size: 0.8rem;
-    font-weight: 500;
-}
+    .system-message span {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }

@@ -1,27 +1,35 @@
+/* ficheiro de estilos base do site */
+/* define o tamanho base da fonte para 14px em ecras normais */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
+/* em ecras maiores que 768px (tablets e computadores), aumenta a fonte para 16px */
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
+/* define o estilo de foco para botoes e campos de formulario */
+/* remove a sombra padrao e adiciona um contorno personalizado com cores branca e azul */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* garante que o html ocupa sempre 100% da altura da janela */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
+/* estilos para os placeholders dos campos de formulario com a classe form-floating */
+/* alinha o placeholder a direita por padrao e a esquerda quando o campo esta focado */
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
